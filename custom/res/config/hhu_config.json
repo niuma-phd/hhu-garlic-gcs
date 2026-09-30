@@ -1,0 +1,293 @@
+{
+    "_readme": [
+        "河海大学 大蒜播种车地面站 配置文件。修改后重启地面站生效，无需重新编译。",
+        "位置：安装目录下的 config/hhu_config.json。文件缺失或格式错误时使用程序内置的默认表。",
+        "statusText：车端 STATUSTEXT 按前缀匹配（不区分大小写，最长前缀优先），未匹配的显示原文。",
+        "  {rest} = 前缀后面的原文；{reason} = 前缀后面的原文按 preArm 表再翻译一次；{fault} = 故障码及 faultCodes 中的说明。",
+        "preArm：PreArm / Arm 原因的翻译，同样按前缀匹配。",
+        "faultCodes：VCU 故障码（十六进制或十进制写法均可）对应的中文说明，由底盘厂提供。",
+        "ntripProviders：RTK 差分页的服务商预设（选中后自动填地址和端口）。以下地址为常见公开值，甲方须向服务商核实后修改。",
+        "server：4G 服务器之外的 HTTPS 服务（检查更新、日志上传）的地址，留空时用 4G 连接配置中的服务器地址（https://地址）。"
+    ],
+    "statusText": [
+        {
+            "prefix": "VCU: feedback timeout",
+            "text": "底盘通信中断，已停车"
+        },
+        {
+            "prefix": "VCU: not in auto",
+            "text": "底盘未切到自动模式"
+        },
+        {
+            "prefix": "VCU: estop",
+            "text": "底盘急停已触发"
+        },
+        {
+            "prefix": "VCU: fault 0x",
+            "text": "底盘故障（故障码 {fault}）"
+        },
+        {
+            "prefix": "VCU: RTK lost",
+            "text": "RTK 定位丢失，已停车"
+        },
+        {
+            "prefix": "VCU: no RTK fix",
+            "text": "无 RTK 固定解，暂不能开始作业"
+        },
+        {
+            "prefix": "VCU: fw lacks get_desired binding",
+            "text": "车辆固件版本不对，请联系售后"
+        },
+        {
+            "prefix": "VCU: no scripting CAN",
+            "text": "车辆 CAN 配置错误，请联系售后"
+        },
+        {
+            "prefix": "PreArm:",
+            "text": "启动前检查未通过：{reason}"
+        },
+        {
+            "prefix": "Arm:",
+            "text": "启动检查未通过：{reason}"
+        },
+        {
+            "prefix": "Arming motors",
+            "text": "车辆已解锁"
+        },
+        {
+            "prefix": "Disarming motors",
+            "text": "车辆已上锁"
+        },
+        {
+            "prefix": "Mission: ",
+            "text": "航线：{rest}"
+        },
+        {
+            "prefix": "Reached destination",
+            "text": "已到达目标点"
+        },
+        {
+            "prefix": "Mission Complete",
+            "text": "航线已完成"
+        },
+        {
+            "prefix": "Fence Breached",
+            "text": "车辆越出电子围栏"
+        },
+        {
+            "prefix": "Failsafe",
+            "text": "车辆进入失效保护：{rest}"
+        },
+        {
+            "prefix": "GPS 1: detected",
+            "text": "已检测到 GPS：{rest}"
+        },
+        {
+            "prefix": "EKF3 IMU0 is using GPS",
+            "text": "导航开始使用 GPS 定位"
+        },
+        {
+            "prefix": "EKF3 IMU1 is using GPS",
+            "text": "导航开始使用 GPS 定位"
+        }
+    ],
+    "preArm": [
+        {
+            "prefix": "Hardware safety switch",
+            "text": "安全开关未按下"
+        },
+        {
+            "prefix": "Radio failsafe on",
+            "text": "遥控器信号丢失"
+        },
+        {
+            "prefix": "RC not calibrated",
+            "text": "遥控器未校准，请联系售后"
+        },
+        {
+            "prefix": "Throttle",
+            "text": "遥控器油门摇杆不在中位"
+        },
+        {
+            "prefix": "GPS 1: Bad fix",
+            "text": "GPS 定位差"
+        },
+        {
+            "prefix": "GPS 1: not healthy",
+            "text": "GPS 异常"
+        },
+        {
+            "prefix": "GPS 2: Bad fix",
+            "text": "第二 GPS 定位差"
+        },
+        {
+            "prefix": "GPS and AHRS differ",
+            "text": "GPS 位置与导航位置不一致，请稍候"
+        },
+        {
+            "prefix": "GPSs inconsistent",
+            "text": "两个 GPS 位置不一致"
+        },
+        {
+            "prefix": "Need Position Estimate",
+            "text": "等待定位"
+        },
+        {
+            "prefix": "Need Alt Estimate",
+            "text": "等待定位"
+        },
+        {
+            "prefix": "AHRS: waiting for home",
+            "text": "等待定位"
+        },
+        {
+            "prefix": "AHRS: EKF3 not started",
+            "text": "导航系统启动中，请稍候"
+        },
+        {
+            "prefix": "AHRS: not using configured AHRS",
+            "text": "导航系统启动中，请稍候"
+        },
+        {
+            "prefix": "EKF3 waiting for GPS config data",
+            "text": "等待 GPS 配置完成"
+        },
+        {
+            "prefix": "EKF3",
+            "text": "导航系统未就绪：{rest}"
+        },
+        {
+            "prefix": "Compass not calibrated",
+            "text": "罗盘未校准，请联系售后"
+        },
+        {
+            "prefix": "Check mag field",
+            "text": "磁场异常，请远离铁磁物体"
+        },
+        {
+            "prefix": "Compasses inconsistent",
+            "text": "罗盘数据不一致，请联系售后"
+        },
+        {
+            "prefix": "3D Accel calibration needed",
+            "text": "加速度计未校准，请联系售后"
+        },
+        {
+            "prefix": "Accels inconsistent",
+            "text": "加速度计数据不一致，请联系售后"
+        },
+        {
+            "prefix": "Gyros inconsistent",
+            "text": "陀螺仪数据不一致，请联系售后"
+        },
+        {
+            "prefix": "Battery 1 below minimum arming",
+            "text": "电池电压过低"
+        },
+        {
+            "prefix": "Battery",
+            "text": "电池检查未通过：{rest}"
+        },
+        {
+            "prefix": "Fence requires position",
+            "text": "电子围栏需要定位，请等待定位"
+        },
+        {
+            "prefix": "Fence: vehicle outside fence",
+            "text": "车辆在电子围栏外"
+        },
+        {
+            "prefix": "vehicle outside fence",
+            "text": "车辆在电子围栏外"
+        },
+        {
+            "prefix": "Fence",
+            "text": "电子围栏检查未通过：{rest}"
+        },
+        {
+            "prefix": "Mode not armable",
+            "text": "当前模式不能启动"
+        },
+        {
+            "prefix": "Logging failed",
+            "text": "车端日志记录失败，请联系售后"
+        },
+        {
+            "prefix": "No SD card",
+            "text": "车端未插存储卡，请联系售后"
+        },
+        {
+            "prefix": "Scripting",
+            "text": "车端脚本异常，请联系售后：{rest}"
+        },
+        {
+            "prefix": "Motors",
+            "text": "电机配置错误，请联系售后"
+        },
+        {
+            "prefix": "Check board voltage",
+            "text": "飞控板电压异常"
+        },
+        {
+            "prefix": "Internal errors",
+            "text": "车端内部错误，请联系售后：{rest}"
+        },
+        {
+            "prefix": "Waiting for RC",
+            "text": "等待遥控器信号"
+        },
+        {
+            "prefix": "Param storage failed",
+            "text": "车端参数存储失败，请联系售后"
+        },
+        {
+            "prefix": "VCU: feedback timeout",
+            "text": "底盘通信中断"
+        },
+        {
+            "prefix": "VCU: estop",
+            "text": "底盘急停已触发"
+        },
+        {
+            "prefix": "VCU: fault",
+            "text": "底盘故障"
+        },
+        {
+            "prefix": "VCU: not in auto",
+            "text": "底盘未切到自动模式"
+        },
+        {
+            "prefix": "VCU: no RTK fix",
+            "text": "无 RTK 固定解"
+        },
+        {
+            "prefix": "VCU: RTK lost",
+            "text": "RTK 定位丢失"
+        },
+        {
+            "prefix": "VCU",
+            "text": "底盘未就绪：{rest}"
+        }
+    ],
+    "faultCodes": {},
+    "ntripProviders": [
+        {
+            "name": "千寻位置",
+            "host": "rtk.ntrip.qxwz.com",
+            "port": 8002
+        },
+        {
+            "name": "六分科技",
+            "host": "rtk.sixents.com",
+            "port": 8002
+        },
+        {
+            "name": "中国移动",
+            "host": "sdk.pnt.10086.cn",
+            "port": 8002
+        }
+    ],
+    "server": {
+        "baseUrl": ""
+    }
+}
