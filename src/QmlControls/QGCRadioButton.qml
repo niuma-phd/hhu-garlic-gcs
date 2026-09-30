@@ -44,7 +44,7 @@ RadioButton {
 
     contentItem: Text {
         text:               control.text
-        font.family:        control.font.pointSize
+        font.family:        control.font.family  // HHU: upstream set the point size here (serif fallback)
         font.pointSize:     control.font.pointSize
         font.bold:          control.font.bold
         color:              control.textColor
