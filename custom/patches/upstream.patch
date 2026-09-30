@@ -1,0 +1,200 @@
+diff --git a/src/FlightMap/FlightMap.qml b/src/FlightMap/FlightMap.qml
+index 0c44d3e..ae1e53c 100644
+--- a/src/FlightMap/FlightMap.qml
++++ b/src/FlightMap/FlightMap.qml
+@@ -13,6 +13,42 @@ Map {
+ 
+     plugin:     Plugin { name: "QGroundControl" }
+     opacity:    0.99 // https://bugreports.qt.io/browse/QTBUG-82185
++    // HHU: TianDiTu tiles stop at level 18 and Qt stretches them at most 4 levels
++    // (blank at 23). Qt ignores maximumZoomLevel with overzoom on, so clamp ourselves.
++    readonly property real _hhuMaxZoom: 22
++    onZoomLevelChanged: (level) => { if (level > _hhuMaxZoom) Qt.callLater(_hhuClampZoom) }
++    function _hhuClampZoom() { if (zoomLevel > _hhuMaxZoom) zoomLevel = _hhuMaxZoom }
++
++    // HHU: TianDiTu annotation layer (place names, roads) over the base map, 需求说明 V1.0 §3.4
++    // 卫星 + 注记. A transparent second map following this one; switched in 通用 settings.
++    readonly property var _hhuLabelType: {
++        if (typeof hhuSettings === "undefined" || !hhuSettings.mapLabels || activeMapType.name.indexOf("TianDiTu") !== 0) {
++            return null
++        }
++        const wanted = activeMapType.name + " Labels"
++        for (let i = 0; i < _hhuLabels.supportedMapTypes.length; i++) {
++            if (_hhuLabels.supportedMapTypes[i].name === wanted) {
++                return _hhuLabels.supportedMapTypes[i]
++            }
++        }
++        return null
++    }
++    Map {
++        id:                 _hhuLabels
++        anchors.fill:       parent
++        z:                  1
++        plugin:             Plugin { name: "QGroundControl" }
++        enabled:            false
++        visible:            _map._hhuLabelType !== null
++        color:              "transparent"
++        copyrightsVisible:  false
++        center:             _map.center
++        zoomLevel:          _map.zoomLevel
++        bearing:            _map.bearing
++        tilt:               _map.tilt
++        fieldOfView:        _map.fieldOfView
++        activeMapType:      _map._hhuLabelType ? _map._hhuLabelType : supportedMapTypes[0]
++    }
+ 
+     property string mapName:                        'defaultMap'
+     property bool   isSatelliteMap:                 activeMapType.name.indexOf("Satellite") > -1 || activeMapType.name.indexOf("Hybrid") > -1
+@@ -138,7 +174,7 @@ Map {
+             }
+         }
+         onScaleChanged: (delta) => {
+-            _map.zoomLevel = Math.max(_map.zoomLevel + Math.log2(delta), 0)
++            _map.zoomLevel = Math.min(Math.max(_map.zoomLevel + Math.log2(delta), 0), _hhuMaxZoom)
+             _map.alignCoordinateToPoint(pinchStartGeoCoord, pinchStartScreenPoint)
+         }
+     }
+@@ -160,7 +196,7 @@ Map {
+         onWheel: (event) => {
+             const zoomDelta = event.angleDelta.y * rotationScale
+             const mouseGeoPos = _map.toCoordinate(Qt.point(event.x, event.y), false)
+-            _map.zoomLevel = Math.max(_map.zoomLevel + zoomDelta, 0)
++            _map.zoomLevel = Math.min(Math.max(_map.zoomLevel + zoomDelta, 0), _hhuMaxZoom)
+             _map.alignCoordinateToPoint(mouseGeoPos, Qt.point(event.x, event.y))
+         }
+     }
+diff --git a/src/MissionManager/SpeedSection.cc b/src/MissionManager/SpeedSection.cc
+index cf3ce0c..8ff75c7 100644
+--- a/src/MissionManager/SpeedSection.cc
++++ b/src/MissionManager/SpeedSection.cc
+@@ -45,7 +45,9 @@ bool SpeedSection::settingsSpecified(void) const
+ void SpeedSection::setAvailable(bool available)
+ {
+     if (available != _available) {
+-        if (available && (_masterController->controllerVehicle()->multiRotor() || _masterController->controllerVehicle()->fixedWing())) {
++        // HHU: rovers support DO_CHANGE_SPEED too (作业速度, 需求说明 §6)
++        if (available && (_masterController->controllerVehicle()->multiRotor() || _masterController->controllerVehicle()->fixedWing()
++                          || _masterController->controllerVehicle()->rover())) {
+             _available = available;
+             emit availableChanged(available);
+         }
+diff --git a/src/QmlControls/QGCRadioButton.qml b/src/QmlControls/QGCRadioButton.qml
+index 3177b7f..0b208b6 100644
+--- a/src/QmlControls/QGCRadioButton.qml
++++ b/src/QmlControls/QGCRadioButton.qml
+@@ -44,7 +44,7 @@ RadioButton {
+ 
+     contentItem: Text {
+         text:               control.text
+-        font.family:        control.font.pointSize
++        font.family:        control.font.family  // HHU: upstream set the point size here (serif fallback)
+         font.pointSize:     control.font.pointSize
+         font.bold:          control.font.bold
+         color:              control.textColor
+diff --git a/src/QtLocationPlugin/Providers/TianDiTuProvider.h b/src/QtLocationPlugin/Providers/TianDiTuProvider.h
+index 8e1b9ab..1287c66 100644
+--- a/src/QtLocationPlugin/Providers/TianDiTuProvider.h
++++ b/src/QtLocationPlugin/Providers/TianDiTuProvider.h
+@@ -28,7 +28,7 @@ class TianDiTuRoadProvider : public TianDiTuProvider
+     TianDiTuRoadProvider()
+         : TianDiTuProvider(
+             QObject::tr("TianDiTu Road"),
+-            QStringLiteral("cia_w"),
++            QStringLiteral("vec_w"),    // HHU: vector base map (cia_w is the satellite annotation layer)
+             QStringLiteral("png"),
+             AVERAGE_TIANDITU_STREET_MAP,
+             MapProvider::StreetMap) {}
+@@ -45,3 +45,29 @@ class TianDiTuSatelliteProvider : public TianDiTuProvider
+             AVERAGE_TIANDITU_SAT_MAP,
+             MapProvider::SatelliteMapDay) {}
+ };
++
++// HHU: annotation layers (place names, roads) drawn over the base map by FlightMap.qml
++// (需求说明 V1.0 §3.4: 卫星 + 注记). Not offered as map types (QGCMapEngineManager::mapTypeList).
++class TianDiTuSatelliteLabelsProvider : public TianDiTuProvider
++{
++public:
++    TianDiTuSatelliteLabelsProvider()
++        : TianDiTuProvider(
++            QStringLiteral("TianDiTu Satellite Labels"),
++            QStringLiteral("cia_w"),
++            QStringLiteral("png"),
++            AVERAGE_TIANDITU_STREET_MAP,
++            MapProvider::CustomMap) {}
++};
++
++class TianDiTuRoadLabelsProvider : public TianDiTuProvider
++{
++public:
++    TianDiTuRoadLabelsProvider()
++        : TianDiTuProvider(
++            QStringLiteral("TianDiTu Road Labels"),
++            QStringLiteral("cva_w"),
++            QStringLiteral("png"),
++            AVERAGE_TIANDITU_STREET_MAP,
++            MapProvider::CustomMap) {}
++};
+diff --git a/src/QtLocationPlugin/QGCMapEngineManager.cc b/src/QtLocationPlugin/QGCMapEngineManager.cc
+index 8dae3b1..80adc49 100644
+--- a/src/QtLocationPlugin/QGCMapEngineManager.cc
++++ b/src/QtLocationPlugin/QGCMapEngineManager.cc
+@@ -195,6 +195,9 @@ QStringList QGCMapEngineManager::mapTypeList(const QString &provider)
+ {
+     QStringList mapStringList = mapList();
+     mapStringList = mapStringList.filter(QRegularExpression(provider));
++    // HHU: TianDiTu annotation layers are overlays, not map types to choose
++    static const QRegularExpression tiandituLabels(QStringLiteral("^TianDiTu .* Labels$"));
++    (void) mapStringList.removeIf([](const QString &name) { return tiandituLabels.match(name).hasMatch(); });
+ 
+     static const QRegularExpression providerType = QRegularExpression(uR"(^([^\ ]*) (.*)$)"_s);
+     (void) mapStringList.replaceInStrings(providerType, "\\2");
+diff --git a/src/QtLocationPlugin/QGCMapUrlEngine.cpp b/src/QtLocationPlugin/QGCMapUrlEngine.cpp
+index 455594b..cf84187 100644
+--- a/src/QtLocationPlugin/QGCMapUrlEngine.cpp
++++ b/src/QtLocationPlugin/QGCMapUrlEngine.cpp
+@@ -30,6 +30,8 @@ const QList<SharedMapProvider> UrlFactory::_providers = {
+ 
+     std::make_shared<TianDiTuRoadProvider>(),
+     std::make_shared<TianDiTuSatelliteProvider>(),
++    std::make_shared<TianDiTuSatelliteLabelsProvider>(),    // HHU: annotation overlay
++    std::make_shared<TianDiTuRoadLabelsProvider>(),         // HHU: annotation overlay
+     std::make_shared<StatkartTopoMapProvider>(),
+     std::make_shared<StatkartBaseMapProvider>(),
+     std::make_shared<SvalbardMapProvider>(),
+diff --git a/src/QtLocationPlugin/QGeoTiledMappingManagerEngineQGC.cpp b/src/QtLocationPlugin/QGeoTiledMappingManagerEngineQGC.cpp
+index ffa04fc..b181d79 100644
+--- a/src/QtLocationPlugin/QGeoTiledMappingManagerEngineQGC.cpp
++++ b/src/QtLocationPlugin/QGeoTiledMappingManagerEngineQGC.cpp
+@@ -22,6 +22,7 @@
+ #include "QGeoFileTileCacheQGC.h"
+ #include "QGeoTiledMapQGC.h"
+ #include "QGeoTileFetcherQGC.h"
++#include "TianDiTuProvider.h"
+ 
+ QGC_LOGGING_CATEGORY(QGeoTiledMappingManagerEngineQGCLog, "QtLocationPlugin.QGeoTiledMappingManagerEngineQGC")
+ 
+@@ -53,9 +54,15 @@ QGeoTiledMappingManagerEngineQGC::QGeoTiledMappingManagerEngineQGC(const QVarian
+     setTileVersion(kTileVersion);
+     setTileSize(QSize(256, 256));
+ 
++    // HHU: TianDiTu serves tiles only up to level 18; cap the tile level there and let
++    // Qt overzoom (stretch level-18 tiles) instead of showing blank tiles when zooming in.
++    QGeoCameraCapabilities tiandituCaps = cameraCaps;
++    tiandituCaps.setMaximumZoomLevel(18);
++
+     QList<QGeoMapType> mapList;
+     const QList<SharedMapProvider> providers = UrlFactory::getProviders();
+     for (const SharedMapProvider &provider : providers) {
++        const bool isTianDiTu = std::dynamic_pointer_cast<const TianDiTuProvider>(provider) != nullptr;
+         const QGeoMapType map = QGeoMapType(
+             static_cast<QGeoMapType::MapStyle>(provider->getMapStyle()),
+             provider->getMapName(),
+@@ -64,7 +71,7 @@ QGeoTiledMappingManagerEngineQGC::QGeoTiledMappingManagerEngineQGC(const QVarian
+             false,
+             provider->getMapId(),
+             QByteArrayLiteral("QGroundControl"),
+-            cameraCapabilities()
++            isTianDiTu ? tiandituCaps : cameraCapabilities()
+         );
+         mapList.append(map);
+     }
