@@ -13,6 +13,11 @@ Map {
 
     plugin:     Plugin { name: "QGroundControl" }
     opacity:    0.99 // https://bugreports.qt.io/browse/QTBUG-82185
+    // HHU: TianDiTu tiles stop at level 18 and Qt stretches them at most 4 levels
+    // (blank at 23). Qt ignores maximumZoomLevel with overzoom on, so clamp ourselves.
+    readonly property real _hhuMaxZoom: 22
+    onZoomLevelChanged: (level) => { if (level > _hhuMaxZoom) Qt.callLater(_hhuClampZoom) }
+    function _hhuClampZoom() { if (zoomLevel > _hhuMaxZoom) zoomLevel = _hhuMaxZoom }
 
     property string mapName:                        'defaultMap'
     property bool   isSatelliteMap:                 activeMapType.name.indexOf("Satellite") > -1 || activeMapType.name.indexOf("Hybrid") > -1
@@ -138,7 +143,7 @@ Map {
             }
         }
         onScaleChanged: (delta) => {
-            _map.zoomLevel = Math.max(_map.zoomLevel + Math.log2(delta), 0)
+            _map.zoomLevel = Math.min(Math.max(_map.zoomLevel + Math.log2(delta), 0), _hhuMaxZoom)
             _map.alignCoordinateToPoint(pinchStartGeoCoord, pinchStartScreenPoint)
         }
     }
@@ -160,7 +165,7 @@ Map {
         onWheel: (event) => {
             const zoomDelta = event.angleDelta.y * rotationScale
             const mouseGeoPos = _map.toCoordinate(Qt.point(event.x, event.y), false)
-            _map.zoomLevel = Math.max(_map.zoomLevel + zoomDelta, 0)
+            _map.zoomLevel = Math.min(Math.max(_map.zoomLevel + zoomDelta, 0), _hhuMaxZoom)
             _map.alignCoordinateToPoint(mouseGeoPos, Qt.point(event.x, event.y))
         }
     }

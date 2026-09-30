@@ -22,6 +22,7 @@
 #include "QGeoFileTileCacheQGC.h"
 #include "QGeoTiledMapQGC.h"
 #include "QGeoTileFetcherQGC.h"
+#include "TianDiTuProvider.h"
 
 QGC_LOGGING_CATEGORY(QGeoTiledMappingManagerEngineQGCLog, "QtLocationPlugin.QGeoTiledMappingManagerEngineQGC")
 
@@ -53,9 +54,15 @@ QGeoTiledMappingManagerEngineQGC::QGeoTiledMappingManagerEngineQGC(const QVarian
     setTileVersion(kTileVersion);
     setTileSize(QSize(256, 256));
 
+    // HHU: TianDiTu serves tiles only up to level 18; cap the tile level there and let
+    // Qt overzoom (stretch level-18 tiles) instead of showing blank tiles when zooming in.
+    QGeoCameraCapabilities tiandituCaps = cameraCaps;
+    tiandituCaps.setMaximumZoomLevel(18);
+
     QList<QGeoMapType> mapList;
     const QList<SharedMapProvider> providers = UrlFactory::getProviders();
     for (const SharedMapProvider &provider : providers) {
+        const bool isTianDiTu = std::dynamic_pointer_cast<const TianDiTuProvider>(provider) != nullptr;
         const QGeoMapType map = QGeoMapType(
             static_cast<QGeoMapType::MapStyle>(provider->getMapStyle()),
             provider->getMapName(),
@@ -64,7 +71,7 @@ QGeoTiledMappingManagerEngineQGC::QGeoTiledMappingManagerEngineQGC(const QVarian
             false,
             provider->getMapId(),
             QByteArrayLiteral("QGroundControl"),
-            cameraCapabilities()
+            isTianDiTu ? tiandituCaps : cameraCapabilities()
         );
         mapList.append(map);
     }
