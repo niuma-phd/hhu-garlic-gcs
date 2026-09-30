@@ -23,6 +23,8 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QSslCertificate>
+#include <QtNetwork/QSslConfiguration>
 
 QGC_LOGGING_CATEGORY(HHUServiceLog, "Custom.HHUService")
 
@@ -40,6 +42,26 @@ QString sha256Of(const QString &path)
     QCryptographicHash hash(QCryptographicHash::Sha256);
     (void) hash.addData(&f);
     return QString::fromLatin1(hash.result().toHex());
+}
+
+/// The relay server is reached by IP with a certificate from the operator's own CA. The 4G
+/// connection imports that CA; HTTPS requests to the same server must trust it as well.
+void applyServerCa(QNetworkRequest &request, const QString &caFile)
+{
+    if (caFile.isEmpty()) {
+        return;
+    }
+    const QString path = caFile.startsWith(QStringLiteral("file:")) ? QUrl(caFile).toLocalFile() : caFile;
+    const QList<QSslCertificate> extra = QSslCertificate::fromPath(path);
+    if (extra.isEmpty()) {
+        qCWarning(HHUServiceLog) << "CA certificate not readable" << path;
+        return;
+    }
+    QSslConfiguration ssl = QSslConfiguration::defaultConfiguration();
+    QList<QSslCertificate> cas = ssl.caCertificates();
+    cas.append(extra);
+    ssl.setCaCertificates(cas);
+    request.setSslConfiguration(ssl);
 }
 }
 
@@ -84,6 +106,7 @@ QNetworkReply *HHUService::_send(const QString &method, const QString &path, con
     QNetworkRequest request(QUrl(baseUrl() + path));
     request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("HHU-GCS/%1").arg(appVersion()));
     request.setTransferTimeout(30000);
+    applyServerCa(request, _link4G->caFile());
     const QVariantMap cred = _link4G->credentials();
     const QString vehicle = cred.value(QStringLiteral("vehicle")).toString();
     if (!vehicle.isEmpty()) {
@@ -184,6 +207,7 @@ void HHUService::downloadAndInstall()
     _setUpdate(QStringLiteral("downloading"), tr("Downloading the update…"));
     QNetworkRequest request{ QUrl(url).isRelative() ? QUrl(baseUrl() + url) : QUrl(url) };
     request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("HHU-GCS/%1").arg(appVersion()));
+    applyServerCa(request, _link4G->caFile());
     QNetworkReply *reply = _nam->get(request);
     _reply = reply;
     _watchReply(reply);
