@@ -1,0 +1,41 @@
+<RCC>
+    <!-- QML overrides: CustomOverrideInterceptor maps qrc:/X to qrc:/Custom/X when present -->
+    <qresource prefix="/Custom/qml">
+        <file alias="QGroundControl/Toolbar/SelectViewDropdown.qml">src/qml/SelectViewDropdown.qml</file>
+        <file alias="QGroundControl/Toolbar/FlyViewToolBar.qml">src/qml/FlyViewToolBar.qml</file>
+        <file alias="QGroundControl/Toolbar/PlanViewToolBar.qml">src/qml/PlanViewToolBar.qml</file>
+        <file alias="QGroundControl/FlyView/FlyViewWidgetLayer.qml">src/qml/FlyViewWidgetLayer.qml</file>
+        <file alias="QGroundControl/FlyView/FlyViewMap.qml">src/qml/generated/FlyViewMap.qml</file>
+        <file alias="QGroundControl/VehicleSetup/VehicleConfigView.qml">src/qml/DisabledToolPage.qml</file>
+        <file alias="QGroundControl/AnalyzeView/AnalyzeView.qml">src/qml/DisabledToolPage.qml</file>
+        <file alias="QGroundControl/AppSettings/SettingsPagesModel.qml">src/qml/SettingsPagesModel.qml</file>
+        <file alias="QGroundControl/AppSettings/GeneralSettings.qml">src/qml/settings/GeneralSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/CommLinksSettings.qml">src/qml/settings/CommLinksSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/NTRIPSettings.qml">src/qml/settings/NTRIPSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/HHUAdvancedSettings.qml">src/qml/settings/HHUAdvancedSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/HHUAboutSettings.qml">src/qml/settings/HHUAboutSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/LinkConfigurationManager.qml">src/qml/generated/LinkConfigurationManager.qml</file>
+        <file alias="QGroundControl/PlanView/PlanView.qml">src/qml/generated/PlanView.qml</file>
+        <file alias="QGroundControl/PlanView/SimpleItemEditor.qml">src/qml/generated/SimpleItemEditor.qml</file>
+        <file alias="QGroundControl/PlanView/MissionDefaultsEditor.qml">src/qml/generated/MissionDefaultsEditor.qml</file>
+        <file alias="QGroundControl/PlanView/PlanInfoEditor.qml">src/qml/generated/PlanInfoEditor.qml</file>
+        <file alias="QGroundControl/PlanView/PlanEditLayers.qml">src/qml/generated/PlanEditLayers.qml</file>
+        <file alias="QGroundControl/PlanView/PlanTreeView.qml">src/qml/generated/PlanTreeView.qml</file>
+        <file alias="QGroundControl/PlanView/MissionItemEditor.qml">src/qml/generated/MissionItemEditor.qml</file>
+        <file alias="QGroundControl/PlanView/PlanToolBarIndicators.qml">src/qml/generated/PlanToolBarIndicators.qml</file>
+    </qresource>
+    <qresource prefix="/Custom/res">
+        <file alias="QGCLogoFull.svg">res/images/hhu_logo_small.svg</file>
+        <file alias="QGCLogoWhite.svg">res/images/hhu_logo_mono.svg</file>
+        <file alias="qgroundcontrol.ico">res/icons/hhu.ico</file>
+    </qresource>
+    <qresource prefix="/hhu">
+        <file alias="hhu_logo.svg">res/images/hhu_logo_small.svg</file>
+        <file alias="hhu_emblem.png">res/images/hhu_emblem.png</file>
+        <file alias="tractor.svg">res/images/tractor.svg</file>
+        <file alias="i18n/hhu_source_zh_CN.qm">res/i18n/hhu_source_zh_CN.qm</file>
+        <file alias="i18n/hhu_json_zh_CN.qm">res/i18n/hhu_json_zh_CN.qm</file>
+        <file alias="config/hhu_config.json">res/config/hhu_config.json</file>
+        <file alias="sounds/alarm.wav">res/sounds/alarm.wav</file>
+    </qresource>
+</RCC>

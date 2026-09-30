@@ -1,0 +1,4 @@
+# local editor / tool files
+.qmlls.ini
+__pycache__/
+translations/_merged_json_zh_CN.ts

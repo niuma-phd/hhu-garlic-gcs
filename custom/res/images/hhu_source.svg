@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <!-- 5角星定义 (左右装饰) -->
+    <polygon id="badge-star" points="0,-8 2.35,-2.6 8,-2.47 3.6,1.4 5.1,6.8 0,3.6 -5.1,6.8 -3.6,1.4 -8,-2.47 -2.35,-2.6" fill="#004B97"/>
+
+    <!-- 梅花外轮廓基础路径 (以 300,300 为中心，5瓣对称) -->
+    <path id="plum-petal-frame" d="
+      M 232.05,206.48 
+      A 68,68 0 0,1 367.95,206.48 
+      A 68,68 0 0,1 409.94,335.72 
+      A 68,68 0 0,1 300.00,415.60 
+      A 68,68 0 0,1 190.06,335.72 
+      A 68,68 0 0,1 232.05,206.48 Z" />
+
+    <!-- 顶部汉字文字弧线 (半径 232) -->
+    <path id="text-arc-top" d="M 68,300 A 232,232 0 1,1 532,300" fill="none"/>
+
+    <!-- 底部英文与年份文字弧线 (半径 228) -->
+    <path id="text-arc-bottom" d="M 72,300 A 228,228 0 0,0 528,300" fill="none"/>
+  </defs>
+
+  <!-- ================= 1. 外同心圆环 ================= -->
+  <g stroke="#004B97" fill="none">
+    <!-- 最外侧粗细双圈 -->
+    <circle cx="300" cy="300" r="282" stroke-width="4.5"/>
+    <circle cx="300" cy="300" r="274" stroke-width="1.8"/>
+
+    <!-- 内侧双圈 (分隔文字与花形核心) -->
+    <circle cx="300" cy="300" r="186" stroke-width="2.5"/>
+    <circle cx="300" cy="300" r="179" stroke-width="1.2"/>
+  </g>
+
+  <!-- ================= 2. 环形文字与点缀 ================= -->
+  <!-- 顶部中文字样 -->
+  <text font-family="'STKaiti', 'KaiTi', 'SimSun', 'Songti SC', 'Noto Serif CJK SC', serif" 
+        font-size="44" 
+        font-weight="bold" 
+        fill="#004B97" 
+        letter-spacing="18px">
+    <textPath href="#text-arc-top" startOffset="50%" text-anchor="middle">
+      河海大学
+    </textPath>
+  </text>
+
+  <!-- 底部英文字样与建校年份 -->
+  <text font-family="'Arial', 'Helvetica', 'Segoe UI', sans-serif" 
+        font-size="20" 
+        font-weight="bold" 
+        fill="#004B97" 
+        letter-spacing="3.5px">
+    <textPath href="#text-arc-bottom" startOffset="50%" text-anchor="middle">
+      HOHAI UNIVERSITY · 1915
+    </textPath>
+  </text>
+
+  <!-- 左右对称装饰五角星 -->
+  <use href="#badge-star" x="72" y="300"/>
+  <use href="#badge-star" x="528" y="300"/>
+
+  <!-- ================= 3. 核心梅花双边框 ================= -->
+  <!-- 梅花外框 -->
+  <use href="#plum-petal-frame" stroke="#004B97" stroke-width="3.2" fill="none"/>
+  <!-- 梅花内框 (等比缩放双线效果) -->
+  <use href="#plum-petal-frame" stroke="#004B97" stroke-width="1.5" fill="none" 
+       transform="translate(300,300) scale(0.92) translate(-300,-300)"/>
+
+  <!-- ================= 4. 底部水浪波纹 (水利象征) ================= -->
+  <g stroke="#004B97" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M 218,336 C 245,322 268,350 300,336 C 332,322 355,350 382,336"/>
+    <path d="M 230,356 C 255,342 274,370 300,356 C 326,342 345,370 370,356"/>
+    <path d="M 248,376 C 268,364 284,388 300,376 C 316,364 332,388 352,376"/>
+  </g>
+
+  <!-- ================= 5. 中心篆体“河海”字样 ================= -->
+  <g stroke="#004B97" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- 右侧：“河”字篆体结构 -->
+    <!-- 三点水水波文 -->
+    <path d="M 314,232 C 318,238 318,244 313,248"/>
+    <path d="M 312,260 C 317,266 317,272 312,277"/>
+    <path d="M 310,288 C 315,294 318,300 324,304"/>
+    <!-- “可”字横与竖勾 -->
+    <path d="M 326,229 C 342,225 358,225 368,230"/>
+    <path d="M 364,230 L 364,296 C 364,307 354,312 342,311"/>
+    <!-- “可”字圆角方框口 -->
+    <path d="M 333,250 C 333,245 352,245 352,250 L 352,272 C 352,278 333,278 333,272 Z"/>
+
+    <!-- 左侧：“海”字篆体结构 -->
+    <!-- 三点水水波文 -->
+    <path d="M 234,232 C 238,238 238,244 233,248"/>
+    <path d="M 232,260 C 237,266 237,272 232,277"/>
+    <path d="M 230,288 C 235,294 238,300 244,304"/>
+    <!-- “每”字头部与外部主轮廓 -->
+    <path d="M 264,224 C 256,230 250,237 247,243"/>
+    <path d="M 247,242 C 265,236 280,236 292,242"/>
+    <path d="M 252,250 C 252,275 250,299 262,308 C 275,310 284,306 288,296 L 288,250"/>
+    <!-- “每”字内部结构 -->
+    <path d="M 250,272 L 290,272"/>
+    <path d="M 270,257 L 270,264"/>
+    <path d="M 270,280 L 270,287"/>
+  </g>
+</svg>
