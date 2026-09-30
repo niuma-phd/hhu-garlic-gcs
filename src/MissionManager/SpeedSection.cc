@@ -45,7 +45,9 @@ bool SpeedSection::settingsSpecified(void) const
 void SpeedSection::setAvailable(bool available)
 {
     if (available != _available) {
-        if (available && (_masterController->controllerVehicle()->multiRotor() || _masterController->controllerVehicle()->fixedWing())) {
+        // HHU: rovers support DO_CHANGE_SPEED too (作业速度, 需求说明 §6)
+        if (available && (_masterController->controllerVehicle()->multiRotor() || _masterController->controllerVehicle()->fixedWing()
+                          || _masterController->controllerVehicle()->rover())) {
             _available = available;
             emit availableChanged(available);
         }
