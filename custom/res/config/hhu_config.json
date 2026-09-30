@@ -189,6 +189,10 @@
             "text": "电池检查未通过：{rest}"
         },
         {
+            "prefix": "Polygon fence(s) invalid",
+            "text": "车上没有有效的电子围栏，请在航线页上传围栏"
+        },
+        {
             "prefix": "Fence requires position",
             "text": "电子围栏需要定位，请等待定位"
         },
