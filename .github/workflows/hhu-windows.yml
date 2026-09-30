@@ -2,7 +2,8 @@ name: HHU Windows
 
 # Build of the HHU garlic seeder ground station (QGroundControl + custom/).
 # - every push to the hhu branch / manual run: installer uploaded as a workflow artifact
-# - tag v*: the installer is attached to a GitHub Release of that tag
+# - tag hhu-v* (e.g. hhu-v1.0.0, matching HHU_APP_VERSION in custom/CMakeLists.txt): the installer is
+#   attached to a GitHub Release of that tag. Plain v* tags are QGroundControl's own versions.
 #
 # Reuses QGroundControl's own composite actions (.github/actions) for Qt, CMake and the NSIS installer.
 
@@ -11,7 +12,7 @@ on:
     branches:
       - hhu
     tags:
-      - 'v*'
+      - 'hhu-v*'
     paths-ignore:
       - 'docs/**'
       - '**.md'
@@ -86,7 +87,7 @@ jobs:
         run: |
           $exe = Get-ChildItem -Path "${{ runner.temp }}\build" -Filter "*installer*.exe" | Select-Object -First 1
           if (-not $exe) { Write-Error "Installer .exe not found"; exit 1 }
-          $version = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}" } else { "dev-$("${{ github.sha }}".Substring(0,7))" }
+          $version = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}".Substring(4) } else { "dev-$("${{ github.sha }}".Substring(0,7))" }
           $name = "HHU-GCS-$version-Windows-x64-setup.exe"
           Copy-Item $exe.FullName (Join-Path "${{ runner.temp }}" $name)
           "name=$name" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8

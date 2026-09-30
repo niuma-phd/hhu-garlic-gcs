@@ -9,7 +9,8 @@
   1. 天地图 18 级以上拉伸显示、地图最大缩放 22 级；
   2. 航线速度（`DO_CHANGE_SPEED`）对车辆开放；
   3. `QGCRadioButton` 字体 bug（上游把字号当字体名）；
-  4. 天地图矢量底图、注记图层（卫星 + 注记）。
+  4. 天地图矢量底图、注记图层（卫星 + 注记）；
+  5. `cmake/modules/Git.cmake` 取 QGC 版本号时排除产品发布 tag `hhu-*`。
 
 ## 功能概览
 
@@ -48,7 +49,7 @@ cmake --install build --config Release   :: 生成 NSIS 安装包（需安装 NS
 
 QGC 发现 `custom/` 目录会自动启用定制版（程序名 HHU-GCS）。
 
-CI：`.github/workflows/hhu-windows.yml`，推送 `hhu` 分支时编译并上传安装包；推送 `v*` tag 时发布 Release。
+CI：`.github/workflows/hhu-windows.yml`，推送 `hhu` 分支时编译并上传安装包；推送 `hhu-v*` tag（如 `hhu-v1.0.0`，与 `custom/CMakeLists.txt` 的 `HHU_APP_VERSION` 一致）时发布 Release。`v*` tag 是 QGC 自己的版本，`cmake/modules/Git.cmake` 取版本号时排除 `hhu-*`。
 
 ## 升级 QGC 版本
 
