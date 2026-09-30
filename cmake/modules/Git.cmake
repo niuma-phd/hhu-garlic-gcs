@@ -87,7 +87,8 @@ endif()
 # Extract Version String from Git Tags
 # ----------------------------------------------------------------------------
 execute_process(
-    COMMAND ${GIT_EXECUTABLE} describe --always --tags
+    # HHU: product release tags (hhu-v*) are not QGC versions and would break project(VERSION)
+    COMMAND ${GIT_EXECUTABLE} describe --always --tags --exclude "hhu-*"
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     OUTPUT_VARIABLE QGC_APP_VERSION_STR
     OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -110,7 +111,7 @@ endif()
 # Extract Clean Version Tag
 # ----------------------------------------------------------------------------
 execute_process(
-    COMMAND ${GIT_EXECUTABLE} describe --always --tags --abbrev=0
+    COMMAND ${GIT_EXECUTABLE} describe --always --tags --abbrev=0 --exclude "hhu-*"
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     OUTPUT_VARIABLE QGC_APP_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
