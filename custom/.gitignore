@@ -2,3 +2,6 @@
 .qmlls.ini
 __pycache__/
 translations/_merged_json_zh_CN.ts
+
+# compiled translations are part of the source (built by tools/i18n.py; the root .gitignore excludes *.qm)
+!res/i18n/*.qm
