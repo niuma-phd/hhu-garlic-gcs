@@ -140,6 +140,15 @@ QString HHU4GLink::serverHost() const
     return index >= 0 ? _configs[index].toMap().value(QStringLiteral("host")).toString() : QString();
 }
 
+QString HHU4GLink::caFile() const
+{
+    const int index = _activeIndex >= 0 ? _activeIndex : (_configs.isEmpty() ? -1 : 0);
+    if (index < 0 || !_configs[index].toMap().value(QStringLiteral("tls"), true).toBool()) {
+        return QString();
+    }
+    return _configs[index].toMap().value(QStringLiteral("caFile")).toString();
+}
+
 QVariantMap HHU4GLink::credentials() const
 {
     const QVariantMap c = _config(_activeIndex >= 0 ? _activeIndex : 0);

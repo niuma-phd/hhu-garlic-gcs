@@ -3,6 +3,7 @@
 #include "QGCPalette.h"
 #include "QGCMAVLink.h"
 #include "AppSettings.h"
+#include "APMMavlinkStreamRateSettings.h"
 #include "FlightMapSettings.h"
 #include "UnitsSettings.h"
 #include "QGCApplication.h"
@@ -188,6 +189,23 @@ void CustomPlugin::adjustSettingMetaData(const QString &settingsGroup, FactMetaD
         } else if (name == AppSettings::qLocaleLanguageName) {
             // First-run default only; still user selectable (中文 / English)
             metaData.setRawDefaultValue(QLocale::Chinese);
+        }
+    } else if (settingsGroup == APMMavlinkStreamRateSettings::settingsGroup) {
+        // 4G traffic is paid per GB: request only what the ground station shows. Raw sensors and
+        // RC channels are not used (no RC receiver on the vehicle); 4 Hz attitude / speed is
+        // enough for the map and status bar. Engineers use Mission Planner for tuning data.
+        if (name == APMMavlinkStreamRateSettings::streamRateRawSensorsName
+                || name == APMMavlinkStreamRateSettings::streamRateRCChannelsName) {
+            metaData.setRawDefaultValue(0);
+        } else if (name == APMMavlinkStreamRateSettings::streamRateExtendedStatusName) {
+            metaData.setRawDefaultValue(2);
+        } else if (name == APMMavlinkStreamRateSettings::streamRatePositionName) {
+            metaData.setRawDefaultValue(3);
+        } else if (name == APMMavlinkStreamRateSettings::streamRateExtra1Name
+                   || name == APMMavlinkStreamRateSettings::streamRateExtra2Name) {
+            metaData.setRawDefaultValue(4);
+        } else if (name == APMMavlinkStreamRateSettings::streamRateExtra3Name) {
+            metaData.setRawDefaultValue(1);
         }
     } else if (settingsGroup == LogManagerSettings::settingsGroup) {
         // Run logs are kept for after-sales (需求说明 V1.0 §5 日志, 7 days, see HHUService)

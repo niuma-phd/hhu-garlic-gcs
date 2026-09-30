@@ -59,6 +59,9 @@ public:
     Q_INVOKABLE void updateNtrip(const QVariantMap &ntrip);
     /// Server host of the active (or first) config, for the update / log upload service
     Q_INVOKABLE QString serverHost() const;
+    /// CA certificate file of the active (or first) config, so the update / log upload service
+    /// trusts the same server certificate as the 4G connection ("" = system CAs only)
+    Q_INVOKABLE QString caFile() const;
     Q_INVOKABLE QVariantMap credentials() const;
 
     /// Connects the last used 4G config if the 4G connection was on when the GCS closed
