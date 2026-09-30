@@ -195,6 +195,9 @@ QStringList QGCMapEngineManager::mapTypeList(const QString &provider)
 {
     QStringList mapStringList = mapList();
     mapStringList = mapStringList.filter(QRegularExpression(provider));
+    // HHU: TianDiTu annotation layers are overlays, not map types to choose
+    static const QRegularExpression tiandituLabels(QStringLiteral("^TianDiTu .* Labels$"));
+    (void) mapStringList.removeIf([](const QString &name) { return tiandituLabels.match(name).hasMatch(); });
 
     static const QRegularExpression providerType = QRegularExpression(uR"(^([^\ ]*) (.*)$)"_s);
     (void) mapStringList.replaceInStrings(providerType, "\\2");

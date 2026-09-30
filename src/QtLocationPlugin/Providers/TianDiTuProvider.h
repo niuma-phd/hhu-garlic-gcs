@@ -28,7 +28,7 @@ public:
     TianDiTuRoadProvider()
         : TianDiTuProvider(
             QObject::tr("TianDiTu Road"),
-            QStringLiteral("cia_w"),
+            QStringLiteral("vec_w"),    // HHU: vector base map (cia_w is the satellite annotation layer)
             QStringLiteral("png"),
             AVERAGE_TIANDITU_STREET_MAP,
             MapProvider::StreetMap) {}
@@ -44,4 +44,30 @@ public:
             QStringLiteral("jpg"),
             AVERAGE_TIANDITU_SAT_MAP,
             MapProvider::SatelliteMapDay) {}
+};
+
+// HHU: annotation layers (place names, roads) drawn over the base map by FlightMap.qml
+// (需求说明 V1.0 §3.4: 卫星 + 注记). Not offered as map types (QGCMapEngineManager::mapTypeList).
+class TianDiTuSatelliteLabelsProvider : public TianDiTuProvider
+{
+public:
+    TianDiTuSatelliteLabelsProvider()
+        : TianDiTuProvider(
+            QStringLiteral("TianDiTu Satellite Labels"),
+            QStringLiteral("cia_w"),
+            QStringLiteral("png"),
+            AVERAGE_TIANDITU_STREET_MAP,
+            MapProvider::CustomMap) {}
+};
+
+class TianDiTuRoadLabelsProvider : public TianDiTuProvider
+{
+public:
+    TianDiTuRoadLabelsProvider()
+        : TianDiTuProvider(
+            QStringLiteral("TianDiTu Road Labels"),
+            QStringLiteral("cva_w"),
+            QStringLiteral("png"),
+            AVERAGE_TIANDITU_STREET_MAP,
+            MapProvider::CustomMap) {}
 };

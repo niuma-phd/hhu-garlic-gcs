@@ -19,6 +19,37 @@ Map {
     onZoomLevelChanged: (level) => { if (level > _hhuMaxZoom) Qt.callLater(_hhuClampZoom) }
     function _hhuClampZoom() { if (zoomLevel > _hhuMaxZoom) zoomLevel = _hhuMaxZoom }
 
+    // HHU: TianDiTu annotation layer (place names, roads) over the base map, 需求说明 V1.0 §3.4
+    // 卫星 + 注记. A transparent second map following this one; switched in 通用 settings.
+    readonly property var _hhuLabelType: {
+        if (typeof hhuSettings === "undefined" || !hhuSettings.mapLabels || activeMapType.name.indexOf("TianDiTu") !== 0) {
+            return null
+        }
+        const wanted = activeMapType.name + " Labels"
+        for (let i = 0; i < _hhuLabels.supportedMapTypes.length; i++) {
+            if (_hhuLabels.supportedMapTypes[i].name === wanted) {
+                return _hhuLabels.supportedMapTypes[i]
+            }
+        }
+        return null
+    }
+    Map {
+        id:                 _hhuLabels
+        anchors.fill:       parent
+        z:                  1
+        plugin:             Plugin { name: "QGroundControl" }
+        enabled:            false
+        visible:            _map._hhuLabelType !== null
+        color:              "transparent"
+        copyrightsVisible:  false
+        center:             _map.center
+        zoomLevel:          _map.zoomLevel
+        bearing:            _map.bearing
+        tilt:               _map.tilt
+        fieldOfView:        _map.fieldOfView
+        activeMapType:      _map._hhuLabelType ? _map._hhuLabelType : supportedMapTypes[0]
+    }
+
     property string mapName:                        'defaultMap'
     property bool   isSatelliteMap:                 activeMapType.name.indexOf("Satellite") > -1 || activeMapType.name.indexOf("Hybrid") > -1
     property var    gcsPosition:                    QGroundControl.qgcPositionManger.gcsPosition

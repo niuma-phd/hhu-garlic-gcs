@@ -30,6 +30,8 @@ const QList<SharedMapProvider> UrlFactory::_providers = {
 
     std::make_shared<TianDiTuRoadProvider>(),
     std::make_shared<TianDiTuSatelliteProvider>(),
+    std::make_shared<TianDiTuSatelliteLabelsProvider>(),    // HHU: annotation overlay
+    std::make_shared<TianDiTuRoadLabelsProvider>(),         // HHU: annotation overlay
     std::make_shared<StatkartTopoMapProvider>(),
     std::make_shared<StatkartBaseMapProvider>(),
     std::make_shared<SvalbardMapProvider>(),
