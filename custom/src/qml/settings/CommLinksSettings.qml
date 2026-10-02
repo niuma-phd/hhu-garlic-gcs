@@ -174,6 +174,7 @@ SettingsPage {
 
         property int    editIndex: -1
         property bool   hasPassword: false
+        property bool   advanced:    false
 
         function openFor(index, config) {
             editIndex = index
@@ -183,6 +184,8 @@ SettingsPage {
             tlsSwitch.checked = config.tls !== false
             caEdit.text = config.caFile || ""
             vehicleEdit.text = config.vehicle || ""
+            // 服务器 / 端口 / 加密 / 证书 are set by after-sales: folded away unless still missing
+            advanced = hostEdit.text === ""
             passwordEdit.text = ""
             hasPassword = !!config.hasPassword
             showPassword.checked = false
@@ -236,29 +239,6 @@ SettingsPage {
             QGCLabel { text: qsTr("Name") }
             QGCTextField { id: nameEdit; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 30 }
 
-            QGCLabel { text: qsTr("Server address") }
-            QGCTextField { id: hostEdit; Layout.fillWidth: true; placeholderText: "gcs.example.com" }
-
-            QGCLabel { text: qsTr("Port") }
-            QGCTextField { id: portEdit; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 10; validator: IntValidator { bottom: 1; top: 65535 } }
-
-            QGCLabel { text: qsTr("Encryption (TLS)") }
-            QGCCheckBoxSlider { id: tlsSwitch }
-
-            QGCLabel {
-                Layout.columnSpan:  2
-                visible:            !tlsSwitch.checked
-                text:               qsTr("Without encryption the password is sent as plain text.")
-                color:              "#B42318"
-            }
-
-            QGCLabel { text: qsTr("CA certificate"); visible: tlsSwitch.checked }
-            RowLayout {
-                visible: tlsSwitch.checked
-                QGCTextField { id: caEdit; Layout.fillWidth: true; placeholderText: qsTr("Optional, for a private server") }
-                QGCButton { text: qsTr("Import…"); onClicked: caDialog.open() }
-            }
-
             QGCLabel { text: qsTr("Vehicle number") }
             QGCTextField { id: vehicleEdit; Layout.fillWidth: true }
 
@@ -271,6 +251,50 @@ SettingsPage {
                     placeholderText:    fourGDialog.hasPassword ? qsTr("Saved (leave empty to keep)") : ""
                 }
                 QGCCheckBox { id: showPassword; text: qsTr("Show") }
+            }
+
+            // encryption state in one line; details for after-sales below
+            QGCLabel {
+                Layout.columnSpan:  2
+                text:               tlsSwitch.checked ? (caEdit.text === "" ? qsTr("Encryption on · factory preset, nothing to set")
+                                                                            : qsTr("Encryption on · own certificate"))
+                                                      : qsTr("Encryption off")
+                color:              tlsSwitch.checked ? "#1E8E3E" : "#D32F2F"
+            }
+
+            QGCLabel {
+                Layout.columnSpan:  2
+                text:               (fourGDialog.advanced ? "▾ " : "▸ ") + qsTr("Advanced (after-sales)")
+                font.bold:          true
+                color:              "#004B97"
+                MouseArea {
+                    anchors.fill:   parent
+                    cursorShape:    Qt.PointingHandCursor
+                    onClicked:      fourGDialog.advanced = !fourGDialog.advanced
+                }
+            }
+
+            QGCLabel { text: qsTr("Server address"); visible: fourGDialog.advanced }
+            QGCTextField { id: hostEdit; visible: fourGDialog.advanced; Layout.fillWidth: true; placeholderText: "gcs.example.com" }
+
+            QGCLabel { text: qsTr("Port"); visible: fourGDialog.advanced }
+            QGCTextField { id: portEdit; visible: fourGDialog.advanced; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 10; validator: IntValidator { bottom: 1; top: 65535 } }
+
+            QGCLabel { text: qsTr("Encryption (TLS)"); visible: fourGDialog.advanced }
+            QGCCheckBoxSlider { id: tlsSwitch; visible: fourGDialog.advanced }
+
+            QGCLabel {
+                Layout.columnSpan:  2
+                visible:            fourGDialog.advanced && !tlsSwitch.checked
+                text:               qsTr("Without encryption the password is sent as plain text.")
+                color:              "#B42318"
+            }
+
+            QGCLabel { text: qsTr("CA certificate"); visible: fourGDialog.advanced && tlsSwitch.checked }
+            RowLayout {
+                visible: fourGDialog.advanced && tlsSwitch.checked
+                QGCTextField { id: caEdit; Layout.fillWidth: true; placeholderText: qsTr("Built in (factory preset)") }
+                QGCButton { text: qsTr("Import…"); onClicked: caDialog.open() }
             }
 
             RowLayout {

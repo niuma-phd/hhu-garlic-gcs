@@ -60,8 +60,11 @@ public:
     /// Server host of the active (or first) config, for the update / log upload service
     Q_INVOKABLE QString serverHost() const;
     /// CA certificate file of the active (or first) config, so the update / log upload service
-    /// trusts the same server certificate as the 4G connection ("" = system CAs only)
+    /// trusts the same server certificate as the 4G connection ("" = no TLS). Without an own file
+    /// the relay server CA built into the program is used.
     Q_INVOKABLE QString caFile() const;
+    /// The relay server CA built into the program (出厂预设)
+    static QString builtInCa() { return QStringLiteral(":/hhu/config/relay_ca.crt"); }
     Q_INVOKABLE QVariantMap credentials() const;
 
     /// Connects the last used 4G config if the 4G connection was on when the GCS closed

@@ -146,7 +146,8 @@ QString HHU4GLink::caFile() const
     if (index < 0 || !_configs[index].toMap().value(QStringLiteral("tls"), true).toBool()) {
         return QString();
     }
-    return _configs[index].toMap().value(QStringLiteral("caFile")).toString();
+    const QString file = _configs[index].toMap().value(QStringLiteral("caFile")).toString();
+    return file.isEmpty() ? builtInCa() : file;
 }
 
 QVariantMap HHU4GLink::credentials() const
@@ -250,12 +251,14 @@ void HHU4GLink::_openSocket()
 
     if (c.value(QStringLiteral("tls"), true).toBool()) {
         QSslConfiguration ssl = QSslConfiguration::defaultConfiguration();
-        const QString caFile = c.value(QStringLiteral("caFile")).toString();
-        if (!caFile.isEmpty()) {
-            QList<QSslCertificate> cas = ssl.caCertificates();
-            cas.append(QSslCertificate::fromPath(caFile.startsWith(QStringLiteral("file:")) ? QUrl(caFile).toLocalFile() : caFile));
-            ssl.setCaCertificates(cas);
+        // own CA file (售后 高级设置) or the relay server CA built into the program
+        QString caFile = c.value(QStringLiteral("caFile")).toString();
+        if (caFile.isEmpty()) {
+            caFile = builtInCa();
         }
+        QList<QSslCertificate> cas = ssl.caCertificates();
+        cas.append(QSslCertificate::fromPath(caFile.startsWith(QStringLiteral("file:")) ? QUrl(caFile).toLocalFile() : caFile));
+        ssl.setCaCertificates(cas);
         _socket->setSslConfiguration(ssl);
         (void) connect(_socket, &QSslSocket::encrypted, this, &HHU4GLink::_onConnected);
         (void) connect(_socket, &QSslSocket::sslErrors, this, [this](const QList<QSslError> &errors) {
