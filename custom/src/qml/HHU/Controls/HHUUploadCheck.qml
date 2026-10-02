@@ -79,42 +79,53 @@ Item {
         return points.slice(0, 15).map(p => p.seq).join(", ") + (points.length > 15 ? " …" : "")
     }
 
-    /// { errors: [...], warnings: [...] } (strings)
+    /// { errors: [...], warnings: [...] } (strings) and items: [{ t, error, step, look }] for the
+    /// 规划 check step (step: where to fix it, -1 = nothing to fix there; look: show it on the map)
     function check() {
         const points = _waypoints()
         let errors = []
         let warnings = []
+        let items = []
+        const add = (list, t, error, step, look) => { list.push(t); items.push({ t: t, error: error, step: step, look: !!look }) }
 
         if (hhu4G.active && hhu4G.readOnly) {
-            errors.push(qsTr("Read-only connection: another ground station controls this vehicle. The route can be edited and saved but not uploaded."))
+            add(errors, qsTr("Read-only connection: another ground station controls this vehicle. The route can be edited and saved but not uploaded."), true, -1)
         }
 
         if (!fence.hasInclusion()) {
-            errors.push(qsTr("The route has no geofence. Draw the field boundary as a geofence first."))
+            add(errors, qsTr("No field boundary. Draw the boundary first."), true, 1)
         } else {
             const outside = points.filter(p => !fence.contains(p.coordinate))
             if (outside.length > 0) {
-                errors.push(qsTr("Waypoints outside the geofence: %1").arg(_seqList(outside)))
+                add(errors, qsTr("Waypoints outside the boundary: %1").arg(_seqList(outside)), true, 2)
             }
         }
 
         const turnRadius = _turnRadius()
         const tight = _findTightTurns(points, turnRadius)
         if (tight.length > 0) {
-            warnings.push(qsTr("Turns too sharp for the vehicle (turn radius %1 m) at waypoints: %2 (marked red on the map)").arg(turnRadius.toFixed(1)).arg(_seqList(tight)))
+            add(warnings, qsTr("Turns too sharp for the vehicle (turn radius %1 m) at waypoints: %2 (marked red on the map)").arg(turnRadius.toFixed(1)).arg(_seqList(tight)), false, 2, true)
         }
 
         if (points.length > hhuSettings.maxWaypoints) {
-            warnings.push(qsTr("The route has %1 waypoints, more than the limit of %2.").arg(points.length).arg(hhuSettings.maxWaypoints))
+            add(warnings, qsTr("The route has %1 waypoints, more than the limit of %2.").arg(points.length).arg(hhuSettings.maxWaypoints), false, 2)
         }
 
         if (_vehicle && _vehicle.coordinate.isValid && points.length > 0) {
             const d = _vehicle.coordinate.distanceTo(points[0].coordinate)
             if (d > maxVehicleDistance) {
-                warnings.push(qsTr("The first waypoint is %1 km from the vehicle.").arg((d / 1000).toFixed(1)))
+                add(warnings, qsTr("The first waypoint is %1 km from the vehicle.").arg((d / 1000).toFixed(1)), false, -1)
             }
         }
-        return { errors: errors, warnings: warnings }
+        if (points.length === 0) {
+            add(errors, qsTr("No route. Add waypoints first."), true, 2)
+        }
+        if (!_vehicle) {
+            add(errors, qsTr("Not connected to the vehicle."), true, -1)
+        } else if (_vehicle.armed && _vehicle.flightMode === _vehicle.missionFlightMode) {
+            add(errors, qsTr("The vehicle is working on its route. Pause it or stop and lock it first."), true, -1)
+        }
+        return { errors: errors, warnings: warnings, items: items }
     }
 
     /// Runs the checks, then calls uploadFn directly, after the user confirms the warnings, or not at all

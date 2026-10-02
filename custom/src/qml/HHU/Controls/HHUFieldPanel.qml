@@ -50,6 +50,23 @@ Popup {
         })
     }
 
+    /// Name dialog: "new", "rename" or "saveNew" (used by the 规划 step panel)
+    function openNameDialog(mode, id, name) {
+        nameDialog.openFor(mode, id, name)
+    }
+
+    function confirmDelete(id, name) {
+        QGroundControl.showMessageDialog(root, qsTr("Delete field"),
+                                         qsTr("Delete field \"%1\" with its boundary and route?").arg(name),
+                                         Dialog.Yes | Dialog.Cancel,
+                                         function() {
+                                             if (id === hhuFields.currentId) {
+                                                 root.planMasterController.removeAll()
+                                             }
+                                             hhuFields.remove(id)
+                                         })
+    }
+
     /// Saves the editor contents into the open field; without one, asks for a new field
     function saveCurrent() {
         if (hhuFields.currentId === "") {
@@ -209,7 +226,7 @@ Popup {
                     QGCButton {
                         text:       qsTr("Delete")
                         onClicked:  QGroundControl.showMessageDialog(root, qsTr("Delete field"),
-                                                                     qsTr("Delete field \"%1\" with its boundary and route? Work records are kept.").arg(modelData.name),
+                                                                     qsTr("Delete field \"%1\" with its boundary and route?").arg(modelData.name),
                                                                      Dialog.Yes | Dialog.Cancel,
                                                                      function() { hhuFields.remove(modelData.id) })
                     }

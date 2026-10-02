@@ -22,6 +22,9 @@ Item {
 
     readonly property int   _decimalPlaces: 8
 
+    // HHU: waypoint labels show the selected item (规划) or the vehicle's current item (作业)
+    Binding { target: HHUState; property: "planPage"; value: _root.visible }
+
     function _hhuSkipTemplates() {
         if (_planMasterController.showCreateFromTemplate) {
             _planMasterController.userSelectedManualCreation = true
@@ -327,6 +330,9 @@ Item {
                         insertSimpleItemAfterCurrent(coordinate)
                     }
                     break
+                case _layerFence:
+                    hhuPlanPanel.boundaryClicked(coordinate)  // HHU: 画边界
+                    break
                 case _layerRally:
                     if (_rallyPointController.supported) {
                         _rallyPointController.addPoint(coordinate)
@@ -437,26 +443,26 @@ Item {
 
         //-----------------------------------------------------------
         // Left tool strip
-        HHUMapToolButton {
-            id: hhuWorkSwitch
-            anchors.margins: _toolsMargin
+        HHUPlanPanel {
+            id: hhuPlanPanel
             anchors.left: parent.left
             anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.margins: HHUStyle.margin * 0.75
             z: QGroundControl.zOrderWidgets
-            primary: true
-            text: qsTr("Work")
-            iconSource: "qrc:/hhu/tractor.svg"
-            onClicked: mainWindow.showFlyView()
+            planView: _root
+            planMasterController: planMasterController  // the PlanMasterController id: has the file dialogs
+            editorMap: editorMap
         }
 
         ToolStrip {
             id: toolStrip
+            visible: false  // HHU: replaced by the step panel
             anchors.margins: _toolsMargin
             anchors.left: parent.left
-            anchors.top: hhuWorkSwitch.bottom
+            anchors.top: parent.top
             z: QGroundControl.zOrderWidgets
             maxHeight: parent.height - toolStrip.y
-            visible: _editingLayer == _layerMission
 
             property bool _isMissionLayer: _editingLayer == _layerMission
 
@@ -556,32 +562,21 @@ Item {
 
         MapScale {
             anchors.margins: _toolsMargin
-            anchors.left: toolStrip.right
+            anchors.left: hhuPlanPanel.right
             anchors.top: parent.top
             mapControl: editorMap
             autoHide: true
         }
 
         HHUPlanSummary {
+            anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: _toolsMargin
-            x: Math.max(hhuVehiclePoints.x + hhuVehiclePoints.width + _toolsMargin, (rightPanel.x - width) / 2)
+            anchors.margins: HHUStyle.margin
             z: QGroundControl.zOrderWidgets
+            showRoute: hhuPlanPanel.step >= 2
             missionController: _missionController
             geoFenceController: _geoFenceController
             visible: _missionController.visualItems.count > 1 || _geoFenceController.polygons.count > 0
-        }
-
-        // 用车辆位置打点 (需求说明 V1.0 §3.3)
-        HHUVehiclePointTools {
-            id: hhuVehiclePoints
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            anchors.margins: _toolsMargin
-            z: QGroundControl.zOrderWidgets
-            planMasterController: _planMasterController
-            editorMap: editorMap
-            insertWaypoint: function(coordinate) { insertSimpleItemAfterCurrent(coordinate) }
         }
 
         // Waypoints where the vehicle cannot make the turn are ringed red (上传前检查)
@@ -614,10 +609,11 @@ Item {
 
         PlanViewRightPanel {
             id: rightPanel
+            visible: false  // HHU: the step panel edits the plan
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: _rightPanelWidth
+            width: 0  // HHU
             planMasterController: _planMasterController
             editorMap: editorMap
             onEditingLayerChangeRequested: (layer) => _editingLayer = layer
@@ -634,7 +630,7 @@ Item {
             width:                  layerRow.width
             height:                 _layerButtonSize
             z:                      QGroundControl.zOrderWidgets
-            visible:                !_planMasterController.showCreateFromTemplate
+            visible:                false  // HHU: the step chooses the layer
 
             property bool   expanded: false
             property real   _layerButtonSize: ScreenTools.defaultFontPixelHeight * 2.0

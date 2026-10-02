@@ -35,7 +35,7 @@ RowLayout {
     function _uploadClicked() {
         hhuUploadCheck.run(function() {
             _planMasterController.upload()
-            // 断点续作 / 作业记录 need to know which field is on the vehicle
+            // 断点续作 needs to know which field is on the vehicle
             hhuWork.setVehicleField(QGroundControl.multiVehicleManager.activeVehicle, hhuFields.currentId)
         })
     }
