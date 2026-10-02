@@ -6,7 +6,7 @@
 message(STATUS "QGC: Adding HHU Custom Plugin")
 
 # Product version (检查更新 compares against it; sent in the 4G login)
-set(HHU_APP_VERSION "1.0.1")
+set(HHU_APP_VERSION "1.0.2")
 
 # ============================================================================
 # Custom Resources
