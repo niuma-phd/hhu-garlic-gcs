@@ -60,7 +60,7 @@
         },
         {
             "prefix": "Mission: ",
-            "text": "航线：{rest}"
+            "text": "航线：前往第 {first} 点"
         },
         {
             "prefix": "Reached destination",
@@ -89,6 +89,10 @@
         {
             "prefix": "EKF3 IMU1 is using GPS",
             "text": "导航开始使用 GPS 定位"
+        },
+        {
+            "prefix": "Reached waypoint #",
+            "text": "已到达第 {rest} 点"
         }
     ],
     "preArm": [
@@ -190,7 +194,7 @@
         },
         {
             "prefix": "Polygon fence(s) invalid",
-            "text": "车上没有有效的电子围栏，请在航线页上传围栏"
+            "text": "车上没有有效的电子围栏，请在规划页上传围栏"
         },
         {
             "prefix": "Fence requires position",
@@ -281,14 +285,24 @@
             "port": 8002
         },
         {
+            "name": "中国移动",
+            "host": "sdk.pnt.10086.cn",
+            "port": 8002
+        },
+        {
             "name": "六分科技",
             "host": "rtk.sixents.com",
             "port": 8002
         },
         {
-            "name": "中国移动",
-            "host": "sdk.pnt.10086.cn",
-            "port": 8002
+            "name": "开普勒",
+            "host": "103.143.19.54",
+            "port": 8002,
+            "portNote": "8001 ITRF2008 · 8002 WGS84 · 8003 CGCS2000",
+            "mountpoints": [
+                "RTCM32_GRCpro",
+                "RTCM33_GRCEJpro"
+            ]
         }
     ],
     "server": {

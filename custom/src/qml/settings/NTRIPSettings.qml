@@ -119,6 +119,11 @@ SettingsPage {
                 if (index < hhuNtrip.providers.length) {
                     hostEdit.text = hhuNtrip.providers[index].host
                     portEdit.text = hhuNtrip.providers[index].port.toString()
+                    // providers with fixed mountpoints (hhu_config.json "mountpoints"): preselect the first
+                    const mounts = hhuNtrip.providers[index].mountpoints || []
+                    if (mounts.length > 0 && mounts.indexOf(mountEdit.text) < 0) {
+                        mountEdit.text = mounts[0]
+                    }
                 }
             }
         }

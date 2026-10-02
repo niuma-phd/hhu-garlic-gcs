@@ -108,6 +108,7 @@ QString HHUConfig::translateStatusText(const QString &text) const
         }
         result.replace(QStringLiteral("{fault}"), fault);
     }
+    result.replace(QStringLiteral("{first}"), rest.section(QLatin1Char(' '), 0, 0));
     result.replace(QStringLiteral("{rest}"), rest);
     return result;
 }
