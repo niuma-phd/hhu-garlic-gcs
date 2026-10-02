@@ -5,6 +5,7 @@
 #include "AppSettings.h"
 #include "APMMavlinkStreamRateSettings.h"
 #include "FlightMapSettings.h"
+#include "FlyViewSettings.h"
 #include "UnitsSettings.h"
 #include "QGCApplication.h"
 #include "JsonParsing.h"
@@ -31,6 +32,9 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtGui/QFont>
+#include <QtGui/QFontDatabase>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
@@ -217,6 +221,13 @@ void CustomPlugin::adjustSettingMetaData(const QString &settingsGroup, FactMetaD
         if (name == MavlinkSettings::telemetrySaveName || name == MavlinkSettings::telemetrySaveNotArmedName) {
             metaData.setRawDefaultValue(true);
         }
+    } else if (settingsGroup == FlyViewSettings::settingsGroup) {
+        // No upstream "开始任务 / 继续任务" slider popping up in the top bar: work is started and
+        // continued with the 作业 buttons (断点续作, command confirmation)
+        if (name == FlyViewSettings::enableAutomaticMissionPopupsName) {
+            metaData.setRawDefaultValue(false);
+            userVisible = false;
+        }
     } else if (settingsGroup == FlightMapSettings::settingsGroup) {
         // First-run default: 天地图卫星 (CGCS2000 ≈ WGS-84, no offset correction needed)
         if (name == FlightMapSettings::mapProviderName) {
@@ -332,6 +343,30 @@ bool CustomPlugin::_translateStatusText(Vehicle *vehicle, const mavlink_message_
     return false;
 }
 
+void CustomPlugin::_loadFonts()
+{
+    // UI font of the design: HarmonyOS Sans SC (text) and Barlow (numbers), shipped in fonts/ next to
+    // the executable. QGC renders everything in "Open Sans": once our fonts are there, its application
+    // fonts are dropped so "Open Sans" resolves through the substitution below to HarmonyOS Sans SC.
+    const QDir dir(QCoreApplication::applicationDirPath() + QStringLiteral("/fonts"));
+    const QStringList files = dir.entryList({ QStringLiteral("*.ttf") }, QDir::Files);
+    if (!dir.exists(QStringLiteral("HarmonyOS_Sans_SC_Regular.ttf"))) {
+        qCWarning(CustomLog) << "HarmonyOS Sans SC not found in" << dir.absolutePath() << "- keeping Open Sans";
+        return;
+    }
+    QFontDatabase::removeAllApplicationFonts();
+    for (const QString &file : files) {
+        if (QFontDatabase::addApplicationFont(dir.filePath(file)) < 0) {
+            qCWarning(CustomLog) << "cannot load font" << file;
+        }
+    }
+    QFont::removeSubstitutions(QStringLiteral("Open Sans"));
+    QFont::insertSubstitutions(QStringLiteral("Open Sans"), { QStringLiteral("HarmonyOS Sans SC"), QStringLiteral("Microsoft YaHei UI") });
+    QFont font = QGuiApplication::font();
+    font.setFamily(QStringLiteral("HarmonyOS Sans SC"));
+    QGuiApplication::setFont(font);
+}
+
 QList<PlanCreator *> CustomPlugin::planCreators(PlanMasterController *planMasterController)
 {
     return { new BlankPlanCreator(planMasterController) };
@@ -339,6 +374,7 @@ QList<PlanCreator *> CustomPlugin::planCreators(PlanMasterController *planMaster
 
 QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
 {
+    _loadFonts();
     _qmlEngine = QGCCorePlugin::createQmlApplicationEngine(parent);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuVcu"), _vcuStatus);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuSettings"), _hhuSettings);

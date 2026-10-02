@@ -12,6 +12,7 @@ Item {
     property string detail
     property color  dotColor:   "transparent"
     property bool   showDot:    true
+    property bool   clickable:  true
 
     signal clicked
 
@@ -22,7 +23,7 @@ Item {
         anchors.fill:       parent
         anchors.margins:    ScreenTools.defaultFontPixelHeight * 0.25
         radius:             ScreenTools.defaultFontPixelHeight * 0.3
-        color:              mouseArea.containsMouse ? "#1AFFFFFF" : "transparent"
+        color:              mouseArea.containsMouse && root.clickable ? "#1AFFFFFF" : "transparent"
     }
 
     RowLayout {
@@ -62,6 +63,7 @@ Item {
     MouseArea {
         id:             mouseArea
         anchors.fill:   parent
+        enabled:        root.clickable
         hoverEnabled:   true
         cursorShape:    Qt.PointingHandCursor
         onClicked:      root.clicked()

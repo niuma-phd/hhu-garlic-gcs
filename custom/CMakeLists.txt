@@ -27,6 +27,7 @@ qt_add_library(HHUControlsModule STATIC)
 
 file(GLOB HHU_CONTROLS_QML CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/qml/HHU/Controls/*.qml ${CMAKE_CURRENT_SOURCE_DIR}/src/qml/HHU/Controls/*.js)
 qgc_set_qt_resource_alias(${HHU_CONTROLS_QML})
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/src/qml/HHU/Controls/HHUStyle.qml ${CMAKE_CURRENT_SOURCE_DIR}/src/qml/HHU/Controls/HHUState.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(HHUControlsModule
     URI HHU.Controls
@@ -45,6 +46,13 @@ qt_add_qml_module(HHUControlsModule
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_config.json DESTINATION ${CMAKE_BINARY_DIR}/Release/config)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_config.json DESTINATION ${CMAKE_BINARY_DIR}/Debug/config)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_config.json DESTINATION ${CMAKE_INSTALL_BINDIR}/config)
+
+# UI fonts (HarmonyOS Sans SC, Barlow) next to the executable as fonts/ — loaded by CustomPlugin.
+# HarmonyOS Sans: bundled unmodified with its license as the license requires (no subsetting).
+file(GLOB HHU_FONT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/fonts/*)
+file(COPY ${HHU_FONT_FILES} DESTINATION ${CMAKE_BINARY_DIR}/Release/fonts)
+file(COPY ${HHU_FONT_FILES} DESTINATION ${CMAKE_BINARY_DIR}/Debug/fonts)
+install(FILES ${HHU_FONT_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR}/fonts)
 
 # ============================================================================
 # Custom Plugin Sources

@@ -105,5 +105,13 @@ SettingsPage {
                        + "MAVLink (MIT License) and map data from TianDiTu (<a href=\"https://www.tianditu.gov.cn\">tianditu.gov.cn</a>). "
                        + "The source code of the open source parts is available on request.")
         }
+
+        // Required by the HarmonyOS Sans Fonts License (fonts/HarmonyOS_Sans_LICENSE.txt)
+        QGCLabel {
+            Layout.fillWidth:       true
+            Layout.maximumWidth:    ScreenTools.defaultFontPixelWidth * 70
+            wrapMode:               Text.WordWrap
+            text: qsTr("Fonts: this software uses HarmonyOS Sans Fonts (© Huawei Device Co., Ltd., HarmonyOS Sans Fonts License Agreement) and Barlow (SIL Open Font License 1.1).")
+        }
     }
 }

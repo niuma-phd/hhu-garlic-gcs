@@ -23,6 +23,12 @@
         <file alias="QGroundControl/PlanView/PlanTreeView.qml">src/qml/generated/PlanTreeView.qml</file>
         <file alias="QGroundControl/PlanView/MissionItemEditor.qml">src/qml/generated/MissionItemEditor.qml</file>
         <file alias="QGroundControl/PlanView/PlanToolBarIndicators.qml">src/qml/generated/PlanToolBarIndicators.qml</file>
+        <file alias="QGroundControl/Controls/QGCPopupDialog.qml">src/qml/generated/QGCPopupDialog.qml</file>
+        <file alias="QGroundControl/PlanView/MissionItemIndexLabel.qml">src/qml/generated/MissionItemIndexLabel.qml</file>
+        <file alias="QGroundControl/PlanView/GeoFenceMapVisuals.qml">src/qml/generated/GeoFenceMapVisuals.qml</file>
+        <file alias="QGroundControl/FlightMap/MapItems/VehicleMapItem.qml">src/qml/VehicleMapItem.qml</file>
+        <file alias="QGroundControl/FlightMap/MapItems/MissionLineView.qml">src/qml/MissionLineView.qml</file>
+        <file alias="QGroundControl/FlightMap/MapItems/QGCMapPolygonVisuals.qml">src/qml/generated/QGCMapPolygonVisuals.qml</file>
     </qresource>
     <qresource prefix="/Custom/res">
         <file alias="QGCLogoFull.svg">res/images/hhu_logo_small.svg</file>
@@ -33,9 +39,28 @@
         <file alias="hhu_logo.svg">res/images/hhu_logo_small.svg</file>
         <file alias="hhu_emblem.png">res/images/hhu_emblem.png</file>
         <file alias="tractor.svg">res/images/tractor.svg</file>
+        <file alias="vehicle_top.svg">res/images/vehicle_top.svg</file>
+        <file alias="vehicle_top_lost.svg">res/images/vehicle_top_lost.svg</file>
         <file alias="i18n/hhu_source_zh_CN.qm">res/i18n/hhu_source_zh_CN.qm</file>
         <file alias="i18n/hhu_json_zh_CN.qm">res/i18n/hhu_json_zh_CN.qm</file>
         <file alias="config/hhu_config.json">res/config/hhu_config.json</file>
+        <file alias="config/relay_ca.crt">res/config/relay_ca.crt</file>
         <file alias="sounds/alarm.wav">res/sounds/alarm.wav</file>
+        <file alias="icons/arrow.svg">res/icons/ui/arrow.svg</file>
+        <file alias="icons/bell.svg">res/icons/ui/bell.svg</file>
+        <file alias="icons/check.svg">res/icons/ui/check.svg</file>
+        <file alias="icons/close.svg">res/icons/ui/close.svg</file>
+        <file alias="icons/info.svg">res/icons/ui/info.svg</file>
+        <file alias="icons/link.svg">res/icons/ui/link.svg</file>
+        <file alias="icons/locate.svg">res/icons/ui/locate.svg</file>
+        <file alias="icons/lock.svg">res/icons/ui/lock.svg</file>
+        <file alias="icons/mute.svg">res/icons/ui/mute.svg</file>
+        <file alias="icons/pause.svg">res/icons/ui/pause.svg</file>
+        <file alias="icons/pin.svg">res/icons/ui/pin.svg</file>
+        <file alias="icons/play.svg">res/icons/ui/play.svg</file>
+        <file alias="icons/return.svg">res/icons/ui/return.svg</file>
+        <file alias="icons/settings.svg">res/icons/ui/settings.svg</file>
+        <file alias="icons/trash.svg">res/icons/ui/trash.svg</file>
+        <file alias="icons/warning.svg">res/icons/ui/warning.svg</file>
     </qresource>
 </RCC>

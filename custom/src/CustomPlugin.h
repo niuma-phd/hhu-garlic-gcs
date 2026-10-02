@@ -101,6 +101,8 @@ public:
     bool mavlinkMessage(Vehicle *vehicle, LinkInterface *link, const mavlink_message_t &message) final;
     /// Installs the QML override interceptor
     QQmlApplicationEngine *createQmlApplicationEngine(QObject *parent) final;
+    /// HarmonyOS Sans SC / Barlow from fonts/ next to the executable, replacing QGC's Open Sans
+    void _loadFonts();
     /// Releases the url interceptor attached in createQmlApplicationEngine before the engine is destroyed
     void destroyQmlApplicationEngine(QQmlApplicationEngine *qmlEngine) final;
 
