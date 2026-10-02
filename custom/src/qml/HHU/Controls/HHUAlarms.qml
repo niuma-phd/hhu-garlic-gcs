@@ -7,82 +7,116 @@ import QtMultimedia
 import QGroundControl
 import QGroundControl.Controls
 
-/// Alarms of the 作业 page (需求说明 V1.0 §3.6).
-/// - Banner + repeating sound while an alarm is active and not yet confirmed (知道了):
-///   link lost, chassis link lost, RTK fixed lost while working, low battery, chassis fault.
-/// - Link lost: map label at the vehicle's last position with the time since the last data.
-/// - Link back: notice with outage length and vehicle state; the route is reloaded from the vehicle.
+/// Alarm banners of the 作业 page (设计稿 5.3, 需求说明 V1.0 §3.6), top center, one line title + at
+/// most one line of text, at most two at a time (the most severe first; all are in the message list too).
+///   提示 (info):     light blue, blue border, one beep          - link restored, view only
+///   注意 (warning):  yellow, dark text, beep every 30 s         - battery low, position lost while working,
+///                                                                 chassis data lost
+///   危险 (danger):   red, white text, beeps until tapped (mute) - link lost, chassis fault
+/// Link lost: label at the vehicle's last position. Link back: the route is reloaded from the vehicle.
 Item {
     id: root
 
-    property var planMasterController
-    property var mapControl
+    property var  planMasterController
+    property var  mapControl
+    property real maxWidth: 640
 
-    implicitWidth:  messages.implicitWidth
-    implicitHeight: messages.implicitHeight
+    implicitWidth:  column.implicitWidth
+    implicitHeight: column.implicitHeight
 
     HHUStatus { id: status }
 
     /// Working (AUTO) when the link was lost - the vehicle keeps driving the route without us
-    property bool _workingAtLoss: false
-    /// Alarm ids the user confirmed; an id is dropped again once its alarm clears
-    property var  _acked: ({})
+    property bool _workingAtLoss:   false
+    /// Danger alarm ids the user muted; an id is dropped again once its alarm clears
+    property var  _muted:           ({})
+    property bool _restoredShown:   false
+    property real _lostSince:       0
+    property int  _lostSeconds:     0
+
+    function _fmtDuration(sec) {
+        const m = Math.floor(sec / 60)
+        return m > 0 ? qsTr("%1 min %2 s").arg(m).arg(sec % 60) : qsTr("%1 s").arg(sec)
+    }
 
     readonly property var activeAlarms: {
         let list = []
         if (status.linkLost) {
-            list.push({ id: "link", text: _workingAtLoss
-                        ? qsTr("Link to the vehicle lost. The vehicle is still driving the route automatically. To stop it now, use the emergency stop button on the vehicle or the remote control.")
-                        : qsTr("Link to the vehicle lost (no data for %1 s).").arg(hhuLink.silentSec) })
-        }
-        if (status.connected && hhuVcu.seen && !hhuVcu.valid) {
-            list.push({ id: "chassisLink", text: qsTr("Chassis communication lost.") })
-        }
-        if (status.connected && status.inAuto && !status.rtkFixed) {
-            list.push({ id: "rtk", text: qsTr("RTK fixed solution lost while working (now: %1).").arg(status.fixText) })
-        }
-        if (status.connected && !isNaN(status.batteryPct) && status.batteryPct < hhuSettings.lowBatteryPct) {
-            list.push({ id: "battery", text: qsTr("Battery low: %1% (alarm below %2%).").arg(status.batteryPct.toFixed(0)).arg(hhuSettings.lowBatteryPct) })
+            list.push({ id: "link", level: 2,
+                        title: qsTr("Link lost %1").arg(_fmtDuration(_lostSeconds)),
+                        text: _workingAtLoss ? qsTr("The vehicle is still working. To stop it, press the emergency stop on the vehicle.")
+                                             : qsTr("Waiting for the vehicle to come back.") })
         }
         if (status.faultText !== "") {
-            list.push({ id: "fault", text: qsTr("Chassis fault: %1").arg(status.faultText) })
+            const desc = hhuConfig.faultText(hhuVcu.fault)
+            list.push({ id: "fault", level: 2,
+                        title: desc !== "" ? qsTr("Chassis fault: %1").arg(desc) : qsTr("Chassis fault %1").arg(status.faultText),
+                        text: qsTr("Clear the fault on the vehicle, then tap \"Continue\".") })
+        }
+        if (status.connected && hhuVcu.seen && !hhuVcu.valid) {
+            list.push({ id: "chassisLink", level: 1, title: qsTr("No data from the chassis"), text: qsTr("Check the chassis cable and power.") })
+        }
+        if (status.connected && status.inAuto && !status.rtkFixed) {
+            list.push({ id: "rtk", level: 1, title: qsTr("Position poor while working"), text: qsTr("The vehicle may leave the route. Watch it or pause.") })
+        }
+        if (status.connected && !isNaN(status.batteryPct) && status.batteryPct < hhuSettings.lowBatteryPct) {
+            list.push({ id: "battery", level: 1, title: qsTr("Battery low %1%, please come back to charge").arg(status.batteryPct.toFixed(0)), text: "" })
+        }
+        if (status.readOnly) {
+            list.push({ id: "readOnly", level: 0, title: qsTr("View only"), text: qsTr("Another ground station controls this vehicle.") })
+        }
+        if (status.routeDone) {
+            list.push({ id: "done", level: 0, title: qsTr("Work done"), text: qsTr("The whole route is driven. Return to start or stop and lock the vehicle.") })
+        }
+        if (_restoredShown && status.connected) {
+            list.push({ id: "restored", level: 0, title: qsTr("Link restored"), text: qsTr("Lost for %1. Vehicle: %2.").arg(_fmtDuration(hhuLink.lastOutageSec)).arg(status.modeText) })
         }
         return list
     }
 
-    readonly property var shownAlarms: activeAlarms.filter(a => !_acked[a.id])
+    readonly property var shownAlarms: activeAlarms.slice().sort((a, b) => b.level - a.level).slice(0, 2)
 
     onActiveAlarmsChanged: {
-        // Forget confirmations of alarms that have cleared, so they sound again next time
+        // Forget mutes of alarms that have cleared, so they sound again next time
         const active = activeAlarms.map(a => a.id)
-        let acked = {}
+        let muted = {}
         let changed = false
-        for (const id in _acked) {
+        for (const id in _muted) {
             if (active.indexOf(id) >= 0) {
-                acked[id] = true
+                muted[id] = true
             } else {
                 changed = true
             }
         }
         if (changed) {
-            _acked = acked
+            _muted = muted
         }
+        // a new alarm: info beeps once, warning starts its 30 s cycle
+        for (const a of activeAlarms) {
+            if (_known.indexOf(a.id) < 0) {
+                alarmSound.play()
+                warningTimer.restart()
+            }
+        }
+        _known = active
+    }
+    property var _known: []
+
+    function _mute(id) {
+        let muted = Object.assign({}, _muted)
+        muted[id] = true
+        _muted = muted
     }
 
-    function _ackAll() {
-        let acked = Object.assign({}, _acked)
-        for (const a of shownAlarms) {
-            acked[a.id] = true
-        }
-        _acked = acked
-    }
+    readonly property bool _dangerSounding: activeAlarms.some(a => a.level === 2 && !_muted[a.id])
+    readonly property bool _warningActive:  activeAlarms.some(a => a.level === 1)
 
     Connections {
         target: QGroundControl.multiVehicleManager
         function onActiveVehicleChanged(vehicle) {
             hhuVcu.reset()
-            root._acked = {}
-            notice.visible = false
+            root._muted = {}
+            root._restoredShown = false
         }
     }
 
@@ -91,13 +125,21 @@ Item {
         function onLinkLostChanged() {
             if (status.linkLost) {
                 root._workingAtLoss = status.inAuto
-                notice.visible = false
-                hhuWork.linkInterrupted()   // 作业记录: 中断次数
+                root._restoredShown = false
+                root._lostSince = Date.now() - hhuLink.silentSec * 1000
+                root._lostSeconds = hhuLink.silentSec
             } else if (status.vehicle) {
                 // Let fresh telemetry arrive before reporting the vehicle state
                 recoveredTimer.restart()
             }
         }
+    }
+
+    Timer {
+        interval:   1000
+        repeat:     true
+        running:    status.linkLost
+        onTriggered: root._lostSeconds = Math.round((Date.now() - root._lostSince) / 1000)
     }
 
     Timer {
@@ -107,9 +149,8 @@ Item {
             if (!status.connected) {
                 return
             }
-            notice.text = qsTr("Link restored after %1 s. Vehicle state: %2.").arg(hhuLink.lastOutageSec).arg(status.modeText)
-            notice.visible = true
-            noticeTimer.restart()
+            root._restoredShown = true
+            restoredTimer.restart()
             if (root.planMasterController && !root.planMasterController.syncInProgress) {
                 root.planMasterController.loadFromVehicle()
             }
@@ -117,9 +158,9 @@ Item {
     }
 
     Timer {
-        id:         noticeTimer
+        id:         restoredTimer
         interval:   10000
-        onTriggered: notice.visible = false
+        onTriggered: root._restoredShown = false
     }
 
     // ---- Sound ---------------------------------------------------------------------------
@@ -131,99 +172,108 @@ Item {
         muted:      QGroundControl.settingsManager.appSettings.audioMuted.rawValue
     }
 
+    // 危险: continuous
     Timer {
-        interval:           4000
-        repeat:             true
-        triggeredOnStart:   true
-        running:            root.shownAlarms.length > 0
-        onTriggered:        alarmSound.play()
+        interval:   4000
+        repeat:     true
+        running:    root._dangerSounding
+        onTriggered: alarmSound.play()
     }
 
+    // 注意: every 30 s
+    Timer {
+        id:         warningTimer
+        interval:   30000
+        repeat:     true
+        running:    root._warningActive && !root._dangerSounding
+        onTriggered: alarmSound.play()
+    }
+
+    // ---- Banners -------------------------------------------------------------------------
+
     Column {
-        id:         messages
-        spacing:    ScreenTools.defaultFontPixelHeight * 0.5
+        id:         column
+        spacing:    8 * HHUStyle.s
 
-        // ---- Banner --------------------------------------------------------------------------
+        Repeater {
+            model: root.shownAlarms
 
-        Rectangle {
-            id:             banner
-            visible:        root.shownAlarms.length > 0
-            width:          Math.min(ScreenTools.defaultFontPixelWidth * 70 * hhuSettings.fontScale, root.parent ? root.parent.width * 0.6 : 600)
-            height:         bannerRow.implicitHeight + ScreenTools.defaultFontPixelHeight
-            radius:         ScreenTools.defaultFontPixelHeight * 0.4
-            color:          "#B42318"
-            border.color:   "white"
-            border.width:   hhuSettings.highContrast ? 3 : 1
+            HHUCard {
+                id:     banner
+                width:  Math.min(HHUStyle.bannerW, root.maxWidth)
+                height: bannerRow.implicitHeight + 24 * HHUStyle.s
+                radius: 12 * HHUStyle.s
+                color:          modelData.level === 2 ? HHUStyle.red : (modelData.level === 1 ? HHUStyle.yellow : HHUStyle.blueLight)
+                border.color:   modelData.level === 0 ? HHUStyle.blue : "transparent"
+                border.width:   modelData.level === 0 ? 2 : 0
 
-            RowLayout {
-                id:                 bannerRow
-                anchors.fill:       parent
-                anchors.margins:    ScreenTools.defaultFontPixelHeight * 0.5
-                spacing:            ScreenTools.defaultFontPixelWidth
+                readonly property color _fg: modelData.level === 2 ? "white" : (modelData.level === 1 ? HHUStyle.yellowText : HHUStyle.text)
+                readonly property bool  _muted: !!root._muted[modelData.id]
 
-                QGCColoredImage {
-                    source:                 "/InstrumentValueIcons/exclamation-outline.svg"
-                    color:                  "white"
-                    Layout.alignment:       Qt.AlignTop
-                    Layout.preferredHeight: ScreenTools.defaultFontPixelHeight * 1.6 * hhuSettings.fontScale
-                    Layout.preferredWidth:  Layout.preferredHeight
-                    sourceSize.height:      Layout.preferredHeight
-                }
+                RowLayout {
+                    id:                 bannerRow
+                    anchors.left:       parent.left
+                    anchors.right:      parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 16 * HHUStyle.s
+                    anchors.rightMargin: 12 * HHUStyle.s
+                    spacing:            14 * HHUStyle.s
 
-                ColumnLayout {
-                    Layout.fillWidth:   true
-                    spacing:            ScreenTools.defaultFontPixelHeight * 0.3
-
-                    Repeater {
-                        model: root.shownAlarms
-                        QGCLabel {
-                            Layout.fillWidth:   true
-                            text:               modelData.text
-                            color:              "white"
-                            font.bold:          true
-                            font.pointSize:     ScreenTools.mediumFontPointSize * hhuSettings.fontScale
-                            wrapMode:           Text.WordWrap
+                    Rectangle {
+                        Layout.preferredWidth:  40 * HHUStyle.s
+                        Layout.preferredHeight: Layout.preferredWidth
+                        radius:                 width / 2
+                        color:                  modelData.level === 0 ? HHUStyle.blue : "white"
+                        HHUIcon {
+                            anchors.centerIn:   parent
+                            name:               modelData.level === 0 ? "info" : "warning"
+                            size:               22
+                            color:              modelData.level === 2 ? HHUStyle.red : (modelData.level === 1 ? "#8A5A00" : "white")
                         }
+                    }
+
+                    ColumnLayout {
+                        Layout.fillWidth:   true
+                        spacing:            2
+                        HHUText {
+                            Layout.fillWidth:   true
+                            text:               modelData.title
+                            size:               19
+                            bold:               true
+                            color:              banner._fg
+                            elide:              Text.ElideRight
+                        }
+                        HHUText {
+                            Layout.fillWidth:   true
+                            visible:            modelData.text !== ""
+                            text:               modelData.text
+                            size:               16
+                            color:              banner._fg
+                            wrapMode:           Text.WordWrap
+                            maximumLineCount:   2
+                            elide:              Text.ElideRight
+                        }
+                    }
+
+                    // 危险: tap to mute
+                    HHUIcon {
+                        visible:    modelData.level === 2
+                        name:       "mute"
+                        size:       24
+                        color:      "white"
+                        opacity:    banner._muted ? 0.45 : 1
                     }
                 }
 
-                QGCButton {
-                    Layout.alignment:   Qt.AlignVCenter
-                    text:               qsTr("OK")
-                    onClicked:          root._ackAll()
+                MouseArea {
+                    anchors.fill:   parent
+                    enabled:        modelData.level === 2
+                    cursorShape:    Qt.PointingHandCursor
+                    onClicked:      root._mute(modelData.id)
                 }
             }
         }
-
-        // ---- Link restored notice ------------------------------------------------------------
-
-        Rectangle {
-            id:             notice
-            visible:        false
-            width:          Math.min(noticeLabel.implicitWidth, ScreenTools.defaultFontPixelWidth * 70 * hhuSettings.fontScale) + ScreenTools.defaultFontPixelHeight
-            height:         noticeLabel.implicitHeight + ScreenTools.defaultFontPixelHeight
-            radius:         ScreenTools.defaultFontPixelHeight * 0.4
-            color:          "#1F8A3B"
-
-            property alias text: noticeLabel.text
-
-            QGCLabel {
-                id:                 noticeLabel
-                anchors.centerIn:   parent
-                width:              Math.min(implicitWidth, ScreenTools.defaultFontPixelWidth * 70 * hhuSettings.fontScale)
-                color:              "white"
-                font.bold:          true
-                font.pointSize:     ScreenTools.mediumFontPointSize * hhuSettings.fontScale
-                wrapMode:           Text.WordWrap
-            }
-
-            MouseArea {
-                anchors.fill:   parent
-                onClicked:      notice.visible = false
-            }
-        }
-
-    } // Column
+    }
 
     // ---- Last known position while the link is lost -------------------------------------
 
@@ -232,22 +282,31 @@ Item {
         visible:        status.linkLost && !!status.vehicle && status.vehicle.coordinate.isValid
         coordinate:     status.vehicle ? status.vehicle.coordinate : QtPositioning.coordinate()
         anchorPoint.x:  sourceItem.width / 2
-        anchorPoint.y:  -ScreenTools.defaultFontPixelHeight * 1.5   // below the vehicle icon
+        anchorPoint.y:  -36 * HHUStyle.s   // below the vehicle icon and its ring
         z:              QGroundControl.zOrderMapItems + 1
 
         sourceItem: Rectangle {
-            width:      lastPositionLabel.implicitWidth + ScreenTools.defaultFontPixelWidth * 2
-            height:     lastPositionLabel.implicitHeight + ScreenTools.defaultFontPixelHeight * 0.4
-            radius:     height / 4
-            color:      "#E6B42318"
+            width:      lastPositionColumn.implicitWidth + 20 * HHUStyle.s
+            height:     lastPositionColumn.implicitHeight + 10 * HHUStyle.s
+            radius:     6 * HHUStyle.s
+            color:      HHUStyle.red
 
-            QGCLabel {
-                id:                 lastPositionLabel
+            Column {
+                id:                 lastPositionColumn
                 anchors.centerIn:   parent
-                text:               qsTr("Last position (%1 s ago)").arg(hhuLink.silentSec)
-                color:              "white"
-                font.bold:          true
-                font.pointSize:     ScreenTools.defaultFontPointSize * hhuSettings.fontScale
+                HHUText {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text:   qsTr("Last position")
+                    size:   14
+                    bold:   true
+                    color:  "white"
+                }
+                HHUText {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text:   new Date(root._lostSince).toLocaleTimeString(Qt.locale(), "HH:mm:ss") + " · " + qsTr("%1 ago").arg(root._fmtDuration(root._lostSeconds))
+                    size:   14
+                    color:  "white"
+                }
             }
         }
     }

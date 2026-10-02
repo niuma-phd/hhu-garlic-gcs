@@ -6,13 +6,14 @@ import QtQuick.Dialogs
 import QGroundControl
 import QGroundControl.Controls
 import QGroundControl.PlanView
+import HHU.Controls
 
-// HHU override of QGroundControl/Toolbar/PlanViewToolBar.qml (brand block replaces the QGC logo button)
+// HHU override of QGroundControl/Toolbar/PlanViewToolBar.qml: HHU status bar + upstream mission sync progress
 Rectangle {
     id: _root
     width: parent.width
-    height: ScreenTools.toolbarHeight
-    color: qgcPal.toolbarBackground
+    height: HHUStyle.barH
+    color: "white"
 
     property var planMasterController
     property bool showRallyPointsHelp: false
@@ -24,98 +25,13 @@ Rectangle {
 
     QGCPalette { id: qgcPal }
 
-    /// Bottom single pixel divider
-    Rectangle {
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: 1
-        color: "black"
-        visible: qgcPal.globalTheme === QGCPalette.Light
+    // Same vehicle status bar as the 作业 page; the plan actions sit on the map (PlanView)
+    HHUStatusBar {
+        anchors.fill: parent
+        page: "plan"
     }
 
-    // HHU brand block (replaces the QGC logo button): opens the 作业 / 航线 / 设置 menu
-    Rectangle {
-        id: qgcButton
-        objectName: "toolbar_qgcLogo"
-        height: parent.height
-        width: brandRow.implicitWidth + ScreenTools.defaultFontPixelWidth * 2
-        color: "#004B97"
-
-        RowLayout {
-            id: brandRow
-            anchors.centerIn: parent
-            spacing: ScreenTools.defaultFontPixelWidth * 0.8
-
-            Image {
-                source: "qrc:/hhu/hhu_logo.svg"
-                sourceSize.height: _root.height * 0.8
-                Layout.preferredHeight: _root.height * 0.8
-                Layout.preferredWidth: Layout.preferredHeight
-                fillMode: Image.PreserveAspectFit
-            }
-            QGCLabel {
-                text: qsTr("Route planning")
-                color: "white"
-                font.bold: true
-                font.pointSize: ScreenTools.mediumFontPointSize
-            }
-            QGCColoredImage {
-                source: "/InstrumentValueIcons/cheveron-down.svg"
-                color: "white"
-                height: ScreenTools.defaultFontPixelHeight * 0.8
-                width: height
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: mainWindow.showToolSelectDialog()
-        }
-    }
-
-    QGCFlickable {
-        id: toolsFlickable
-        anchors.bottomMargin: 1
-        anchors.left: qgcButton.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: settingsButton.left
-        contentWidth: toolIndicators.width
-        flickableDirection: Flickable.HorizontalFlick
-
-        PlanToolBarIndicators {
-            id: toolIndicators
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            planMasterController: _root.planMasterController
-            showRallyPointsHelp: _root.showRallyPointsHelp
-            onToolbarButtonClicked: _root.toolbarButtonClicked()
-        }
-    }
-
-    // Settings (需求说明 §3.1: gear at the right of the top bar)
-    QGCColoredImage {
-        id: settingsButton
-        anchors.right: parent.right
-        anchors.rightMargin: ScreenTools.defaultFontPixelWidth * 1.5
-        anchors.verticalCenter: parent.verticalCenter
-        height: parent.height * 0.45
-        width: height
-        sourceSize.height: height
-        source: "/InstrumentValueIcons/cog.svg"
-        color: "#004B97"
-
-        MouseArea {
-            anchors.fill: parent
-            anchors.margins: -_root.height * 0.15
-            cursorShape: Qt.PointingHandCursor
-            onClicked: mainWindow.showSettingsTool()
-        }
-    }
-
-        // Small mission download progress bar
+    // Small mission download progress bar
     Rectangle {
         id: progressBar
         anchors.left: parent.left

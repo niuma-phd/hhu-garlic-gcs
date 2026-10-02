@@ -23,6 +23,8 @@ QtObject {
     readonly property bool  inPause:        !!vehicle && flightMode === vehicle.pauseFlightMode
     readonly property bool  inReturn:       !!vehicle && (flightMode === vehicle.rtlFlightMode || flightMode === vehicle.smartRTLFlightMode)
     readonly property bool  inGuided:       !!vehicle && flightMode === vehicle.gotoFlightMode
+    /// The route was driven to its end; the vehicle waits there (Rover holds in AUTO) until 停车上锁 / 返回
+    readonly property bool  routeDone:      !!vehicle && armed && hhuWork.completed && !inReturn && !inGuided
 
     /// Link kind shown in the status bar: 4G / 串口 / 局域网 / 蓝牙
     readonly property string linkTypeText: {
@@ -59,6 +61,7 @@ QtObject {
     readonly property string modeText: {
         if (!vehicle)   return qsTr("Offline")
         if (!armed)     return qsTr("Standby")
+        if (routeDone)  return qsTr("Done")
         if (inAuto)     return qsTr("Working")
         if (inPause)    return qsTr("Paused")
         if (inReturn)   return qsTr("Returning")
