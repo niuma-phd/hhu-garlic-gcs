@@ -7,7 +7,7 @@ import QGroundControl.Controls
 import HHU.Controls
 
 // HHU override of QGroundControl/Toolbar/SelectViewDropdown.qml
-// Only 作业 / 航线 / 作业记录 / 设置 / 退出. Vehicle setup and analyze tools are engineer-only (Mission Planner).
+// Only 作业 / 规划 / 设置 / 退出. Vehicle setup and analyze tools are engineer-only (Mission Planner).
 ToolIndicatorPage {
     id: root
 
@@ -44,18 +44,6 @@ ToolIndicatorPage {
                         mainWindow.closeIndicatorDrawer()
                         mainWindow.showPlanView()
                     }
-                }
-            }
-
-            SubMenuButton {
-                objectName: "toolbar_workRecords"
-                implicitHeight: root._toolButtonHeight
-                Layout.fillWidth: true
-                text: qsTr("Work records")
-                imageResource: "/InstrumentValueIcons/list.svg"
-                onClicked: {
-                    mainWindow.closeIndicatorDrawer()
-                    hhuWork.requestShowRecords()   // the window lives on the 作业 page
                 }
             }
 

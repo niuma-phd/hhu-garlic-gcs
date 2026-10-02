@@ -112,8 +112,8 @@ SettingsPage {
         const now = new Date()
         switch (index) {
         case 0: {
-            const last = hhuWork.records.length > 0 ? hhuWork.records[0] : null
-            if (last) {
+            const last = hhuWork.lastRun
+            if (last.start && last.end) {
                 // A few minutes around the run: logs are written just before / after
                 return [ new Date(new Date(last.start).getTime() - 10 * 60000), new Date(new Date(last.end).getTime() + 10 * 60000) ]
             }
