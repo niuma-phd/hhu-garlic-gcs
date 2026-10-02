@@ -2,6 +2,33 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
   <context>
+    <name>AppSettings</name>
+    <message>
+      <source>About</source>
+      <translation>关于</translation>
+    </message>
+    <message>
+      <source>After-sales settings</source>
+      <translation>售后设置</translation>
+    </message>
+    <message>
+      <source>Connection</source>
+      <translation>连接</translation>
+    </message>
+    <message>
+      <source>General</source>
+      <translation>通用</translation>
+    </message>
+    <message>
+      <source>Map</source>
+      <translation>地图</translation>
+    </message>
+    <message>
+      <source>RTK</source>
+      <translation>差分定位</translation>
+    </message>
+  </context>
+  <context>
     <name>CommLinksSettings</name>
     <message>
       <source> (retry in %1 s)</source>
@@ -460,6 +487,10 @@
   </context>
   <context>
     <name>HHUAboutSettings</name>
+    <message>
+      <source>After-sales settings ›</source>
+      <translation>售后设置 ›</translation>
+    </message>
     <message>
       <source>Based on QGroundControl</source>
       <translation>基于 QGroundControl</translation>
@@ -1759,6 +1790,77 @@ Next time you can continue where it stopped.</source>
     </message>
     <message>
       <source>Type</source>
+      <translation type="unfinished" />
+    </message>
+  </context>
+  <context>
+    <name>MainWindow</name>
+    <message>
+      <source>Active Vehicle Connections</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Additional errors received</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Advanced Mode</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Analyze Tools</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Application Settings</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Click Ok to reboot the vehicle now.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Debug Touch Areas</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Pending Parameter Updates</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Please correct the invalid value before continuing</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>There are still active connections to vehicles. Are you sure you want to exit?</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Touch Area display toggled</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Turn off Advanced Mode?</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Unsaved Mission</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Vehicle Configuration</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Vehicle Error</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>You have a mission edit in progress which has not been saved/uploaded. If you close you will lose changes. Are you sure you want to close?</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>You have pending parameter updates to a vehicle. If you close you will lose changes. Are you sure you want to close?</source>
       <translation type="unfinished" />
     </message>
   </context>

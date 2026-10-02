@@ -24,6 +24,10 @@
         <file alias="QGroundControl/PlanView/MissionItemEditor.qml">src/qml/generated/MissionItemEditor.qml</file>
         <file alias="QGroundControl/PlanView/PlanToolBarIndicators.qml">src/qml/generated/PlanToolBarIndicators.qml</file>
         <file alias="QGroundControl/Controls/QGCPopupDialog.qml">src/qml/generated/QGCPopupDialog.qml</file>
+        <file alias="QGroundControl/Controls/SettingsGroupLayout.qml">src/qml/generated/SettingsGroupLayout.qml</file>
+        <file alias="QGroundControl/Controls/AppSettings.qml">src/qml/AppSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/SettingsPage.qml">src/qml/generated/SettingsPage.qml</file>
+        <file alias="QGroundControl/MainWindow.qml">src/qml/generated/MainWindow.qml</file>
         <file alias="QGroundControl/PlanView/MissionItemIndexLabel.qml">src/qml/generated/MissionItemIndexLabel.qml</file>
         <file alias="QGroundControl/PlanView/GeoFenceMapVisuals.qml">src/qml/generated/GeoFenceMapVisuals.qml</file>
         <file alias="QGroundControl/FlightMap/MapItems/VehicleMapItem.qml">src/qml/VehicleMapItem.qml</file>

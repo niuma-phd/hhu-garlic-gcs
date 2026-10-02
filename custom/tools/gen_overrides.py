@@ -54,6 +54,57 @@ def add_import(module):
 
 
 OVERRIDES = {
+    # Settings pages: content left-aligned under the page title (设计稿 6a), at most 820 px wide
+    "AppSettings/SettingsPage.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""            x:          Math.max(0, root.width / 2 - width / 2)
+            width:      Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 50)
+""", """            x:          0
+            width:      Math.min(Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 50), Math.max(820 * HHUStyle.s, root.width * 0.6))
+"""),
+    ],
+    # Settings (设计稿 6a): the top bar keeps only 作业 / 规划 (none highlighted), no back button or title
+    "MainWindow/MainWindow.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""            height:         ScreenTools.toolbarHeight
+            color:          qgcPal.toolbarBackground
+
+            RowLayout {
+                id:                 toolDrawerToolbarLayout
+""", """            height:         HHUStyle.barH
+            color:          "white"
+
+            HHUStatusBar {
+                anchors.fill:   parent
+                page:           "settings"
+            }
+
+            RowLayout {
+                id:                 toolDrawerToolbarLayout
+                visible:            false  // HHU
+"""),
+    ],
+    # Settings groups (设计稿 6a–6d): white cards with a light border on the grey settings page
+    "QmlControls/SettingsGroupLayout.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""    property string defaultBorderColor  : QGroundControl.globalPalette.groupBorder
+""", """    property string defaultBorderColor  : HHUStyle.settingsBorder
+"""),
+        replace_once("""        color:              "transparent"
+        border.color:       outerBorderColor
+        border.width:       showBorder ? 1 : 0
+        radius:             ScreenTools.defaultFontPixelHeight / 2
+""", """        color:              showBorder ? "white" : "transparent"
+        border.color:       outerBorderColor
+        border.width:       showBorder ? 1 : 0
+        radius:             12 * HHUStyle.s
+"""),
+        replace_once("""                height:     1
+                color:      QGroundControl.globalPalette.groupBorder
+""", """                height:     1
+                color:      HHUStyle.divider
+"""),
+    ],
     # Boundary editing: drag handles only, no polygon tool bar (Basic / Circular / Trace / KML)
     "FlightMap/MapItems/QGCMapPolygonVisuals.qml": [
         replace_once("""    function addToolbarVisuals() {

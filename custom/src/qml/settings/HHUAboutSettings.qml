@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import QGroundControl
 import QGroundControl.Controls
 import QGroundControl.AppSettings
+import HHU.Controls
 
 // 关于 (需求说明 V1.0 §3.4): version, build date, 检查更新 (§3.8), open source notices,
 // location of the editable tables.
@@ -113,5 +114,14 @@ SettingsPage {
             wrapMode:               Text.WordWrap
             text: qsTr("Fonts: this software uses HarmonyOS Sans Fonts (© Huawei Device Co., Ltd., HarmonyOS Sans Fonts License Agreement) and Barlow (SIL Open Font License 1.1).")
         }
+    }
+
+    // 高级 (指令超时、告警阈值、航点上限、上传日志、流量统计) for after-sales
+    HHUButton {
+        Layout.alignment:   Qt.AlignLeft
+        text:               qsTr("After-sales settings ›")
+        kind:               "plain"
+        size:               16
+        onClicked:          mainWindow.showSettingsTool("Advanced")
     }
 }
