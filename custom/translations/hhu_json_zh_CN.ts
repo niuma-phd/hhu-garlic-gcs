@@ -2331,7 +2331,7 @@
     </message>
     <message>
       <source>Plan View</source>
-      <translation>航线页</translation>
+      <translation>规划页</translation>
     </message>
     <message>
       <source>Remote ID</source>

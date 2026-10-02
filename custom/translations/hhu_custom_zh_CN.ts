@@ -32,12 +32,20 @@
       <translation>新增 4G 连接</translation>
     </message>
     <message>
+      <source>Advanced (after-sales)</source>
+      <translation>高级（售后填写）</translation>
+    </message>
+    <message>
       <source>All files (*)</source>
       <translation>所有文件 (*)</translation>
     </message>
     <message>
       <source>Automatic connection</source>
       <translation>自动连接</translation>
+    </message>
+    <message>
+      <source>Built in (factory preset)</source>
+      <translation>内置（出厂预设）</translation>
     </message>
     <message>
       <source>CA certificate</source>
@@ -88,6 +96,18 @@
       <translation>加密 (TLS)</translation>
     </message>
     <message>
+      <source>Encryption off</source>
+      <translation>加密已关闭</translation>
+    </message>
+    <message>
+      <source>Encryption on · factory preset, nothing to set</source>
+      <translation>加密已开启 · 出厂预设，无需设置</translation>
+    </message>
+    <message>
+      <source>Encryption on · own certificate</source>
+      <translation>加密已开启 · 使用自选证书</translation>
+    </message>
+    <message>
       <source>Import…</source>
       <translation>导入…</translation>
     </message>
@@ -102,10 +122,6 @@
     <message>
       <source>Name</source>
       <translation>名称</translation>
-    </message>
-    <message>
-      <source>Optional, for a private server</source>
-      <translation>可选，自建服务器时导入</translation>
     </message>
     <message>
       <source>Password</source>
@@ -247,129 +263,30 @@
     </message>
   </context>
   <context>
-    <name>FlyViewToolBar</name>
-    <message>
-      <source>%1 V</source>
-      <translation>%1 V</translation>
-    </message>
-    <message>
-      <source>%1 ms</source>
-      <translation>%1 毫秒</translation>
-    </message>
-    <message>
-      <source>%1 new</source>
-      <translation>%1 条新消息</translation>
-    </message>
-    <message>
-      <source>%1 sats · HDOP %2</source>
-      <translation>%1 颗卫星 · HDOP %2</translation>
-    </message>
-    <message>
-      <source>4G connecting</source>
-      <translation>4G 连接中</translation>
-    </message>
-    <message>
-      <source>Armed</source>
-      <translation>已解锁</translation>
-    </message>
-    <message>
-      <source>Auto</source>
-      <translation>自动</translation>
-    </message>
-    <message>
-      <source>Battery %1%</source>
-      <translation>电量 %1%</translation>
-    </message>
-    <message>
-      <source>Chassis</source>
-      <translation>底盘</translation>
-    </message>
-    <message>
-      <source>Chassis fault</source>
-      <translation>底盘故障</translation>
-    </message>
-    <message>
-      <source>Chassis not ready</source>
-      <translation>底盘未就绪</translation>
-    </message>
-    <message>
-      <source>Chassis ready</source>
-      <translation>底盘就绪</translation>
-    </message>
-    <message>
-      <source>Connected</source>
-      <translation>已连接</translation>
-    </message>
-    <message>
-      <source>Connected, read only</source>
-      <translation>已连接（只读）</translation>
-    </message>
-    <message>
-      <source>Disarmed</source>
-      <translation>已上锁</translation>
-    </message>
-    <message>
-      <source>Link lost</source>
-      <translation>信号中断</translation>
-    </message>
-    <message>
-      <source>Loss %1%</source>
-      <translation>丢包 %1%</translation>
-    </message>
-    <message>
-      <source>Manual</source>
-      <translation>手动</translation>
-    </message>
-    <message>
-      <source>Messages</source>
-      <translation>消息</translation>
-    </message>
-    <message>
-      <source>Mode %1</source>
-      <translation>模式 %1</translation>
-    </message>
-    <message>
-      <source>No data</source>
-      <translation>无数据</translation>
-    </message>
-    <message>
-      <source>Not connected</source>
-      <translation>未连接</translation>
-    </message>
-    <message>
-      <source>Remote control</source>
-      <translation>遥控</translation>
-    </message>
-    <message>
-      <source>Tap to connect</source>
-      <translation>点击连接</translation>
-    </message>
-  </context>
-  <context>
     <name>FlyViewWidgetLayer</name>
     <message>
       <source>Clear track</source>
-      <translation>清除轨迹</translation>
+      <translation>清轨迹</translation>
     </message>
     <message>
-      <source>Download and install now? The ground station closes for the installation.</source>
-      <translation>现在下载并安装吗？安装时地面站会关闭。</translation>
+      <source>Download and install</source>
+      <translation>下载安装</translation>
     </message>
     <message>
-      <source>Locate vehicle</source>
-      <translation>定位车辆</translation>
+      <source>Find vehicle</source>
+      <translation>找车</translation>
     </message>
     <message>
-      <source>Route</source>
-      <translation>航线</translation>
+      <source>Later</source>
+      <translation>以后再说</translation>
     </message>
     <message>
-      <source>Software update</source>
-      <translation>软件更新</translation>
+      <source>New version %1</source>
+      <translation>发现新版本 %1</translation>
     </message>
     <message>
-      <source>Version %1 is available.</source>
-      <translation>有新版本 %1。</translation>
+      <source>The ground station closes for the installation.</source>
+      <translation>安装时地面站会关闭。作业中不会打断。</translation>
     </message>
   </context>
   <context>
@@ -453,6 +370,13 @@
     <message>
       <source>Units</source>
       <translation>单位</translation>
+    </message>
+  </context>
+  <context>
+    <name>GeoFenceMapVisuals</name>
+    <message>
+      <source>B</source>
+      <translation type="unfinished" />
     </message>
   </context>
   <context>
@@ -559,6 +483,10 @@
     <message>
       <source>Download and install</source>
       <translation>下载并安装</translation>
+    </message>
+    <message>
+      <source>Fonts: this software uses HarmonyOS Sans Fonts (© Huawei Device Co., Ltd., HarmonyOS Sans Fonts License Agreement) and Barlow (SIL Open Font License 1.1).</source>
+      <translation>字体：本软件使用 HarmonyOS Sans 字体（© 华为终端有限公司，HarmonyOS Sans 字体许可协议）和 Barlow 字体（SIL Open Font License 1.1）。</translation>
     </message>
     <message>
       <source>Hohai University Garlic Seeder Ground Station</source>
@@ -707,40 +635,88 @@
   <context>
     <name>HHUAlarms</name>
     <message>
-      <source>Battery low: %1% (alarm below %2%).</source>
-      <translation>电量低：%1%（低于 %2% 告警）。</translation>
+      <source>%1 ago</source>
+      <translation>%1前</translation>
     </message>
     <message>
-      <source>Chassis communication lost.</source>
-      <translation>底盘通信中断。</translation>
+      <source>%1 min %2 s</source>
+      <translation>%1分%2秒</translation>
+    </message>
+    <message>
+      <source>%1 s</source>
+      <translation>%1秒</translation>
+    </message>
+    <message>
+      <source>Another ground station controls this vehicle.</source>
+      <translation>另一台地面站正在控制这辆车。</translation>
+    </message>
+    <message>
+      <source>Battery low %1%, please come back to charge</source>
+      <translation>电量低 %1%，请回来充电</translation>
+    </message>
+    <message>
+      <source>Chassis fault %1</source>
+      <translation>底盘故障 %1</translation>
     </message>
     <message>
       <source>Chassis fault: %1</source>
       <translation>底盘故障：%1</translation>
     </message>
     <message>
-      <source>Last position (%1 s ago)</source>
-      <translation>最后位置（%1 秒前）</translation>
+      <source>Check the chassis cable and power.</source>
+      <translation>检查底盘连线和电源。</translation>
     </message>
     <message>
-      <source>Link restored after %1 s. Vehicle state: %2.</source>
-      <translation>连接已恢复，中断 %1 秒，车辆当前状态：%2。</translation>
+      <source>Clear the fault on the vehicle, then tap "Continue".</source>
+      <translation>排除故障后点“继续”。</translation>
     </message>
     <message>
-      <source>Link to the vehicle lost (no data for %1 s).</source>
-      <translation>与车辆连接中断（%1 秒未收到数据）。</translation>
+      <source>Last position</source>
+      <translation>最后位置</translation>
     </message>
     <message>
-      <source>Link to the vehicle lost. The vehicle is still driving the route automatically. To stop it now, use the emergency stop button on the vehicle or the remote control.</source>
-      <translation>与车辆失去连接，车辆仍在按航线自动作业。如需立即停车，请使用车上急停按钮或遥控器。</translation>
+      <source>Link lost %1</source>
+      <translation>信号中断 %1</translation>
     </message>
     <message>
-      <source>OK</source>
-      <translation>知道了</translation>
+      <source>Link restored</source>
+      <translation>信号已恢复</translation>
     </message>
     <message>
-      <source>RTK fixed solution lost while working (now: %1).</source>
-      <translation>作业中 RTK 掉固定解（当前：%1）。</translation>
+      <source>Lost for %1. Vehicle: %2.</source>
+      <translation>中断了 %1，车辆：%2。</translation>
+    </message>
+    <message>
+      <source>No data from the chassis</source>
+      <translation>底盘没有数据</translation>
+    </message>
+    <message>
+      <source>Position poor while working</source>
+      <translation>作业中定位变差</translation>
+    </message>
+    <message>
+      <source>The vehicle is still working. To stop it, press the emergency stop on the vehicle.</source>
+      <translation>车仍在自动作业。要停车，请按车上急停。</translation>
+    </message>
+    <message>
+      <source>The vehicle may leave the route. Watch it or pause.</source>
+      <translation>车可能偏离航线，请留意或暂停。</translation>
+    </message>
+    <message>
+      <source>The whole route is driven. Return to start or stop and lock the vehicle.</source>
+      <translation>整条航线已走完。可以返回起点，或停车上锁。</translation>
+    </message>
+    <message>
+      <source>View only</source>
+      <translation>只能查看</translation>
+    </message>
+    <message>
+      <source>Waiting for the vehicle to come back.</source>
+      <translation>正在等车辆重新连上。</translation>
+    </message>
+    <message>
+      <source>Work done</source>
+      <translation>作业完成</translation>
     </message>
   </context>
   <context>
@@ -792,8 +768,8 @@
       <translation>删除地块</translation>
     </message>
     <message>
-      <source>Delete field "%1" with its boundary and route? Work records are kept.</source>
-      <translation>删除地块“%1”及其边界和航线吗？作业记录会保留。</translation>
+      <source>Delete field "%1" with its boundary and route?</source>
+      <translation>删除地块“%1”及其边界和航线？</translation>
     </message>
     <message>
       <source>Enter a name.</source>
@@ -859,16 +835,28 @@
   <context>
     <name>HHUGotoHere</name>
     <message>
+      <source>%1 m from the vehicle</source>
+      <translation>离车 %1 m</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
       <source>Command not executed</source>
       <translation>指令未执行</translation>
     </message>
     <message>
-      <source>Distance %1 m. </source>
-      <translation>距离 %1 米。</translation>
+      <source>Drive</source>
+      <translation>开过去</translation>
     </message>
     <message>
       <source>Drive here</source>
       <translation>开到这里</translation>
+    </message>
+    <message>
+      <source>Drive here?</source>
+      <translation>开到这里？</translation>
     </message>
     <message>
       <source>Link lost</source>
@@ -883,14 +871,6 @@
       <translation>只读连接</translation>
     </message>
     <message>
-      <source>Slide to drive</source>
-      <translation>滑动开往</translation>
-    </message>
-    <message>
-      <source>Target</source>
-      <translation>目标点</translation>
-    </message>
-    <message>
       <source>The point is outside the geofence.</source>
       <translation>该点在电子围栏外。</translation>
     </message>
@@ -899,55 +879,66 @@
       <translation>车辆没有执行“%1”，请检查车辆状态后重试。</translation>
     </message>
     <message>
-      <source>The vehicle will drive straight to this point and stop there. Tap Pause to stop it earlier.</source>
-      <translation>车辆将直线驶向该点，到达后停车。中途可点“暂停”停车。</translation>
-    </message>
-    <message>
       <source>There is no geofence on the vehicle. Upload the field boundary first.</source>
       <translation>车上没有电子围栏，请先上传地块边界。</translation>
     </message>
   </context>
   <context>
+    <name>HHUMessageList</name>
+    <message>
+      <source>Clear</source>
+      <translation>清空</translation>
+    </message>
+    <message>
+      <source>Messages</source>
+      <translation>消息</translation>
+    </message>
+    <message>
+      <source>No messages</source>
+      <translation>没有消息</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUMissionProgress</name>
     <message>
-      <source>%1 h %2 min</source>
-      <translation>%1 小时 %2 分</translation>
+      <source>%1 waypoints</source>
+      <translation>%1 个航点</translation>
     </message>
     <message>
-      <source>%1 km</source>
-      <translation>%1 千米</translation>
+      <source>All %1 waypoints driven</source>
+      <translation>%1 个航点全部走完</translation>
     </message>
     <message>
-      <source>%1 m</source>
-      <translation>%1 米</translation>
+      <source>Done</source>
+      <translation>已完成</translation>
     </message>
     <message>
-      <source>%1 m/s</source>
-      <translation>%1 m/s</translation>
+      <source>Route on the vehicle</source>
+      <translation>车上航线</translation>
     </message>
     <message>
-      <source>%1 min</source>
-      <translation>%1 分钟</translation>
+      <source>To target point</source>
+      <translation>前往目标点</translation>
     </message>
     <message>
-      <source>Distance left</source>
-      <translation>剩余距离</translation>
+      <source>Waypoint %1/%2</source>
+      <translation>航点 %1/%2</translation>
     </message>
     <message>
-      <source>Heading</source>
-      <translation>航向</translation>
+      <source>about</source>
+      <translation>约</translation>
     </message>
     <message>
-      <source>Speed</source>
-      <translation>车速</translation>
+      <source>left</source>
+      <translation>还剩</translation>
     </message>
     <message>
-      <source>Time left</source>
-      <translation>剩余时间</translation>
+      <source>m</source>
+      <translation>米</translation>
     </message>
     <message>
-      <source>Waypoint</source>
-      <translation>航点</translation>
+      <source>min</source>
+      <translation>分钟</translation>
     </message>
   </context>
   <context>
@@ -982,6 +973,137 @@
     </message>
   </context>
   <context>
+    <name>HHUPlanPanel</name>
+    <message>
+      <source>%1 items to fix</source>
+      <translation>%1 项要修改</translation>
+    </message>
+    <message>
+      <source>+ New field</source>
+      <translation>+ 新建地块</translation>
+    </message>
+    <message>
+      <source>Add a point at the vehicle</source>
+      <translation>在车的位置加点</translation>
+    </message>
+    <message>
+      <source>Add a waypoint at the vehicle</source>
+      <translation>在车的位置加航点</translation>
+    </message>
+    <message>
+      <source>Back</source>
+      <translation>上一步</translation>
+    </message>
+    <message>
+      <source>Boundary</source>
+      <translation>画边界</translation>
+    </message>
+    <message>
+      <source>Check</source>
+      <translation>检查上传</translation>
+    </message>
+    <message>
+      <source>Check passed</source>
+      <translation>检查通过</translation>
+    </message>
+    <message>
+      <source>Clear</source>
+      <translation>清空</translation>
+    </message>
+    <message>
+      <source>Copy</source>
+      <translation>复制</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Export</source>
+      <translation>导出</translation>
+    </message>
+    <message>
+      <source>Field</source>
+      <translation>选地块</translation>
+    </message>
+    <message>
+      <source>Fix</source>
+      <translation>去修改</translation>
+    </message>
+    <message>
+      <source>Go to work</source>
+      <translation>去作业</translation>
+    </message>
+    <message>
+      <source>Import</source>
+      <translation>导入</translation>
+    </message>
+    <message>
+      <source>Next</source>
+      <translation>下一步</translation>
+    </message>
+    <message>
+      <source>No fields yet. Create one, or import a route / KML file.</source>
+      <translation>还没有地块。新建一个，或导入航线 / KML 文件。</translation>
+    </message>
+    <message>
+      <source>Rename</source>
+      <translation>改名</translation>
+    </message>
+    <message>
+      <source>Route</source>
+      <translation>排航线</translation>
+    </message>
+    <message>
+      <source>Search fields</source>
+      <translation>搜地块</translation>
+    </message>
+    <message>
+      <source>Show</source>
+      <translation>看位置</translation>
+    </message>
+    <message>
+      <source>Speed</source>
+      <translation>速度</translation>
+    </message>
+    <message>
+      <source>Tap the map to add a point · drag to change</source>
+      <translation>点地图加点 · 拖动修改</translation>
+    </message>
+    <message>
+      <source>Tap the map to add a waypoint · drag to change</source>
+      <translation>点地图加航点 · 拖动修改</translation>
+    </message>
+    <message>
+      <source>Tight turns, boundary, waypoint count and connection are all fine.</source>
+      <translation>急弯、边界、航点数、连接都正常。</translation>
+    </message>
+    <message>
+      <source>Undo</source>
+      <translation>撤销</translation>
+    </message>
+    <message>
+      <source>Upload to vehicle</source>
+      <translation>上传到车</translation>
+    </message>
+    <message>
+      <source>Uploaded to the vehicle</source>
+      <translation>已上传到车</translation>
+    </message>
+    <message>
+      <source>Uploading…</source>
+      <translation>正在上传…</translation>
+    </message>
+    <message>
+      <source>points (at least 3)</source>
+      <translation>个点（至少 3 个）</translation>
+    </message>
+    <message>
+      <source>waypoints</source>
+      <translation>个航点</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUPlanSummary</name>
     <message>
       <source>%1 h %2 min</source>
@@ -1000,20 +1122,28 @@
       <translation>%1 分钟</translation>
     </message>
     <message>
-      <source>Estimated time</source>
-      <translation>预计时间</translation>
+      <source>Area</source>
+      <translation>面积</translation>
     </message>
     <message>
-      <source>Field area</source>
-      <translation>地块面积</translation>
+      <source>Length</source>
+      <translation>全长</translation>
     </message>
     <message>
-      <source>Total length</source>
-      <translation>总长度</translation>
+      <source>Time</source>
+      <translation>用时</translation>
     </message>
     <message>
       <source>Waypoints</source>
-      <translation>航点数</translation>
+      <translation>航点</translation>
+    </message>
+    <message>
+      <source>min</source>
+      <translation>分</translation>
+    </message>
+    <message>
+      <source>pcs</source>
+      <translation>个</translation>
     </message>
   </context>
   <context>
@@ -1117,44 +1247,48 @@
   <context>
     <name>HHUStartDialog</name>
     <message>
+      <source>%1 waypoints</source>
+      <translation>%1 个航点</translation>
+    </message>
+    <message>
       <source>Cancel</source>
       <translation>取消</translation>
     </message>
     <message>
-      <source>Field: %1. </source>
-      <translation>地块：%1。</translation>
+      <source>Choose another waypoint ›</source>
+      <translation>选其他航点 ›</translation>
+    </message>
+    <message>
+      <source>Continue last run</source>
+      <translation>接着上次</translation>
+    </message>
+    <message>
+      <source>From the beginning</source>
+      <translation>从头开始</translation>
+    </message>
+    <message>
+      <source>From waypoint %1</source>
+      <translation>从第 %1 点开始</translation>
+    </message>
+    <message>
+      <source>No record for this field</source>
+      <translation>这块地没有中断记录</translation>
+    </message>
+    <message>
+      <source>Nobody is near the vehicle</source>
+      <translation>车周围没有人</translation>
     </message>
     <message>
       <source>Slide to start</source>
-      <translation>滑动开始</translation>
+      <translation>右滑开始</translation>
     </message>
     <message>
-      <source>Start from</source>
-      <translation>起点</translation>
+      <source>Start from waypoint</source>
+      <translation>从第几点开始</translation>
     </message>
     <message>
       <source>Start work</source>
       <translation>开始作业</translation>
-    </message>
-    <message>
-      <source>The first waypoint</source>
-      <translation>从第一个航点开始</translation>
-    </message>
-    <message>
-      <source>The vehicle will arm and drive the uploaded route (%1 waypoints). Make sure nobody is near the vehicle.</source>
-      <translation>车辆将解锁并按车上航线（%1 个航点）行驶，请确认车辆周围无人。</translation>
-    </message>
-    <message>
-      <source>Waypoint</source>
-      <translation>从指定航点开始</translation>
-    </message>
-    <message>
-      <source>Where work last stopped (no record for this field)</source>
-      <translation>从上次中断处继续（该地块没有中断记录）</translation>
-    </message>
-    <message>
-      <source>Where work last stopped (waypoint %1)</source>
-      <translation>从上次中断处继续（第 %1 个航点）</translation>
     </message>
   </context>
   <context>
@@ -1164,8 +1298,12 @@
       <translation>蓝牙</translation>
     </message>
     <message>
+      <source>Done</source>
+      <translation>已完成</translation>
+    </message>
+    <message>
       <source>Going to target</source>
-      <translation>前往目标点</translation>
+      <translation>去目标点</translation>
     </message>
     <message>
       <source>LAN</source>
@@ -1221,10 +1359,200 @@
     </message>
   </context>
   <context>
+    <name>HHUStatusBar</name>
+    <message>
+      <source>Chassis not ready</source>
+      <translation>底盘未就绪</translation>
+    </message>
+    <message>
+      <source>Connected</source>
+      <translation>已连接</translation>
+    </message>
+    <message>
+      <source>Connecting</source>
+      <translation>连接中</translation>
+    </message>
+    <message>
+      <source>Done</source>
+      <translation>已完成</translation>
+    </message>
+    <message>
+      <source>Fault</source>
+      <translation>故障</translation>
+    </message>
+    <message>
+      <source>Link lost</source>
+      <translation>信号中断</translation>
+    </message>
+    <message>
+      <source>Manual</source>
+      <translation>手动</translation>
+    </message>
+    <message>
+      <source>No position</source>
+      <translation>无定位</translation>
+    </message>
+    <message>
+      <source>Not connected</source>
+      <translation>未连接</translation>
+    </message>
+    <message>
+      <source>Paused</source>
+      <translation>已暂停</translation>
+    </message>
+    <message>
+      <source>Plan</source>
+      <translation>规划</translation>
+    </message>
+    <message>
+      <source>Position good</source>
+      <translation>定位好</translation>
+    </message>
+    <message>
+      <source>Position poor</source>
+      <translation>定位差</translation>
+    </message>
+    <message>
+      <source>Returning</source>
+      <translation>返回中</translation>
+    </message>
+    <message>
+      <source>Standby</source>
+      <translation>待机</translation>
+    </message>
+    <message>
+      <source>To target</source>
+      <translation>去目标点</translation>
+    </message>
+    <message>
+      <source>View only</source>
+      <translation>只能查看</translation>
+    </message>
+    <message>
+      <source>Weak signal</source>
+      <translation>信号弱</translation>
+    </message>
+    <message>
+      <source>Work</source>
+      <translation>作业</translation>
+    </message>
+    <message>
+      <source>Working</source>
+      <translation>作业中</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUStatusDetail</name>
+    <message>
+      <source>%1 V</source>
+      <translation>%1 V</translation>
+    </message>
+    <message>
+      <source>%1 ms</source>
+      <translation>%1 毫秒</translation>
+    </message>
+    <message>
+      <source>Alarm below</source>
+      <translation>低于此值告警</translation>
+    </message>
+    <message>
+      <source>Another ground station controls the vehicle</source>
+      <translation>另一台地面站正在控制</translation>
+    </message>
+    <message>
+      <source>Battery</source>
+      <translation>电量</translation>
+    </message>
+    <message>
+      <source>Connection</source>
+      <translation>连接</translation>
+    </message>
+    <message>
+      <source>Connection settings</source>
+      <translation>连接设置</translation>
+    </message>
+    <message>
+      <source>Control</source>
+      <translation>控制</translation>
+    </message>
+    <message>
+      <source>Delay</source>
+      <translation>延迟</translation>
+    </message>
+    <message>
+      <source>Fix</source>
+      <translation>定位类型</translation>
+    </message>
+    <message>
+      <source>HDOP</source>
+      <translation>精度因子</translation>
+    </message>
+    <message>
+      <source>No data for %1 s</source>
+      <translation>%1 秒没有数据</translation>
+    </message>
+    <message>
+      <source>No fix</source>
+      <translation>无定位</translation>
+    </message>
+    <message>
+      <source>Not connected</source>
+      <translation>未连接</translation>
+    </message>
+    <message>
+      <source>Packet loss</source>
+      <translation>丢包</translation>
+    </message>
+    <message>
+      <source>Position</source>
+      <translation>定位</translation>
+    </message>
+    <message>
+      <source>RTK fixed</source>
+      <translation>RTK 固定解</translation>
+    </message>
+    <message>
+      <source>RTK float</source>
+      <translation>RTK 浮点解</translation>
+    </message>
+    <message>
+      <source>RTK settings</source>
+      <translation>差分定位设置</translation>
+    </message>
+    <message>
+      <source>Satellites</source>
+      <translation>卫星数</translation>
+    </message>
+    <message>
+      <source>Single point</source>
+      <translation>单点定位</translation>
+    </message>
+    <message>
+      <source>State</source>
+      <translation>状态</translation>
+    </message>
+    <message>
+      <source>Voltage</source>
+      <translation>电压</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUUploadCheck</name>
     <message>
       <source>Check the route</source>
       <translation>请检查航线</translation>
+    </message>
+    <message>
+      <source>No field boundary. Draw the boundary first.</source>
+      <translation>没有地块边界，请先画边界。</translation>
+    </message>
+    <message>
+      <source>No route. Add waypoints first.</source>
+      <translation>没有航线，请先加航点。</translation>
+    </message>
+    <message>
+      <source>Not connected to the vehicle.</source>
+      <translation>没有连接车辆。</translation>
     </message>
     <message>
       <source>Read-only connection: another ground station controls this vehicle. The route can be edited and saved but not uploaded.</source>
@@ -1243,8 +1571,8 @@
       <translation>航线有 %1 个航点，超过上限 %2 个。</translation>
     </message>
     <message>
-      <source>The route has no geofence. Draw the field boundary as a geofence first.</source>
-      <translation>航线没有电子围栏，请先把地块边界画成电子围栏。</translation>
+      <source>The vehicle is working on its route. Pause it or stop and lock it first.</source>
+      <translation>车正在按航线作业，请先暂停或停车上锁。</translation>
     </message>
     <message>
       <source>Turns too sharp for the vehicle (turn radius %1 m) at waypoints: %2 (marked red on the map)</source>
@@ -1255,8 +1583,8 @@
       <translation>仍然上传吗？</translation>
     </message>
     <message>
-      <source>Waypoints outside the geofence: %1</source>
-      <translation>以下航点在电子围栏外：%1</translation>
+      <source>Waypoints outside the boundary: %1</source>
+      <translation>航点在边界外：%1</translation>
     </message>
   </context>
   <context>
@@ -1279,22 +1607,19 @@
     </message>
   </context>
   <context>
-    <name>HHUWorkLog</name>
-    <message>
-      <source>Date,Vehicle,Field,Start,End,Duration (min),Distance driven (m),Route done (m),Area (mu),Area (ha),Waypoints,Interruptions,Route finished</source>
-      <translation>日期,车辆,地块,开始时间,结束时间,用时(分钟),里程(米),完成航线长度(米),作业面积(亩),作业面积(公顷),航点范围,中断次数,航线完成</translation>
-    </message>
-    <message>
-      <source>No</source>
-      <translation>否</translation>
-    </message>
-    <message>
-      <source>Yes</source>
-      <translation>是</translation>
-    </message>
-  </context>
-  <context>
     <name>HHUWorkPanel</name>
+    <message>
+      <source>Cannot start yet</source>
+      <translation>暂时不能开始</translation>
+    </message>
+    <message>
+      <source>Chassis fault: %1</source>
+      <translation>底盘故障：%1</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
     <message>
       <source>Command not executed</source>
       <translation>指令未执行</translation>
@@ -1308,52 +1633,44 @@
       <translation>继续</translation>
     </message>
     <message>
-      <source>Link lost</source>
-      <translation>信号中断</translation>
+      <source>Go to plan</source>
+      <translation>去规划</translation>
     </message>
     <message>
-      <source>Link lost
-Controls are unavailable</source>
-      <translation>连接中断
-暂时不能控制车辆</translation>
+      <source>No field boundary on the vehicle</source>
+      <translation>车上没有地块边界</translation>
     </message>
     <message>
-      <source>No geofence on vehicle</source>
-      <translation>车上没有电子围栏</translation>
-    </message>
-    <message>
-      <source>No route on vehicle</source>
-      <translation>车辆上没有航线</translation>
-    </message>
-    <message>
-      <source>Not connected</source>
-      <translation>未连接车辆</translation>
+      <source>No route on the vehicle</source>
+      <translation>车上没有航线</translation>
     </message>
     <message>
       <source>Pause</source>
       <translation>暂停</translation>
     </message>
     <message>
-      <source>Read-only connection</source>
-      <translation>只读连接</translation>
-    </message>
-    <message>
-      <source>Read-only connection
-Another ground station controls this vehicle</source>
-      <translation>只读连接
-其它地面站正在控制该车</translation>
-    </message>
-    <message>
       <source>Return</source>
       <translation>返回</translation>
     </message>
     <message>
-      <source>Slide to return</source>
-      <translation>滑动确认返回</translation>
+      <source>Return to start</source>
+      <translation>返回起点</translation>
     </message>
     <message>
-      <source>Slide to stop</source>
-      <translation>滑动确认停车</translation>
+      <source>Return to start?</source>
+      <translation>返回起点？</translation>
+    </message>
+    <message>
+      <source>Send again</source>
+      <translation>重新发送</translation>
+    </message>
+    <message>
+      <source>Slide to lock</source>
+      <translation>右滑上锁</translation>
+    </message>
+    <message>
+      <source>Slide to return</source>
+      <translation>右滑返回</translation>
     </message>
     <message>
       <source>Start work</source>
@@ -1364,155 +1681,30 @@ Another ground station controls this vehicle</source>
       <translation>停车上锁</translation>
     </message>
     <message>
-      <source>The vehicle did not carry out "%1". Check the vehicle state and try again.</source>
-      <translation>车辆没有执行“%1”，请检查车辆状态后重试。</translation>
+      <source>Stop and lock</source>
+      <translation>停车上锁</translation>
     </message>
     <message>
-      <source>The vehicle will stop and disarm. Work can be restarted with Start work.</source>
-      <translation>车辆将停车并上锁，之后可重新"开始作业"。</translation>
+      <source>Stop and lock?</source>
+      <translation>停车上锁？</translation>
     </message>
     <message>
-      <source>The vehicle will stop working and drive back along its path to the start point.</source>
-      <translation>车辆将停止作业，沿原路返回起点。</translation>
+      <source>The vehicle did not respond to "%1".</source>
+      <translation>车没响应“%1”。</translation>
     </message>
     <message>
-      <source>Waiting for RTK fixed</source>
-      <translation>等待 RTK 固定解</translation>
-    </message>
-  </context>
-  <context>
-    <name>HHUWorkRecords</name>
-    <message>
-      <source>%1 h %2 min</source>
-      <translation>%1 小时 %2 分</translation>
+      <source>The vehicle stops at once and this work run ends.
+Next time you can continue where it stopped.</source>
+      <translation>车会马上停下，本次作业结束。
+下次可以接着上次继续。</translation>
     </message>
     <message>
-      <source>%1 min</source>
-      <translation>%1 分钟</translation>
+      <source>The vehicle stops working and drives back along its path to the start point.</source>
+      <translation>车会停止作业，沿走过的路开回起点。</translation>
     </message>
     <message>
-      <source>(no field)</source>
-      <translation>（无地块）</translation>
-    </message>
-    <message>
-      <source>All</source>
-      <translation>全部</translation>
-    </message>
-    <message>
-      <source>Area</source>
-      <translation>面积</translation>
-    </message>
-    <message>
-      <source>Clear filter</source>
-      <translation>清除筛选</translation>
-    </message>
-    <message>
-      <source>Close</source>
-      <translation>关闭</translation>
-    </message>
-    <message>
-      <source>Date</source>
-      <translation>日期</translation>
-    </message>
-    <message>
-      <source>Driven (m)</source>
-      <translation>里程(米)</translation>
-    </message>
-    <message>
-      <source>Duration</source>
-      <translation>用时</translation>
-    </message>
-    <message>
-      <source>End</source>
-      <translation>结束</translation>
-    </message>
-    <message>
-      <source>Excel CSV (*.csv)</source>
-      <translation>Excel 表格 (*.csv)</translation>
-    </message>
-    <message>
-      <source>Export to Excel</source>
-      <translation>导出 Excel</translation>
-    </message>
-    <message>
-      <source>Export work records</source>
-      <translation>导出作业记录</translation>
-    </message>
-    <message>
-      <source>Exported %1 records.</source>
-      <translation>已导出 %1 条记录。</translation>
-    </message>
-    <message>
-      <source>Field</source>
-      <translation>地块</translation>
-    </message>
-    <message>
-      <source>Finished</source>
-      <translation>完成</translation>
-    </message>
-    <message>
-      <source>From</source>
-      <translation>从</translation>
-    </message>
-    <message>
-      <source>Interruptions</source>
-      <translation>中断次数</translation>
-    </message>
-    <message>
-      <source>No</source>
-      <translation>否</translation>
-    </message>
-    <message>
-      <source>No work records. A record is written for every work run, from Start work until the route is finished or the vehicle is stopped.</source>
-      <translation>暂无作业记录。每次作业（从开始作业到航线完成或停车上锁）会自动生成一条记录。</translation>
-    </message>
-    <message>
-      <source>Records: %1</source>
-      <translation>记录 %1 条</translation>
-    </message>
-    <message>
-      <source>Route done: %1 m</source>
-      <translation>完成航线 %1 米</translation>
-    </message>
-    <message>
-      <source>Start</source>
-      <translation>开始</translation>
-    </message>
-    <message>
-      <source>The file could not be written.</source>
-      <translation>文件无法写入。</translation>
-    </message>
-    <message>
-      <source>Today</source>
-      <translation>今天</translation>
-    </message>
-    <message>
-      <source>Total area: %1</source>
-      <translation>合计面积 %1</translation>
-    </message>
-    <message>
-      <source>Total time: %1</source>
-      <translation>合计用时 %1</translation>
-    </message>
-    <message>
-      <source>Vehicle</source>
-      <translation>车辆</translation>
-    </message>
-    <message>
-      <source>Waypoints</source>
-      <translation>航点</translation>
-    </message>
-    <message>
-      <source>Work records</source>
-      <translation>作业记录</translation>
-    </message>
-    <message>
-      <source>Yes</source>
-      <translation>是</translation>
-    </message>
-    <message>
-      <source>to</source>
-      <translation>到</translation>
+      <source>Wait for a good position, about 1-3 minutes</source>
+      <translation>等定位变好，约 1–3 分钟</translation>
     </message>
   </context>
   <context>
@@ -2031,10 +2223,6 @@ Click 'Ok' to upload the Plan anyway.</source>
       <source>Waypoint</source>
       <translation type="unfinished" />
     </message>
-    <message>
-      <source>Work</source>
-      <translation>作业</translation>
-    </message>
   </context>
   <context>
     <name>PlanViewToolBar</name>
@@ -2047,12 +2235,138 @@ Click 'Ok' to upload the Plan anyway.</source>
       <translation>完成</translation>
     </message>
     <message>
-      <source>Route planning</source>
-      <translation>航线规划</translation>
-    </message>
-    <message>
       <source>Syncing Mission</source>
       <translation>正在同步航线</translation>
+    </message>
+  </context>
+  <context>
+    <name>QGCMapPolygonVisuals</name>
+    <message>
+      <source>Basic</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Circular</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Click in the map to add vertices. Click 'Done Tracing' when finished.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Done Tracing</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Edit Center Position</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Edit Vertex Position</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Edit position...</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Enter circle radius.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Load KML/SHP...</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Polygon Tools</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Remove vertex</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Select Polygon File</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set Radius</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set radius...</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Trace</source>
+      <translation type="unfinished" />
+    </message>
+  </context>
+  <context>
+    <name>QGCPopupDialog</name>
+    <message>
+      <source>Abort</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Apply</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Close</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Ignore</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>No</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>No to All</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Ok</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Open</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Reset</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Restore to Defaults</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Retry</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Save</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Save All</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Yes</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Yes to All</source>
+      <translation type="unfinished" />
     </message>
   </context>
   <context>
@@ -2080,10 +2394,6 @@ Click 'Ok' to upload the Plan anyway.</source>
     <message>
       <source>Work</source>
       <translation>作业</translation>
-    </message>
-    <message>
-      <source>Work records</source>
-      <translation>作业记录</translation>
     </message>
   </context>
   <context>

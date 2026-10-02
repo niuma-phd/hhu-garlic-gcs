@@ -2943,11 +2943,11 @@ Is this really what you want?</source>
     </message>
     <message>
       <source>Plan View - Vehicle Changed</source>
-      <translation>航线页 - 车辆已更换</translation>
+      <translation>规划页 - 车辆已更换</translation>
     </message>
     <message>
       <source>Plan View - Vehicle Disconnected</source>
-      <translation>航线页 - 车辆已断开</translation>
+      <translation>规划页 - 车辆已断开</translation>
     </message>
     <message>
       <source>ROI</source>
@@ -2971,11 +2971,11 @@ Is this really what you want?</source>
     </message>
     <message>
       <source>The plan being worked on in the Plan View is not from the current vehicle. What would you like to do with that plan?</source>
-      <translation>航线页中正在编辑的航线不属于当前车辆，要如何处理这条航线？</translation>
+      <translation>规划页中正在编辑的航线不属于当前车辆，要如何处理这条航线？</translation>
     </message>
     <message>
       <source>The vehicle associated with the plan in the Plan View is no longer available. What would you like to do with that plan?</source>
-      <translation>航线页中的航线所属车辆已不可用，要如何处理这条航线？</translation>
+      <translation>规划页中的航线所属车辆已不可用，要如何处理这条航线？</translation>
     </message>
     <message>
       <source>This Plan was created for a different firmware or vehicle type than the firmware/vehicle type of vehicle you are uploading to. This can lead to errors or incorrect behavior. It is recommended to recreate the Plan for the correct firmware/vehicle type.
