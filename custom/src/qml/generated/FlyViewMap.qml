@@ -241,8 +241,8 @@ FlightMap {
     // Add trajectory lines to the map
     MapPolyline {
         id:         trajectoryPolyline
-        line.width: 3
-        line.color: "red"
+        line.width: 5
+        line.color: HHUStyle.track
         z:          QGroundControl.zOrderTrajectoryLines
         visible:    !pipMode
 
