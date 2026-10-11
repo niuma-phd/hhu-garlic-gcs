@@ -1424,6 +1424,10 @@
       <translation>无定位</translation>
     </message>
     <message>
+      <source>Not authorized</source>
+      <translation>未授权</translation>
+    </message>
+    <message>
       <source>Not connected</source>
       <translation>未连接</translation>
     </message>
@@ -1442,6 +1446,10 @@
     <message>
       <source>Position poor</source>
       <translation>定位差</translation>
+    </message>
+    <message>
+      <source>Ready</source>
+      <translation>就绪</translation>
     </message>
     <message>
       <source>Returning</source>
@@ -1648,6 +1656,10 @@
       <translation>底盘故障：%1</translation>
     </message>
     <message>
+      <source>Chassis not ready, see the message list</source>
+      <translation>底盘未就绪，看消息列表</translation>
+    </message>
+    <message>
       <source>Close</source>
       <translation>关闭</translation>
     </message>
@@ -1662,6 +1674,10 @@
     <message>
       <source>Continue</source>
       <translation>继续</translation>
+    </message>
+    <message>
+      <source>Continue work</source>
+      <translation>继续作业</translation>
     </message>
     <message>
       <source>Go to plan</source>
@@ -1718,6 +1734,10 @@
     <message>
       <source>Stop and lock?</source>
       <translation>停车上锁？</translation>
+    </message>
+    <message>
+      <source>Switch to unmanned mode with the remote control</source>
+      <translation>请用遥控器切换到无人模式</translation>
     </message>
     <message>
       <source>The vehicle did not respond to "%1".</source>

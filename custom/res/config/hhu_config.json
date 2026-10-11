@@ -15,12 +15,32 @@
             "text": "底盘通信中断，已停车"
         },
         {
-            "prefix": "VCU: not in auto",
-            "text": "底盘未切到自动模式"
+            "prefix": "VCU: NavSta lost",
+            "text": "底盘状态广播丢失，通信中断"
         },
         {
-            "prefix": "VCU: estop",
-            "text": "底盘急停已触发"
+            "prefix": "VCU: not authorized",
+            "text": "底盘未授权，请用遥控器切换无人模式"
+        },
+        {
+            "prefix": "VCU: failsafe",
+            "text": "底盘已进入故障保护"
+        },
+        {
+            "prefix": "VCU: wait RC start",
+            "text": "已授权，请按遥控器启动键"
+        },
+        {
+            "prefix": "VCU: handover failed",
+            "text": "无人切换失败，请重新切换"
+        },
+        {
+            "prefix": "VCU: RC link lost",
+            "text": "遥控器链路丢失，车辆停车等待恢复"
+        },
+        {
+            "prefix": "VCU: CAN bridge loaded (Nav v1.0)",
+            "text": "底盘通信桥已启动"
         },
         {
             "prefix": "VCU: fault 0x",
@@ -253,6 +273,18 @@
             "text": "底盘通信中断"
         },
         {
+            "prefix": "VCU: NavSta lost",
+            "text": "底盘通信中断"
+        },
+        {
+            "prefix": "VCU: not authorized",
+            "text": "底盘未授权，请用遥控器切换无人模式"
+        },
+        {
+            "prefix": "VCU: failsafe",
+            "text": "底盘故障保护中"
+        },
+        {
             "prefix": "VCU: estop",
             "text": "底盘急停已触发"
         },
@@ -277,7 +309,21 @@
             "text": "底盘未就绪：{rest}"
         }
     ],
-    "faultCodes": {},
+    "faultCodes": {
+        "0x01": "急停",
+        "0x02": "链路断",
+        "0x03": "FCU 超时",
+        "0x04": "电池低温",
+        "0x05": "电池高温",
+        "0x06": "电量低",
+        "0x07": "提升超时",
+        "0x11": "Nav 无响应",
+        "0x12": "Nav 自检故障",
+        "0x13": "停稳超时",
+        "0x14": "Nav_Cmd 断链",
+        "0x15": "遥控链断",
+        "0x16": "未授权帧溢出"
+    },
     "ntripProviders": [
         {
             "name": "千寻位置",

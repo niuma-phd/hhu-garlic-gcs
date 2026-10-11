@@ -47,6 +47,8 @@ QtObject {
 
     // Chassis battery (VCU_SOC / VCU_BATV from vcu_can.lua) when fresh, otherwise the autopilot battery
     readonly property bool  vcuValid:       !!vehicle && hhuVcu.valid
+    /// OpSource = 2: the remote control handed the chassis over to Nav (Nav ↔ VCU CAN v1.0)
+    readonly property bool  vcuAuthorized:  vcuValid && hhuVcu.mode === 2
     readonly property var   battery:        vehicle && vehicle.batteries.count > 0 ? vehicle.batteries.get(0) : null
     readonly property real  batteryPct:     vcuValid && !isNaN(hhuVcu.soc) ? hhuVcu.soc : (battery ? battery.percentRemaining.rawValue : NaN)
     readonly property real  batteryVolts:   vcuValid && !isNaN(hhuVcu.batV) ? hhuVcu.batV : (battery ? battery.voltage.rawValue : NaN)

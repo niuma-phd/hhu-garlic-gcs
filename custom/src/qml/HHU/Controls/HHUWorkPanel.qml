@@ -8,8 +8,10 @@ import QGroundControl.Controls
 /// Work buttons at the bottom right of the 作业 page (设计稿 2b, 4a–4j). Only the buttons that apply to
 /// the current state are shown, main action first, 停车上锁 set apart by a line:
 /// 未连接 → 连接车辆; 待机 → 开始作业 (grey with the reasons and 去处理 buttons when it cannot start);
-/// 作业中 → 暂停 / 返回起点 | 停车上锁; 已暂停 → 继续 / 返回起点 | 停车上锁 (继续 grey on a chassis fault);
+/// 作业中 → 暂停 / 返回起点 | 停车上锁; 已暂停 → 继续作业 / 返回起点 | 停车上锁 (继续 grey on a chassis fault);
 /// 返回中 / 去目标点 → 暂停 | 停车上锁; nothing while the link is lost or the connection is view only.
+/// 开始 / 继续 is one entry (_startOrContinue): disarmed goes through startDialog + startMission,
+/// paused simply switches back to AUTO. The remote control can take over at any time; GCS 暂停 does not conflict.
 /// A command the vehicle has not carried out in time is reported as 指令未执行 with 重新发送.
 /// 开始作业 offers 断点续作 and starts following the run for it (hhuWork).
 Item {
@@ -35,6 +37,9 @@ Item {
     /// Why 开始作业 is not possible ([] when it is): { t, btn, page } - btn opens the place to fix it
     readonly property var _startBlocked: {
         let list = []
+        // 授权 / 底盘 checks come first: the operator handles them in this order (遥控器闸门, Nav v1.0)
+        if (status.vcuValid && !status.vcuAuthorized)                 list.push({ t: qsTr("Switch to unmanned mode with the remote control"), btn: "", page: "" })
+        if (status.vcuValid && status.vcuAuthorized && !hhuVcu.ok)    list.push({ t: qsTr("Chassis not ready, see the message list"), btn: "", page: "" })
         if (!_missionAvailable)     list.push({ t: qsTr("No route on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
         if (!_fenceAvailable)       list.push({ t: qsTr("No field boundary on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
         if (!status.rtkFixed)       list.push({ t: qsTr("Wait for a good position, about 1-3 minutes"), btn: "", page: "" })
@@ -144,6 +149,16 @@ Item {
     function _continue() {
         _vehicle.flightMode = _vehicle.missionFlightMode
         _expect(qsTr("Continue"), function() { return status.inAuto }, 0, null, _continue)
+    }
+
+    /// 开始 / 继续 is one entry: disarmed goes through the start dialog and startMission,
+    /// paused (still armed) simply switches back to AUTO. Both share the _expect confirmation.
+    function _startOrContinue() {
+        if (root._paused) {
+            _continue()
+        } else {
+            _openStart()
+        }
     }
 
     function _returnHome() {
@@ -290,10 +305,11 @@ Item {
                 onClicked:  mainWindow.showSettingsTool("Comm Links")
             }
 
+            // 开始 / 继续作业: one entry, the text follows the state
             HHUButton {
-                visible:    root._idle && status.canControl
-                enabled:    root._startBlocked.length === 0
-                text:       qsTr("Start work")
+                visible:    status.canControl && (root._idle || root._paused)
+                enabled:    root._paused ? (root._missionAvailable && !root._vcuFault) : root._startBlocked.length === 0
+                text:       root._paused ? qsTr("Continue work") : qsTr("Start work")
                 icon:       "play"
                 kind:       "green"
                 h:          HHUStyle.btnH
@@ -301,7 +317,7 @@ Item {
                 minWidth:   220
                 shadow:     true
                 whiteRim:   true
-                onClicked:  root._openStart()
+                onClicked:  root._startOrContinue()
             }
 
             HHUButton {
@@ -315,20 +331,6 @@ Item {
                 shadow:     true
                 whiteRim:   true
                 onClicked:  root._pause()
-            }
-
-            HHUButton {
-                visible:    status.canControl && root._paused
-                enabled:    root._missionAvailable && !root._vcuFault
-                text:       qsTr("Continue")
-                icon:       "play"
-                kind:       "green"
-                h:          HHUStyle.btnH
-                size:       HHUStyle.btnFont / HHUStyle.s
-                minWidth:   160
-                shadow:     true
-                whiteRim:   true
-                onClicked:  root._continue()
             }
 
             HHUButton {
