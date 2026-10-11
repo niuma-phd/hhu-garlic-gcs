@@ -1,0 +1,151 @@
+name: HHU Windows (simplify)
+
+# Simplified-edition build of the HHU garlic seeder ground station (QGroundControl + custom/),
+# built from the simplify-work-flow branch only — independent of the main HHU Windows workflow
+# (hhu branch / hhu-v* tags). No merge into hhu is needed.
+# - every push to simplify-work-flow / manual run: installer uploaded as a workflow artifact AND
+#   attached to the rolling prerelease tagged hhu-simplify-latest (previous prerelease replaced).
+#
+# Reuses QGroundControl's own composite actions (.github/actions) for Qt, CMake and the NSIS installer.
+
+on:
+  push:
+    branches:
+      - simplify-work-flow
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  AQT_SOURCE: 'git+https://github.com/miurahr/aqtinstall.git@8d961e61720b3c06583517fbc68d57ec0a4e9f95'
+
+jobs:
+  build:
+    name: Build Windows x64 installer (simplify)
+    runs-on: windows-2022
+    timeout-minutes: 150
+
+    defaults:
+      run:
+        shell: cmd
+
+    outputs:
+      installer: ${{ steps.installer.outputs.name }}
+      version: ${{ steps.installer.outputs.version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Build Setup (Qt, ccache, MSVC)
+        id: build-setup
+        uses: ./.github/actions/build-setup
+        with:
+          qt-host: windows
+          qt-arch: win64_msvc2022_64
+          aqt-source: ${{ env.AQT_SOURCE }}
+          build-type: Release
+
+      - name: Configure
+        uses: ./.github/actions/cmake-configure
+        with:
+          build-dir: ${{ runner.temp }}/build
+          build-type: Release
+          extra-args: >-
+            -DQGC_ENABLE_GST_VIDEOSTREAMING=OFF
+            -DQGC_CUSTOM_DIR=custom
+
+      - name: Build
+        uses: ./.github/actions/cmake-build
+        with:
+          build-dir: ${{ runner.temp }}/build
+          build-type: Release
+
+      - name: Create installer (NSIS)
+        uses: ./.github/actions/cmake-install
+        with:
+          build-dir: ${{ runner.temp }}\build
+          build-type: Release
+
+      - name: Locate installer
+        id: installer
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path "${{ runner.temp }}\build" -Filter "*installer*.exe" | Select-Object -First 1
+          if (-not $exe) { Write-Error "Installer .exe not found"; exit 1 }
+          $cm = Get-Content "custom/CMakeLists.txt" -Raw
+          $appver = if ($cm -match 'HHU_APP_VERSION "([^"]+)"') { $Matches[1] } else { "0.0.0" }
+          $version = "simplify-v$appver-b${{ github.run_number }}"
+          $name = "HHU-GCS-$version-Windows-x64-setup.exe"
+          Copy-Item $exe.FullName (Join-Path "${{ runner.temp }}" $name)
+          "name=$name" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "path=$(Join-Path "${{ runner.temp }}" $name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Host "Installer: $name ($([math]::Round($exe.Length / 1MB, 1)) MB)"
+
+      - name: Silent install test
+        shell: pwsh
+        run: |
+          $dir = "${{ runner.temp }}\hhu-install-test"
+          Start-Process -FilePath "${{ steps.installer.outputs.path }}" -ArgumentList "/S", "/D=$dir" -Wait -NoNewWindow
+          $bin = Get-ChildItem -Path $dir -Recurse -Filter "HHU-GCS.exe" | Select-Object -First 1
+          if (-not $bin) { Get-ChildItem -Path $dir -Recurse | Select-Object -First 50 FullName; Write-Error "HHU-GCS.exe not installed"; exit 1 }
+          $cfg = Join-Path $bin.DirectoryName "config\hhu_config.json"
+          if (-not (Test-Path $cfg)) { Write-Error "config\hhu_config.json missing next to the executable"; exit 1 }
+          Write-Host "Installed: $($bin.FullName)"
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.installer.outputs.name }}
+          path: ${{ steps.installer.outputs.path }}
+          retention-days: 30
+          if-no-files-found: error
+
+  release:
+    name: Publish simplified prerelease
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TAG: hhu-simplify-latest
+    steps:
+      - name: Download installer
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.installer }}
+          path: dist
+
+      - name: Remove previous rolling prerelease (release + tag)
+        run: gh release delete "$TAG" --yes --cleanup-tag || true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          target_commitish: ${{ github.sha }}
+          name: HHU-GCS 简化版 ${{ needs.build.outputs.version }}
+          prerelease: true
+          files: dist/*.exe
+          body: |
+            河海大学 大蒜播种车地面站 **简化版** Windows 安装包（预发布，滚动更新，基于 QGroundControl v5.1.4）。
+
+            - 来源分支：`simplify-work-flow`，提交 ${{ github.sha }}，构建 #${{ github.run_number }}
+            - 简化内容：作业控制流程简化（Nav v1.0 授权闸门适配：开始/继续合并为单入口、断点续作、未授权状态引导）
+            - 非正式发布渠道：与 `hhu` 分支及 `hhu-v*` 正式 Release 互不干扰；每次推送本分支自动构建并替换本预发布
+
+            安装后在 设置 → 地图 中填写天地图 **浏览器端** Key（程序不内置 Key）。
+            车端提示翻译表、差分服务商预设在安装目录的 `bin/config/hhu_config.json`，可直接修改。
