@@ -763,7 +763,6 @@ FlightMap {
     HHUGotoHere {
         id: hhuGoto
         mapControl: _root
-        planMasterController: _root.planMasterController
     }
 
     onMapClicked: (position) => {

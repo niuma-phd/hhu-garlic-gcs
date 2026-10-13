@@ -91,10 +91,6 @@
             "text": "航线已完成"
         },
         {
-            "prefix": "Fence Breached",
-            "text": "车辆越出电子围栏"
-        },
-        {
             "prefix": "Failsafe",
             "text": "车辆进入失效保护：{rest}"
         },
@@ -211,26 +207,6 @@
         {
             "prefix": "Battery",
             "text": "电池检查未通过：{rest}"
-        },
-        {
-            "prefix": "Polygon fence(s) invalid",
-            "text": "车上没有有效的电子围栏，请在规划页上传围栏"
-        },
-        {
-            "prefix": "Fence requires position",
-            "text": "电子围栏需要定位，请等待定位"
-        },
-        {
-            "prefix": "Fence: vehicle outside fence",
-            "text": "车辆在电子围栏外"
-        },
-        {
-            "prefix": "vehicle outside fence",
-            "text": "车辆在电子围栏外"
-        },
-        {
-            "prefix": "Fence",
-            "text": "电子围栏检查未通过：{rest}"
         },
         {
             "prefix": "Mode not armable",

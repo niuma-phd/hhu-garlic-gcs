@@ -323,10 +323,6 @@
       <translation>告警音量</translation>
     </message>
     <message>
-      <source>Area</source>
-      <translation>面积</translation>
-    </message>
-    <message>
       <source>Display</source>
       <translation>显示</translation>
     </message>
@@ -347,10 +343,6 @@
       <translation>字号作用于状态栏、作业按钮、信息卡片和告警；界面缩放会放大整个界面。</translation>
     </message>
     <message>
-      <source>Hectare</source>
-      <translation>公顷</translation>
-    </message>
-    <message>
       <source>Interface scale</source>
       <translation>界面缩放</translation>
     </message>
@@ -369,10 +361,6 @@
     <message>
       <source>Meters</source>
       <translation>米</translation>
-    </message>
-    <message>
-      <source>Mu</source>
-      <translation>亩</translation>
     </message>
     <message>
       <source>Outdoor high contrast</source>
@@ -397,13 +385,6 @@
     <message>
       <source>Units</source>
       <translation>单位</translation>
-    </message>
-  </context>
-  <context>
-    <name>GeoFenceMapVisuals</name>
-    <message>
-      <source>B</source>
-      <translation type="unfinished" />
     </message>
   </context>
   <context>
@@ -758,112 +739,6 @@
     </message>
   </context>
   <context>
-    <name>HHUFieldManager</name>
-    <message>
-      <source>%1 copy</source>
-      <translation>%1 副本</translation>
-    </message>
-    <message>
-      <source>%1 copy %2</source>
-      <translation>%1 副本 %2</translation>
-    </message>
-  </context>
-  <context>
-    <name>HHUFieldPanel</name>
-    <message>
-      <source>A field with this name already exists.</source>
-      <translation>已有同名地块。</translation>
-    </message>
-    <message>
-      <source>Area %1 · Width %2 m · Last work %3</source>
-      <translation>面积 %1 · 幅宽 %2 米 · 上次作业 %3</translation>
-    </message>
-    <message>
-      <source>Cancel</source>
-      <translation>取消</translation>
-    </message>
-    <message>
-      <source>Close</source>
-      <translation>关闭</translation>
-    </message>
-    <message>
-      <source>Copy</source>
-      <translation>复制</translation>
-    </message>
-    <message>
-      <source>Delete</source>
-      <translation>删除</translation>
-    </message>
-    <message>
-      <source>Delete field</source>
-      <translation>删除地块</translation>
-    </message>
-    <message>
-      <source>Delete field "%1" with its boundary and route?</source>
-      <translation>删除地块“%1”及其边界和航线？</translation>
-    </message>
-    <message>
-      <source>Enter a name.</source>
-      <translation>请输入名称。</translation>
-    </message>
-    <message>
-      <source>Fields</source>
-      <translation>地块</translation>
-    </message>
-    <message>
-      <source>Name</source>
-      <translation>名称</translation>
-    </message>
-    <message>
-      <source>Never</source>
-      <translation>从未作业</translation>
-    </message>
-    <message>
-      <source>New field</source>
-      <translation>新建地块</translation>
-    </message>
-    <message>
-      <source>No field matches the search.</source>
-      <translation>没有匹配的地块。</translation>
-    </message>
-    <message>
-      <source>No fields yet. Draw the field boundary as a geofence and the route, then tap Save; or create a field here first.</source>
-      <translation>还没有地块。画好地块边界（电子围栏）和航线后点“保存”，或先在这里新建地块。</translation>
-    </message>
-    <message>
-      <source>OK</source>
-      <translation>确定</translation>
-    </message>
-    <message>
-      <source>Open field: %1</source>
-      <translation>当前地块：%1</translation>
-    </message>
-    <message>
-      <source>Rename</source>
-      <translation>重命名</translation>
-    </message>
-    <message>
-      <source>Rename field</source>
-      <translation>重命名地块</translation>
-    </message>
-    <message>
-      <source>Save as new field</source>
-      <translation>保存为新地块</translation>
-    </message>
-    <message>
-      <source>Search by name</source>
-      <translation>按名称搜索</translation>
-    </message>
-    <message>
-      <source>The route being edited has unsaved changes. Discard them?</source>
-      <translation>正在编辑的航线有未保存的修改，放弃这些修改吗？</translation>
-    </message>
-    <message>
-      <source>Work width (m)</source>
-      <translation>作业幅宽（米）</translation>
-    </message>
-  </context>
-  <context>
     <name>HHUGotoHere</name>
     <message>
       <source>%1 m from the vehicle</source>
@@ -902,16 +777,8 @@
       <translation>只读连接</translation>
     </message>
     <message>
-      <source>The point is outside the geofence.</source>
-      <translation>该点在电子围栏外。</translation>
-    </message>
-    <message>
       <source>The vehicle did not carry out "%1". Check the vehicle state and try again.</source>
       <translation>车辆没有执行“%1”，请检查车辆状态后重试。</translation>
-    </message>
-    <message>
-      <source>There is no geofence on the vehicle. Upload the field boundary first.</source>
-      <translation>车上没有电子围栏，请先上传地块边界。</translation>
     </message>
   </context>
   <context>
@@ -1010,28 +877,12 @@
       <translation>%1 项要修改</translation>
     </message>
     <message>
-      <source>+ New field</source>
-      <translation>+ 新建地块</translation>
-    </message>
-    <message>
-      <source>Add a point at the vehicle</source>
-      <translation>在车的位置加点</translation>
-    </message>
-    <message>
       <source>Add a waypoint at the vehicle</source>
       <translation>在车的位置加航点</translation>
     </message>
     <message>
       <source>Back</source>
       <translation>上一步</translation>
-    </message>
-    <message>
-      <source>Boundary</source>
-      <translation>画边界</translation>
-    </message>
-    <message>
-      <source>Check</source>
-      <translation>检查上传</translation>
     </message>
     <message>
       <source>Check passed</source>
@@ -1042,22 +893,6 @@
       <translation>清空</translation>
     </message>
     <message>
-      <source>Copy</source>
-      <translation>复制</translation>
-    </message>
-    <message>
-      <source>Delete</source>
-      <translation>删除</translation>
-    </message>
-    <message>
-      <source>Export</source>
-      <translation>导出</translation>
-    </message>
-    <message>
-      <source>Field</source>
-      <translation>选地块</translation>
-    </message>
-    <message>
       <source>Fix</source>
       <translation>去修改</translation>
     </message>
@@ -1066,28 +901,16 @@
       <translation>去作业</translation>
     </message>
     <message>
-      <source>Import</source>
-      <translation>导入</translation>
-    </message>
-    <message>
       <source>Next</source>
       <translation>下一步</translation>
     </message>
     <message>
-      <source>No fields yet. Create one, or import a route / KML file.</source>
-      <translation>还没有地块。新建一个，或导入航线 / KML 文件。</translation>
-    </message>
-    <message>
-      <source>Rename</source>
-      <translation>改名</translation>
+      <source>Position accuracy is not sufficient (%1). Add the point anyway?</source>
+      <translation>定位精度不足（%1），仍要添加该点吗？</translation>
     </message>
     <message>
       <source>Route</source>
       <translation>排航线</translation>
-    </message>
-    <message>
-      <source>Search fields</source>
-      <translation>搜地块</translation>
     </message>
     <message>
       <source>Show</source>
@@ -1098,20 +921,20 @@
       <translation>速度</translation>
     </message>
     <message>
-      <source>Tap the map to add a point · drag to change</source>
-      <translation>点地图加点 · 拖动修改</translation>
-    </message>
-    <message>
       <source>Tap the map to add a waypoint · drag to change</source>
       <translation>点地图加航点 · 拖动修改</translation>
     </message>
     <message>
-      <source>Tight turns, boundary, waypoint count and connection are all fine.</source>
-      <translation>急弯、边界、航点数、连接都正常。</translation>
+      <source>Tight turns, waypoint count and connection are all fine.</source>
+      <translation>急转弯、航点数量和连接状态均正常。</translation>
     </message>
     <message>
       <source>Undo</source>
       <translation>撤销</translation>
+    </message>
+    <message>
+      <source>Upload</source>
+      <translation>上传</translation>
     </message>
     <message>
       <source>Upload to vehicle</source>
@@ -1126,55 +949,8 @@
       <translation>正在上传…</translation>
     </message>
     <message>
-      <source>points (at least 3)</source>
-      <translation>个点（至少 3 个）</translation>
-    </message>
-    <message>
       <source>waypoints</source>
       <translation>个航点</translation>
-    </message>
-  </context>
-  <context>
-    <name>HHUPlanSummary</name>
-    <message>
-      <source>%1 h %2 min</source>
-      <translation>%1 小时 %2 分</translation>
-    </message>
-    <message>
-      <source>%1 km</source>
-      <translation>%1 千米</translation>
-    </message>
-    <message>
-      <source>%1 m</source>
-      <translation>%1 米</translation>
-    </message>
-    <message>
-      <source>%1 min</source>
-      <translation>%1 分钟</translation>
-    </message>
-    <message>
-      <source>Area</source>
-      <translation>面积</translation>
-    </message>
-    <message>
-      <source>Length</source>
-      <translation>全长</translation>
-    </message>
-    <message>
-      <source>Time</source>
-      <translation>用时</translation>
-    </message>
-    <message>
-      <source>Waypoints</source>
-      <translation>航点</translation>
-    </message>
-    <message>
-      <source>min</source>
-      <translation>分</translation>
-    </message>
-    <message>
-      <source>pcs</source>
-      <translation>个</translation>
     </message>
   </context>
   <context>
@@ -1265,17 +1041,6 @@
     </message>
   </context>
   <context>
-    <name>HHUSettings</name>
-    <message>
-      <source>%1 ha</source>
-      <translation>%1 公顷</translation>
-    </message>
-    <message>
-      <source>%1 mu</source>
-      <translation>%1 亩</translation>
-    </message>
-  </context>
-  <context>
     <name>HHUStartDialog</name>
     <message>
       <source>%1 waypoints</source>
@@ -1302,8 +1067,8 @@
       <translation>从第 %1 点开始</translation>
     </message>
     <message>
-      <source>No record for this field</source>
-      <translation>这块地没有中断记录</translation>
+      <source>No record</source>
+      <translation>无记录</translation>
     </message>
     <message>
       <source>Nobody is near the vehicle</source>
@@ -1582,10 +1347,6 @@
       <translation>请检查航线</translation>
     </message>
     <message>
-      <source>No field boundary. Draw the boundary first.</source>
-      <translation>没有地块边界，请先画边界。</translation>
-    </message>
-    <message>
       <source>No route. Add waypoints first.</source>
       <translation>没有航线，请先加航点。</translation>
     </message>
@@ -1620,29 +1381,6 @@
     <message>
       <source>Upload anyway?</source>
       <translation>仍然上传吗？</translation>
-    </message>
-    <message>
-      <source>Waypoints outside the boundary: %1</source>
-      <translation>航点在边界外：%1</translation>
-    </message>
-  </context>
-  <context>
-    <name>HHUVehiclePointTools</name>
-    <message>
-      <source>Fence corner at vehicle</source>
-      <translation>以车辆位置加围栏点</translation>
-    </message>
-    <message>
-      <source>Fence corner at vehicle (%1/3)</source>
-      <translation>以车辆位置加围栏点（%1/3）</translation>
-    </message>
-    <message>
-      <source>Position accuracy is not sufficient (%1). Add the point anyway?</source>
-      <translation>当前定位精度不足（%1），仍然添加吗？</translation>
-    </message>
-    <message>
-      <source>Waypoint at vehicle</source>
-      <translation>以车辆位置加航点</translation>
     </message>
   </context>
   <context>
@@ -1682,10 +1420,6 @@
     <message>
       <source>Go to plan</source>
       <translation>去规划</translation>
-    </message>
-    <message>
-      <source>No field boundary on the vehicle</source>
-      <translation>车上没有地块边界</translation>
     </message>
     <message>
       <source>No route on the vehicle</source>
@@ -2074,17 +1808,6 @@ Next time you can continue where it stopped.</source>
     </message>
   </context>
   <context>
-    <name>PlanEditLayers</name>
-    <message>
-      <source>GeoFence</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Mission</source>
-      <translation type="unfinished" />
-    </message>
-  </context>
-  <context>
     <name>PlanInfoEditor</name>
     <message>
       <source>&lt;Untitled&gt;</source>
@@ -2146,20 +1869,8 @@ Next time you can continue where it stopped.</source>
       <translation type="unfinished" />
     </message>
     <message>
-      <source>Export .plan</source>
-      <translation>导出 .plan</translation>
-    </message>
-    <message>
-      <source>Field: %1</source>
-      <translation>地块：%1</translation>
-    </message>
-    <message>
-      <source>Fields</source>
-      <translation>地块</translation>
-    </message>
-    <message>
-      <source>Import</source>
-      <translation>导入</translation>
+      <source>Open</source>
+      <translation type="unfinished" />
     </message>
     <message>
       <source>Open Plan</source>
@@ -2171,6 +1882,10 @@ Next time you can continue where it stopped.</source>
     </message>
     <message>
       <source>Save as KML</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Save as...</source>
       <translation type="unfinished" />
     </message>
     <message>
@@ -2359,69 +2074,6 @@ Click 'Ok' to upload the Plan anyway.</source>
     <message>
       <source>Syncing Mission</source>
       <translation>正在同步航线</translation>
-    </message>
-  </context>
-  <context>
-    <name>QGCMapPolygonVisuals</name>
-    <message>
-      <source>Basic</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Circular</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Click in the map to add vertices. Click 'Done Tracing' when finished.</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Done Tracing</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Edit Center Position</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Edit Vertex Position</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Edit position...</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Enter circle radius.</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Load KML/SHP...</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Polygon Tools</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Remove vertex</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Select Polygon File</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Set Radius</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Set radius...</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
-      <source>Trace</source>
-      <translation type="unfinished" />
     </message>
   </context>
   <context>

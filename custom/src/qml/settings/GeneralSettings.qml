@@ -73,14 +73,6 @@ SettingsPage {
             indexModel:         false
         }
 
-        LabelledComboBox {
-            Layout.fillWidth:   true
-            label:              qsTr("Area")
-            model:              [ qsTr("Mu"), qsTr("Hectare") ]
-            currentIndex:       hhuSettings.areaUnit
-            onActivated:        (index) => hhuSettings.areaUnit = index
-        }
-
         LabelledLabel {
             Layout.fillWidth:   true
             label:              qsTr("Distance")

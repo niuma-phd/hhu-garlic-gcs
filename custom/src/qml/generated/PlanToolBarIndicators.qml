@@ -34,20 +34,15 @@ RowLayout {
 
     function _uploadClicked() {
         hhuUploadCheck.run(function() {
-            _planMasterController.upload()
-            // 断点续作 needs to know which field is on the vehicle
-            hhuWork.setVehicleField(QGroundControl.multiVehicleManager.activeVehicle, hhuFields.currentId)
+            _planMasterController.sendToVehicle()
+            // A new route on the vehicle invalidates the resume point (断点续作)
+            hhuWork.clearResume(QGroundControl.multiVehicleManager.activeVehicle)
         })
     }
 
     HHUUploadCheck {
         id: hhuUploadCheck
         visible: false
-        planMasterController: root._planMasterController
-    }
-
-    HHUFieldPanel {
-        id: hhuFieldPanel
         planMasterController: root._planMasterController
     }
 
@@ -85,7 +80,11 @@ RowLayout {
     }
 
     function _saveButtonClicked() {
-        hhuFieldPanel.saveCurrent()
+        if (_planMasterController.currentPlanFile === "") {
+            _planMasterController.saveToSelectedFile()
+        } else {
+            _planMasterController.saveToCurrent()
+        }
     }
 
     function _saveAsKMLClicked() {
@@ -122,17 +121,8 @@ RowLayout {
     QGCPalette { id: qgcPal }
 
     QGCButton {
-        objectName: "planToolbar_fieldsButton"
-        text: hhuFields.currentId !== "" ? qsTr("Field: %1").arg(hhuFields.current.name || "") : qsTr("Fields")
-        iconSource: "/res/GeoFence.svg"
-        primary: hhuFields.currentId === ""
-        enabled: !_planMasterController.syncInProgress
-        onClicked: { toolbarButtonClicked(); hhuFieldPanel.open() }
-    }
-
-    QGCButton {
         objectName: "planToolbar_openButton"
-        text: qsTr("Import")
+        text: qsTr("Open")
         iconSource: "/qmlimages/Plan.svg"
         enabled: !_planMasterController.syncInProgress
         onClicked: { toolbarButtonClicked(); _openButtonClicked() }
@@ -198,7 +188,7 @@ RowLayout {
                     QGCButton {
                         objectName: "planToolbar_saveAsButton"
                         Layout.fillWidth: true
-                        text: qsTr("Export .plan")
+                        text: qsTr("Save as...")
                         enabled: !_syncInProgress && _hasPlanItems
 
                         onClicked: {

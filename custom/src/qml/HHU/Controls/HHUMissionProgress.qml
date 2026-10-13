@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QGroundControl
 import QGroundControl.Controls
 
-/// Progress card at the bottom left of the 作业 page (设计稿 4b–4h): field name, big percent, time left,
+/// Progress card at the bottom left of the 作业 page (设计稿 4b–4h): big percent, time left,
 /// progress bar, one small line with waypoint / distance / speed. While driving to a target point
 /// (开到指定点) it shows that trip instead.
 HHUCard {
@@ -60,12 +60,6 @@ HHUCard {
         return m >= 1000 ? (m / 1000).toFixed(2) + " km" : m.toFixed(0) + " m"
     }
 
-    /// Field on the vehicle (as uploaded from the 规划 page; re-read when the route on the vehicle changes)
-    readonly property string _fieldName: {
-        const id = _vehicle && _total >= 0 ? hhuWork.vehicleField(_vehicle) : ""
-        return id !== "" ? (hhuFields.field(id).name || "") : ""
-    }
-
     readonly property bool _started:    _current >= 1 && (status.inAuto || _paused || status.inReturn)
     readonly property bool _goto:       status.inGuided && status.armed && !!HHUState.gotoTarget
     readonly property real _gotoLeft:   _goto && _vehicle.coordinate.isValid ? _vehicle.coordinate.distanceTo(HHUState.gotoTarget) : 0
@@ -95,7 +89,7 @@ HHUCard {
 
         HHUText {
             Layout.fillWidth:   true
-            text:               root._goto ? qsTr("To target point") : (root._fieldName !== "" ? root._fieldName : qsTr("Route on the vehicle"))
+            text:               root._goto ? qsTr("To target point") : qsTr("Route on the vehicle")
             size:               16
             bold:               true
             color:              HHUStyle.text2

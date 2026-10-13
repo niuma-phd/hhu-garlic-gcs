@@ -330,9 +330,6 @@ Item {
                         insertSimpleItemAfterCurrent(coordinate)
                     }
                     break
-                case _layerFence:
-                    hhuPlanPanel.boundaryClicked(coordinate)  // HHU: 画边界
-                    break
                 case _layerRally:
                     if (_rallyPointController.supported) {
                         _rallyPointController.addPoint(coordinate)
@@ -568,18 +565,6 @@ Item {
             autoHide: true
         }
 
-        HHUPlanSummary {
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.margins: HHUStyle.margin
-            z: QGroundControl.zOrderWidgets
-            showRoute: hhuPlanPanel.step >= 2
-            missionController: _missionController
-            geoFenceController: _geoFenceController
-            visible: _missionController.visualItems.count > 1 || _geoFenceController.polygons.count > 0
-        }
-
-        // Waypoints where the vehicle cannot make the turn are ringed red (上传前检查)
         HHUUploadCheck {
             id: hhuTurnCheck
             visible: false

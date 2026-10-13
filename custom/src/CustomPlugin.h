@@ -10,7 +10,6 @@ class CustomOptions;
 class CustomPlugin;
 class HHU4GLink;
 class HHUConfig;
-class HHUFieldManager;
 class HHUNtrip;
 class HHUService;
 class HHUWorkLog;
@@ -119,7 +118,6 @@ private:
     HHUVcuStatus *_vcuStatus = nullptr;
     HHULinkMonitor *_linkMonitor = nullptr;
     HHU4GLink *_link4G = nullptr;
-    HHUFieldManager *_fields = nullptr;
     HHUWorkLog *_workLog = nullptr;
     HHUNtrip *_ntrip = nullptr;
     HHUService *_service = nullptr;

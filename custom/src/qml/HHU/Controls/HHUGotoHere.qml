@@ -8,16 +8,14 @@ import QGroundControl.Controls
 
 /// 开到指定点 (需求说明 V1.0 §3.2, 设计稿 2e / 4h): long press or right click on the 作业 map → a small card
 /// at the point "开到这里？ 离车 XX m" with 取消 / 开过去; the vehicle switches to GUIDED, drives to the
-/// point (flag) and stops there. The point must be inside the geofence; not available while the link
-/// is lost or view only. 暂停 stops it at any time (work panel).
+/// point (flag) and stops there. Not available while the link is lost or view only.
+/// 暂停 stops it at any time (work panel).
 Item {
     id: root
 
     property var mapControl
-    property var planMasterController
 
     HHUStatus { id: status }
-    HHUFence { id: fence; geoFenceController: root.planMasterController ? root.planMasterController.geoFenceController : null }
 
     property var _target: QtPositioning.coordinate()
     property bool _armPending: false
@@ -32,10 +30,6 @@ Item {
             reason = qsTr("Link lost")
         } else if (status.readOnly) {
             reason = qsTr("Read-only connection")
-        } else if (!fence.hasInclusion()) {
-            reason = qsTr("There is no geofence on the vehicle. Upload the field boundary first.")
-        } else if (!fence.contains(coordinate)) {
-            reason = qsTr("The point is outside the geofence.")
         }
         if (reason !== "") {
             QGroundControl.showMessageDialog(root, qsTr("Drive here"), reason, Dialog.Ok)

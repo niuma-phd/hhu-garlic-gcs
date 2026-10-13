@@ -4,7 +4,7 @@ import QtQuick.Layouts
 /// 开始作业 with 断点续作 (设计稿 4i): "车周围没有人" reminder, start point as two big choices
 /// (接着上次 is preselected when there is a resume point, else 从头开始), 选其他航点 for any waypoint,
 /// slide to start.
-/// openStart(waypointCount, firstSeq, lastSeq, resumeSeq, fieldName, callback(seq))
+/// openStart(waypointCount, firstSeq, lastSeq, resumeSeq, callback(seq))
 HHUDialog {
     id: root
 
@@ -12,7 +12,6 @@ HHUDialog {
     property int    lastSeq:    1
     property int    resumeSeq:  0
     property int    waypoints:  0
-    property string fieldName
     property int    choice:     0   ///< 0 first, 1 resume, 2 chosen
     property int    chosenSeq:  1
     property var    _callback:  null
@@ -20,15 +19,14 @@ HHUDialog {
     readonly property bool _resumeValid: resumeSeq > firstSeq && resumeSeq <= lastSeq
 
     title:          qsTr("Start work")
-    subtitle:       (fieldName !== "" ? fieldName + " · " : "") + qsTr("%1 waypoints").arg(waypoints)
+    subtitle:       qsTr("%1 waypoints").arg(waypoints)
     dialogWidth:    560
 
-    function openStart(waypointCount, first, last, resume, field, callback) {
+    function openStart(waypointCount, first, last, resume, callback) {
         waypoints   = waypointCount
         firstSeq    = first
         lastSeq     = last
         resumeSeq   = resume
-        fieldName   = field
         choice      = _resumeValid ? 1 : 0
         chosenSeq   = _resumeValid ? resume : first
         _callback   = callback
@@ -97,7 +95,7 @@ HHUDialog {
 
         Choice {
             label:      qsTr("Continue last run")
-            detail:     root._resumeValid ? qsTr("From waypoint %1").arg(root.resumeSeq) : qsTr("No record for this field")
+            detail:     root._resumeValid ? qsTr("From waypoint %1").arg(root.resumeSeq) : qsTr("No record")
             selected:   root.choice === 1
             available:  root._resumeValid
             onPicked:   root.choice = 1

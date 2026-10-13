@@ -279,13 +279,10 @@ void PlanMasterController::_sendMissionComplete(void)
         return;
     }
     _sendSequence = SyncSequence::GeoFence;
-    if (_geoFenceController.supported()) {
-        qCDebug(PlanMasterControllerLog) << "PlanMasterController::sendToVehicle start GeoFence sendToVehicle";
-        _geoFenceController.sendToVehicle();
-    } else {
-        qCDebug(PlanMasterControllerLog) << "PlanMasterController::sendToVehicle GeoFence not supported skipping";
-        _sendGeoFenceComplete();
-    }
+    // HHU (issue #4): the rover no longer uses a geofence — the upload chain sends the
+    // mission only, never the fence. Skip the GeoFence leg.
+    qCDebug(PlanMasterControllerLog) << "PlanMasterController::sendToVehicle GeoFence skipped (HHU, issue #4)";
+    _sendGeoFenceComplete();
 }
 
 void PlanMasterController::_sendGeoFenceComplete(void)
@@ -525,9 +522,7 @@ void PlanMasterController::removeAllFromVehicle(void)
 {
     if (!offline()) {
         _missionController.removeAllFromVehicle();
-        if (_geoFenceController.supported()) {
-            _geoFenceController.removeAllFromVehicle();
-        }
+        // HHU (issue #4): no geofence on the rover — nothing to clear
         if (_rallyPointController.supported()) {
             _rallyPointController.removeAllFromVehicle();
         }

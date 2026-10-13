@@ -22,8 +22,6 @@ class HHUSettings : public QObject
     Q_PROPERTY(bool   highContrast      READ highContrast      WRITE setHighContrast      NOTIFY changed)
     /// 地图注记: TianDiTu place names / roads over the base map
     Q_PROPERTY(bool   mapLabels         READ mapLabels         WRITE setMapLabels         NOTIFY changed)
-    /// 面积单位: 0 亩, 1 公顷
-    Q_PROPERTY(int    areaUnit          READ areaUnit          WRITE setAreaUnit          NOTIFY changed)
     /// Last TURN_RADIUS read from a vehicle, so the turn check also works while planning offline (NaN if never read)
     Q_PROPERTY(double lastTurnRadius    READ lastTurnRadius    WRITE setLastTurnRadius    NOTIFY changed)
 
@@ -37,7 +35,6 @@ public:
     int    fontSize()          const { return _fontSize; }
     double fontScale()         const;
     bool   highContrast()      const { return _highContrast; }
-    int    areaUnit()          const { return _areaUnit; }
     bool   mapLabels()         const { return _mapLabels; }
     double lastTurnRadius()    const { return _lastTurnRadius; }
 
@@ -47,12 +44,8 @@ public:
     void setMaxWaypoints(int value);
     void setFontSize(int value);
     void setHighContrast(bool value);
-    void setAreaUnit(int value);
     void setMapLabels(bool value);
     void setLastTurnRadius(double value);
-
-    /// Area in square meters formatted in the chosen unit, e.g. "3.25 亩"
-    Q_INVOKABLE QString formatArea(double squareMeters) const;
 
 signals:
     void changed();
@@ -66,7 +59,6 @@ private:
     int    _maxWaypoints      = 700;
     int    _fontSize          = 0;
     bool   _highContrast      = false;
-    int    _areaUnit          = 0;
     bool   _mapLabels         = true;
     double _lastTurnRadius    = qQNaN();
 };

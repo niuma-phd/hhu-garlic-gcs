@@ -105,14 +105,6 @@ OVERRIDES = {
                 color:      HHUStyle.divider
 """),
     ],
-    # Boundary editing: drag handles only, no polygon tool bar (Basic / Circular / Trace / KML)
-    "FlightMap/MapItems/QGCMapPolygonVisuals.qml": [
-        replace_once("""    function addToolbarVisuals() {
-        if (_objMgrToolVisuals.empty) {
-""", """    function addToolbarVisuals() {
-        if (false /* HHU: no polygon tool bar */ && _objMgrToolVisuals.empty) {
-"""),
-    ],
     # Waypoint numbers (设计稿 3): white with blue number; current (作业) green; selected (规划) blue + yellow ring
     "PlanView/MissionItemIndexLabel.qml": [
         add_import("HHU.Controls"),
@@ -165,15 +157,6 @@ OVERRIDES = {
         border.color:   HHUStyle.yellow
         border.width:   3
         visible:        _hhuSelected
-"""),
-    ],
-    # Field boundary (geofence): bright blue, solid (设计稿 3; no dashes)
-    "PlanView/GeoFenceMapVisuals.qml": [
-        add_import("HHU.Controls"),
-        replace_once("""    property color  _borderColor:               "orange"
-    property int    _borderWidthInclusion:      2
-""", """    property color  _borderColor:               HHUStyle.fence
-    property int    _borderWidthInclusion:      4
 """),
     ],
     # All QGC dialogs (showMessageDialog etc.) in the HHU look: white card, big title, buttons in a grey footer
@@ -304,7 +287,7 @@ OVERRIDES = {
         hide_block_with_object_name("planToolStrip_roiButton"),
         hide_block_with_object_name("planToolStrip_landButton"),
         add_import("HHU.Controls"),
-        # 规划 page (设计稿 5a–5e): the HHU step panel on the left replaces the tool strip, the plan tree
+        # 规划 page: the HHU step panel on the left replaces the tool strip, the plan tree
         # (right panel), the layer switcher and the toolbar actions; the map keeps QGC's editing
         replace_once("""        ToolStrip {
             id: toolStrip
@@ -342,14 +325,6 @@ OVERRIDES = {
             anchors.margins: _toolsMargin
             anchors.left: hhuPlanPanel.right
             anchors.top: parent.top
-"""),
-        replace_once("""                case _layerRally:
-                    if (_rallyPointController.supported) {
-""", """                case _layerFence:
-                    hhuPlanPanel.boundaryClicked(coordinate)  // HHU: 画边界
-                    break
-                case _layerRally:
-                    if (_rallyPointController.supported) {
 """),
         replace_once("""            z:                      QGroundControl.zOrderWidgets
             visible:                !_planMasterController.showCreateFromTemplate
@@ -402,22 +377,10 @@ OVERRIDES = {
                             _missionController.setHomePosition(coordinate)  // HHU: no planned home UI
                         }
 """),
-        # Route summary card at the bottom of the map
+        # Waypoints where the vehicle cannot make the turn are ringed red (上传前检查)
         replace_once("""        PlanViewRightPanel {
             id: rightPanel
-""", """        HHUPlanSummary {
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.margins: HHUStyle.margin
-            z: QGroundControl.zOrderWidgets
-            showRoute: hhuPlanPanel.step >= 2
-            missionController: _missionController
-            geoFenceController: _geoFenceController
-            visible: _missionController.visualItems.count > 1 || _geoFenceController.polygons.count > 0
-        }
-
-        // Waypoints where the vehicle cannot make the turn are ringed red (上传前检查)
-        HHUUploadCheck {
+""", """        HHUUploadCheck {
             id: hhuTurnCheck
             visible: false
             live: true
@@ -459,13 +422,6 @@ OVERRIDES = {
             checked: false  // HHU: hides the section content too
 """),
     ],
-    # Layer switcher without rally points (geofence stays)
-    "PlanView/PlanEditLayers.qml": [
-        replace_once("""        { layer: layerFence,   nodeType: "fenceGroup",   icon: "/res/GeoFence.svg",   name: qsTr("GeoFence") },
-        { layer: layerRally,   nodeType: "rallyGroup",   icon: "/res/RallyPoint.svg", name: qsTr("Rally Points") }
-""", """        { layer: layerFence,   nodeType: "fenceGroup",   icon: "/res/GeoFence.svg",   name: qsTr("GeoFence") }
-"""),
-    ],
     # Plan tree without the rally point rows
     "PlanView/PlanTreeView.qml": [
         replace_once("""        implicitHeight: (loader.item ? loader.item.height : 1) + (separatorLine.visible ? separatorLine.height + root.rowSpacing : 0)
@@ -503,9 +459,9 @@ OVERRIDES = {
     }
 """, """    function _uploadClicked() {
         hhuUploadCheck.run(function() {
-            _planMasterController.upload()
-            // 断点续作 needs to know which field is on the vehicle
-            hhuWork.setVehicleField(QGroundControl.multiVehicleManager.activeVehicle, hhuFields.currentId)
+            _planMasterController.sendToVehicle()
+            // A new route on the vehicle invalidates the resume point (断点续作)
+            hhuWork.clearResume(QGroundControl.multiVehicleManager.activeVehicle)
         })
     }
 
@@ -514,42 +470,6 @@ OVERRIDES = {
         visible: false
         planMasterController: root._planMasterController
     }
-
-    HHUFieldPanel {
-        id: hhuFieldPanel
-        planMasterController: root._planMasterController
-    }
-"""),
-        # 地块 button first; 保存 stores into the open field (需求说明 V1.0 §3.3 地块管理)
-        replace_once("""    QGCButton {
-        objectName: "planToolbar_openButton"
-        text: qsTr("Open")
-""", """    QGCButton {
-        objectName: "planToolbar_fieldsButton"
-        text: hhuFields.currentId !== "" ? qsTr("Field: %1").arg(hhuFields.current.name || "") : qsTr("Fields")
-        iconSource: "/res/GeoFence.svg"
-        primary: hhuFields.currentId === ""
-        enabled: !_planMasterController.syncInProgress
-        onClicked: { toolbarButtonClicked(); hhuFieldPanel.open() }
-    }
-
-    QGCButton {
-        objectName: "planToolbar_openButton"
-        text: qsTr("Import")
-"""),
-        replace_once("""    function _saveButtonClicked() {
-        if (_planMasterController.currentPlanFile === "") {
-            _planMasterController.saveToSelectedFile()
-        } else {
-            _planMasterController.saveToCurrent()
-        }
-    }
-""", """    function _saveButtonClicked() {
-        hhuFieldPanel.saveCurrent()
-    }
-"""),
-        replace_once("""                        text: qsTr("Save as...")
-""", """                        text: qsTr("Export .plan")
 """),
     ],
     # Waypoint editor: no altitude (rover, altitude always 0)
@@ -581,7 +501,6 @@ OVERRIDES = {
     HHUGotoHere {
         id: hhuGoto
         mapControl: _root
-        planMasterController: _root.planMasterController
     }
 
     onMapClicked: (position) => {

@@ -12,7 +12,6 @@
 #include "BlankPlanCreator.h"
 #include "HHU4GLink.h"
 #include "HHUConfig.h"
-#include "HHUFieldManager.h"
 #include "HHUNtrip.h"
 #include "HHUService.h"
 #include "HHUWorkLog.h"
@@ -82,7 +81,6 @@ CustomPlugin::CustomPlugin(QObject *parent)
     , _vcuStatus(new HHUVcuStatus(this))
     , _linkMonitor(new HHULinkMonitor(_hhuSettings, this))
     , _link4G(new HHU4GLink(_linkMonitor, this))
-    , _fields(new HHUFieldManager(this))
     , _workLog(new HHUWorkLog(this))
 {
     _showAdvancedUI = false;
@@ -381,7 +379,6 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuConfig"), _hhuConfig);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuLink"), _linkMonitor);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhu4G"), _link4G);
-    _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuFields"), _fields);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuWork"), _workLog);
 
     // These need the settings / network stack, which exist once the QML engine is created

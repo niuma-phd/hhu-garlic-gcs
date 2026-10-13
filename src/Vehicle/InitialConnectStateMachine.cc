@@ -121,14 +121,9 @@ void InitialConnectStateMachine::_createStates()
         QStringLiteral("RequestGeoFence"),
         this,
         [this]() {
-            if (_shouldSkipForPlanLoad()) {
-                return true;
-            }
-            if (!vehicle()->_geoFenceManager->supported()) {
-                _lastSkipReason = QStringLiteral("(not supported by vehicle)");
-                return true;
-            }
-            return false;
+            // HHU (issue #4): the rover no longer uses a geofence — never request it at connect
+            _lastSkipReason = QStringLiteral("(geofence removed, issue #4)");
+            return true;
         },
         [this](SkippableAsyncState* state) { _requestGeoFence(state); },
         [this]() {

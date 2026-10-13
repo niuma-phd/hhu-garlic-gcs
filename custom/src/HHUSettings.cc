@@ -7,7 +7,6 @@
 
 namespace {
 constexpr const char *kGroup = "HHU";
-constexpr double kSquareMetersPerMu = 10000.0 / 15.0;   // 1 亩 = 666.67 m²
 }
 
 HHUSettings::HHUSettings(QObject *parent)
@@ -21,7 +20,6 @@ HHUSettings::HHUSettings(QObject *parent)
     _maxWaypoints      = std::clamp(settings.value("maxWaypoints", _maxWaypoints).toInt(), 10, 10000);
     _fontSize          = std::clamp(settings.value("fontSize", _fontSize).toInt(), 0, 2);
     _highContrast      = settings.value("highContrast", _highContrast).toBool();
-    _areaUnit          = std::clamp(settings.value("areaUnit", _areaUnit).toInt(), 0, 1);
     _lastTurnRadius    = settings.value("lastTurnRadius", _lastTurnRadius).toDouble();
     _mapLabels         = settings.value("mapLabels", _mapLabels).toBool();
 }
@@ -93,15 +91,6 @@ void HHUSettings::setHighContrast(bool value)
     }
 }
 
-void HHUSettings::setAreaUnit(int value)
-{
-    value = std::clamp(value, 0, 1);
-    if (value != _areaUnit) {
-        _areaUnit = value;
-        _save("areaUnit", value);
-    }
-}
-
 void HHUSettings::setMapLabels(bool value)
 {
     if (value != _mapLabels) {
@@ -116,12 +105,4 @@ void HHUSettings::setLastTurnRadius(double value)
         _lastTurnRadius = value;
         _save("lastTurnRadius", value);
     }
-}
-
-QString HHUSettings::formatArea(double squareMeters) const
-{
-    if (_areaUnit == 1) {
-        return tr("%1 ha").arg(squareMeters / 10000.0, 0, 'f', 2);
-    }
-    return tr("%1 mu").arg(squareMeters / kSquareMetersPerMu, 0, 'f', 2);
 }

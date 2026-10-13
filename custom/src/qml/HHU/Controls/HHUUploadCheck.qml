@@ -8,7 +8,8 @@ import QGroundControl.Controls
 /// Route checks of the 航线 page (需求说明 V1.0 §3.3).
 /// Warnings (user may upload anyway): turn too sharp for TURN_RADIUS, more waypoints than
 /// hhuSettings.maxWaypoints, first waypoint more than 5 km from the vehicle.
-/// Errors (upload refused): no geofence, waypoints outside the geofence, read-only 4G connection.
+/// Errors (upload refused): read-only 4G connection, no route, not connected, or the vehicle
+/// already working its route. (The rover no longer uses a geofence — issue #4: no fence checks.)
 /// With live: true, tightTurns is kept up to date for the red map markers.
 Item {
     id: root
@@ -22,10 +23,7 @@ Item {
     property var tightTurns: []
 
     readonly property var _missionController:   planMasterController ? planMasterController.missionController : null
-    readonly property var _fenceController:     planMasterController ? planMasterController.geoFenceController : null
     readonly property var _vehicle:             QGroundControl.multiVehicleManager.activeVehicle
-
-    HHUFence { id: fence; geoFenceController: root._fenceController }
 
     /// TURN_RADIUS of the vehicle; kept up to date by the plugin, last value kept for offline planning
     function _turnRadius() {
@@ -80,7 +78,8 @@ Item {
     }
 
     /// { errors: [...], warnings: [...] } (strings) and items: [{ t, error, step, look }] for the
-    /// 规划 check step (step: where to fix it, -1 = nothing to fix there; look: show it on the map)
+    /// 检查上传 step (step: where to fix it, 0 = the route step, -1 = nothing to fix there;
+    /// look: show it on the map)
     function check() {
         const points = _waypoints()
         let errors = []
@@ -92,23 +91,14 @@ Item {
             add(errors, qsTr("Read-only connection: another ground station controls this vehicle. The route can be edited and saved but not uploaded."), true, -1)
         }
 
-        if (!fence.hasInclusion()) {
-            add(errors, qsTr("No field boundary. Draw the boundary first."), true, 1)
-        } else {
-            const outside = points.filter(p => !fence.contains(p.coordinate))
-            if (outside.length > 0) {
-                add(errors, qsTr("Waypoints outside the boundary: %1").arg(_seqList(outside)), true, 2)
-            }
-        }
-
         const turnRadius = _turnRadius()
         const tight = _findTightTurns(points, turnRadius)
         if (tight.length > 0) {
-            add(warnings, qsTr("Turns too sharp for the vehicle (turn radius %1 m) at waypoints: %2 (marked red on the map)").arg(turnRadius.toFixed(1)).arg(_seqList(tight)), false, 2, true)
+            add(warnings, qsTr("Turns too sharp for the vehicle (turn radius %1 m) at waypoints: %2 (marked red on the map)").arg(turnRadius.toFixed(1)).arg(_seqList(tight)), false, 0, true)
         }
 
         if (points.length > hhuSettings.maxWaypoints) {
-            add(warnings, qsTr("The route has %1 waypoints, more than the limit of %2.").arg(points.length).arg(hhuSettings.maxWaypoints), false, 2)
+            add(warnings, qsTr("The route has %1 waypoints, more than the limit of %2.").arg(points.length).arg(hhuSettings.maxWaypoints), false, 0)
         }
 
         if (_vehicle && _vehicle.coordinate.isValid && points.length > 0) {
@@ -118,7 +108,7 @@ Item {
             }
         }
         if (points.length === 0) {
-            add(errors, qsTr("No route. Add waypoints first."), true, 2)
+            add(errors, qsTr("No route. Add waypoints first."), true, 0)
         }
         if (!_vehicle) {
             add(errors, qsTr("Not connected to the vehicle."), true, -1)

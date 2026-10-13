@@ -27,10 +27,8 @@ Item {
 
     readonly property var   _vehicle:           status.vehicle
     readonly property var   _missionController: planMasterController ? planMasterController.missionController : null
-    readonly property var   _fenceController:   planMasterController ? planMasterController.geoFenceController : null
     readonly property int   _missionItems:      _missionController ? _missionController.visualItems.count - 1 : 0
     readonly property bool  _missionAvailable:  _missionItems > 0
-    readonly property bool  _fenceAvailable:    !!_fenceController && (_fenceController.polygons.count > 0 || _fenceController.circles.count > 0)
     readonly property bool  _paused:            status.inPause && status.armed
     readonly property bool  _idle:              !!_vehicle && !status.inAuto && !_paused && !status.inReturn && !status.inGuided
 
@@ -41,7 +39,6 @@ Item {
         if (status.vcuValid && !status.vcuAuthorized)                 list.push({ t: qsTr("Switch to unmanned mode with the remote control"), btn: "", page: "" })
         if (status.vcuValid && status.vcuAuthorized && !hhuVcu.ok)    list.push({ t: qsTr("Chassis not ready, see the message list"), btn: "", page: "" })
         if (!_missionAvailable)     list.push({ t: qsTr("No route on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
-        if (!_fenceAvailable)       list.push({ t: qsTr("No field boundary on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
         if (!status.rtkFixed)       list.push({ t: qsTr("Wait for a good position, about 1-3 minutes"), btn: "", page: "" })
         if (_vcuFault)              list.push({ t: qsTr("Chassis fault: %1").arg(status.faultText), btn: "", page: "" })
         return list
@@ -117,28 +114,23 @@ Item {
 
     function _openStart() {
         const route = _routeInfo()
-        const fieldId = hhuWork.vehicleField(_vehicle)
-        const field = hhuFields.field(fieldId)
         startDialog.openStart(route.count, route.first, route.last,
-                              hhuWork.resumeWaypoint(_vehicle, fieldId), field.name || "",
-                              function(seq) { root._startWork(seq, route, fieldId, field) })
+                              hhuWork.resumeWaypoint(_vehicle),
+                              function(seq) { root._startWork(seq, route) })
     }
 
-    function _startWork(seq, route, fieldId, field) {
+    function _startWork(seq, route) {
         _vehicle.prearmError = ""
         _vehicle.setCurrentMissionSequence(seq)
         _vehicle.startMission()
         _expect(qsTr("Start work"), function() { return status.armed && status.inAuto }, 0, function() {
             HHUState.gotoTarget = null
             hhuWork.start(root._vehicle, {
-                fieldId:    fieldId,
+                fieldId:    "",
                 startSeq:   seq,
                 lastSeq:    route.last
             })
-            if (fieldId !== "") {
-                hhuFields.markWorked(fieldId)
-            }
-        }, function() { root._startWork(seq, route, fieldId, field) })
+        }, function() { root._startWork(seq, route) })
     }
 
     function _pause() {

@@ -37,11 +37,10 @@ public:
     /// how the end of the route is recognised)
     void itemReached(Vehicle *vehicle, int seq);
 
-    /// 断点续作: waypoint the vehicle was driving to when work on this field last stopped (0 = none)
-    Q_INVOKABLE int resumeWaypoint(Vehicle *vehicle, const QString &fieldId) const;
-    /// Field last uploaded to this vehicle ("" = unknown)
-    Q_INVOKABLE QString vehicleField(Vehicle *vehicle) const;
-    Q_INVOKABLE void setVehicleField(Vehicle *vehicle, const QString &fieldId);
+    /// 断点续作: waypoint the vehicle was driving to when work last stopped (0 = none)
+    Q_INVOKABLE int resumeWaypoint(Vehicle *vehicle) const;
+    /// Forget the resume point of this vehicle (a new route was uploaded)
+    Q_INVOKABLE void clearResume(Vehicle *vehicle);
 
 
 signals:

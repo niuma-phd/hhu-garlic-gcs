@@ -6,7 +6,7 @@
 message(STATUS "QGC: Adding HHU Custom Plugin")
 
 # Product version (检查更新 compares against it; sent in the 4G login)
-set(HHU_APP_VERSION "1.0.2")
+set(HHU_APP_VERSION "1.1.0")
 
 # ============================================================================
 # Custom Resources
@@ -65,8 +65,6 @@ set(CUSTOM_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHU4GLink.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUConfig.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUConfig.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUFieldManager.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUFieldManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHULinkMonitor.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHULinkMonitor.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUNtrip.cc

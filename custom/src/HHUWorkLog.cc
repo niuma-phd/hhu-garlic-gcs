@@ -214,26 +214,21 @@ void HHUWorkLog::_saveSession()
     }
 }
 
-// ---- Resume / vehicle field ------------------------------------------------------------------
+// ---- Resume (断点续作) ------------------------------------------------------------------------
 
 QString HHUWorkLog::_resumeKey(const QString &vehicleKey, const QString &fieldId) const
 {
     return QStringLiteral("HHU/resume/%1/%2").arg(QString(vehicleKey).replace(QLatin1Char('/'), QLatin1Char('_')), fieldId.isEmpty() ? QStringLiteral("none") : fieldId);
 }
 
-int HHUWorkLog::resumeWaypoint(Vehicle *vehicle, const QString &fieldId) const
+int HHUWorkLog::resumeWaypoint(Vehicle *vehicle) const
 {
-    return QSettings().value(_resumeKey(vehicleKey(vehicle), fieldId), 0).toInt();
+    return vehicle ? QSettings().value(_resumeKey(vehicleKey(vehicle), QString()), 0).toInt() : 0;
 }
 
-QString HHUWorkLog::vehicleField(Vehicle *vehicle) const
-{
-    return vehicle ? QSettings().value(QStringLiteral("HHU/vehicleField/") + QString(vehicleKey(vehicle)).replace(QLatin1Char('/'), QLatin1Char('_'))).toString() : QString();
-}
-
-void HHUWorkLog::setVehicleField(Vehicle *vehicle, const QString &fieldId)
+void HHUWorkLog::clearResume(Vehicle *vehicle)
 {
     if (vehicle) {
-        QSettings().setValue(QStringLiteral("HHU/vehicleField/") + QString(vehicleKey(vehicle)).replace(QLatin1Char('/'), QLatin1Char('_')), fieldId);
+        QSettings().remove(_resumeKey(vehicleKey(vehicle), QString()));
     }
 }

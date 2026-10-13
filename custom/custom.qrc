@@ -19,7 +19,6 @@
         <file alias="QGroundControl/PlanView/SimpleItemEditor.qml">src/qml/generated/SimpleItemEditor.qml</file>
         <file alias="QGroundControl/PlanView/MissionDefaultsEditor.qml">src/qml/generated/MissionDefaultsEditor.qml</file>
         <file alias="QGroundControl/PlanView/PlanInfoEditor.qml">src/qml/generated/PlanInfoEditor.qml</file>
-        <file alias="QGroundControl/PlanView/PlanEditLayers.qml">src/qml/generated/PlanEditLayers.qml</file>
         <file alias="QGroundControl/PlanView/PlanTreeView.qml">src/qml/generated/PlanTreeView.qml</file>
         <file alias="QGroundControl/PlanView/MissionItemEditor.qml">src/qml/generated/MissionItemEditor.qml</file>
         <file alias="QGroundControl/PlanView/PlanToolBarIndicators.qml">src/qml/generated/PlanToolBarIndicators.qml</file>
@@ -29,10 +28,8 @@
         <file alias="QGroundControl/AppSettings/SettingsPage.qml">src/qml/generated/SettingsPage.qml</file>
         <file alias="QGroundControl/MainWindow.qml">src/qml/generated/MainWindow.qml</file>
         <file alias="QGroundControl/PlanView/MissionItemIndexLabel.qml">src/qml/generated/MissionItemIndexLabel.qml</file>
-        <file alias="QGroundControl/PlanView/GeoFenceMapVisuals.qml">src/qml/generated/GeoFenceMapVisuals.qml</file>
         <file alias="QGroundControl/FlightMap/MapItems/VehicleMapItem.qml">src/qml/VehicleMapItem.qml</file>
         <file alias="QGroundControl/FlightMap/MapItems/MissionLineView.qml">src/qml/MissionLineView.qml</file>
-        <file alias="QGroundControl/FlightMap/MapItems/QGCMapPolygonVisuals.qml">src/qml/generated/QGCMapPolygonVisuals.qml</file>
     </qresource>
     <qresource prefix="/Custom/res">
         <file alias="QGCLogoFull.svg">res/images/hhu_logo_small.svg</file>
