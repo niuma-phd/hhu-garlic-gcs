@@ -80,7 +80,6 @@ Item {
         }
     }
 
-    ParameterDownloadProgress {
-        anchors.fill: parent
-    }
+    // No ParameterDownloadProgress: its big green bar covered the whole top bar for ~30 s after
+    // connecting. HHUStatusBar shows 正在同步 xx% with a thin bar under it instead (issue #6).
 }

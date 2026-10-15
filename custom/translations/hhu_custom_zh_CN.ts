@@ -29,6 +29,13 @@
     </message>
   </context>
   <context>
+    <name>AutoPilotPlugin</name>
+    <message>
+      <source>Configuration tasks remain before this vehicle is ready to fly. See Vehicle Configuration for details.</source>
+      <translation type="unfinished" />
+    </message>
+  </context>
+  <context>
     <name>CommLinksSettings</name>
     <message>
       <source> (retry in %1 s)</source>
@@ -1231,6 +1238,10 @@
     <message>
       <source>Standby</source>
       <translation>待机</translation>
+    </message>
+    <message>
+      <source>Syncing %1%</source>
+      <translation>正在同步 %1%</translation>
     </message>
     <message>
       <source>To target</source>

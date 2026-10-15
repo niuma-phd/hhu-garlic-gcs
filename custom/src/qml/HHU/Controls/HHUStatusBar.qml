@@ -41,12 +41,17 @@ Rectangle {
     /// 4G link quality the operator notices: slow answers or many lost packets
     readonly property bool _weakLink:   status.connected && ((hhuLink.latencyMs > 1500) || (_vehicle && _vehicle.mavlinkLossPercent > 20))
 
+    /// Parameters still downloading after connecting (QGC's initial connect sequence)
+    readonly property bool _syncing:    !!_vehicle && !_vehicle.initialConnectComplete && !status.linkLost
+    readonly property real _syncProgress: _vehicle ? Math.max(0, Math.min(1, _vehicle.loadProgress)) : 0
+
     readonly property var _conn: {
         if (!_vehicle) {
             return hhu4G.active && hhu4G.state !== "online" ? { t: qsTr("Connecting"), c: HHUStyle.yellow }
                                                           : { t: qsTr("Not connected"), c: HHUStyle.neutral }
         }
         if (status.linkLost)    return { t: qsTr("Link lost"),      c: HHUStyle.red }
+        if (_syncing)           return { t: qsTr("Syncing %1%").arg(Math.round(_syncProgress * 100)), c: HHUStyle.yellow }
         if (status.readOnly)    return { t: qsTr("View only"),      c: HHUStyle.blue }
         if (_weakLink)          return { t: qsTr("Weak signal"),    c: HHUStyle.yellow }
         return { t: qsTr("Connected"), c: HHUStyle.green }
@@ -81,6 +86,15 @@ Rectangle {
         width:          parent.width
         height:         2
         color:          "#24142030"
+    }
+
+    // parameter download: thin bar under the top bar, which stays usable
+    Rectangle {
+        anchors.top:    parent.bottom
+        visible:        root._syncing
+        width:          parent.width * root._syncProgress
+        height:         4 * HHUStyle.s
+        color:          HHUStyle.blue
     }
 
     RowLayout {
