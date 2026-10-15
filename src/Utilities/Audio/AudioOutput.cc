@@ -164,10 +164,26 @@ void AudioOutput::_applyEngineSettings()
         return;
     }
 
-    const QLocale defaultLocale("en_US");
-    if (_engine->availableLocales().contains(defaultLocale)) {
-        _engine->setLocale(defaultLocale);
+    // Speak in the UI language (spoken texts are translated) when the system has a voice for it,
+    // otherwise US English
+    const QList<QLocale> locales = _engine->availableLocales();
+    const QLocale uiLocale;
+    QLocale speechLocale("en_US");
+    if (locales.contains(uiLocale)) {
+        speechLocale = uiLocale;
+    } else {
+        for (const QLocale &locale : locales) {
+            if (locale.language() == uiLocale.language()) {
+                speechLocale = locale;
+                break;
+            }
+        }
     }
+    if (locales.contains(speechLocale)) {
+        _engine->setLocale(speechLocale);
+    }
+    _englishSpeech = _engine->locale().language() == QLocale::English;
+    qCDebug(AudioOutputLog) << "TTS locale" << _engine->locale() << "for UI locale" << uiLocale;
 
     // Pin an explicit voice so output doesn't depend on the engine's per-OS default.
     const QList<QVoice> voices = _engine->availableVoices();
@@ -220,7 +236,8 @@ void AudioOutput::say(const QString &text, TextMods textMods)
         return;
     }
 
-    QString outText = _fixTextMessageForAudio(text);
+    // The rewrites (abbreviations, "point", "meters", "seconds") are English words
+    QString outText = _englishSpeech ? _fixTextMessageForAudio(text) : text;
 
     if (textMods.testFlag(TextMod::Translate)) {
         outText = tr("%1").arg(outText);

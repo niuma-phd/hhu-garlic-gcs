@@ -52,6 +52,7 @@ private:
     qsizetype _textQueueSize = 0;
     bool _initialized = false;
     bool _speakCapable = false;
+    bool _englishSpeech = true;  ///< speech locale is English (text rewrites apply)
     Fact *_volumeFact = nullptr;
     Fact *_mutedFact = nullptr;
     double _lastVolume = -1.0;
