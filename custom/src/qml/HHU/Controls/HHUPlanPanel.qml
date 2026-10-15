@@ -96,19 +96,7 @@ HHUCard {
     readonly property var _speedSection: _mission.visualItems.count > 0 ? _mission.visualItems.get(0).speedSection : null
 
     /// Highest route speed: the vehicle's WP_SPEED / VCU_V_MAX (the lower one), 1.5 m/s when they cannot be read
-    readonly property real _maxSpeed: {
-        const vehicle = status.vehicle
-        let max = 0
-        if (vehicle && vehicle.parameterManager.parametersReady) {
-            for (const name of [ "WP_SPEED", "VCU_V_MAX" ]) {
-                if (vehicle.parameterManager.parameterExists(-1, name)) {
-                    const v = vehicle.parameterManager.getParameter(-1, name).rawValue
-                    if (v > 0) max = max > 0 ? Math.min(max, v) : v
-                }
-            }
-        }
-        return max > 0 ? Math.round(max * 10) / 10 : 1.5
-    }
+    readonly property real _maxSpeed: hhuSettings.vehicleMaxSpeed > 0 ? Math.floor(hhuSettings.vehicleMaxSpeed * 10 + 1e-6) / 10 : 1.5
     /// Route speed; a route without its own speed shows the last speed set here (never above _maxSpeed)
     readonly property real _speed: _speedSection && _speedSection.specifyFlightSpeed
                                    ? _speedSection.flightSpeed.rawValue

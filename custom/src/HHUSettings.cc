@@ -89,6 +89,17 @@ void HHUSettings::setMapLabels(bool value)
     }
 }
 
+void HHUSettings::setVehicleMaxSpeed(double value)
+{
+    if (!std::isfinite(value) || value < 0) {
+        value = 0;
+    }
+    if (value != _vehicleMaxSpeed) {
+        _vehicleMaxSpeed = value;
+        emit changed();
+    }
+}
+
 void HHUSettings::setLastTurnRadius(double value)
 {
     if (std::isfinite(value) && value > 0 && value != _lastTurnRadius) {
