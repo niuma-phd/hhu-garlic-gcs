@@ -72,7 +72,8 @@ SettingsPage {
                 QGCButton {
                     text:       configRow._isActive ? qsTr("Disconnect") : qsTr("Connect")
                     primary:    !configRow._isActive
-                    onClicked:  configRow._isActive ? hhu4G.disconnectLink() : hhu4G.connectTo(index)
+                    onClicked:  configRow._isActive ? hhu4G.disconnectLink()
+                                                    : HHUState.connectExclusive(configRow, modelData.name, function() { hhu4G.connectTo(index) })
                 }
             }
         }
@@ -205,9 +206,13 @@ SettingsPage {
                           tls: base ? base.tls : true, caFile: base ? base.caFile : "", vehicle: "" })
         }
 
+        function _savedName() {
+            return nameEdit.text.trim() !== "" ? nameEdit.text : "4G " + vehicleEdit.text.trim()
+        }
+
         function save() {
             const index = hhu4G.saveConfig(editIndex, {
-                name:     nameEdit.text.trim() !== "" ? nameEdit.text : "4G " + vehicleEdit.text.trim(),
+                name:     _savedName(),
                 host:     hostEdit.text,
                 port:     parseInt(portEdit.text) || 7000,
                 tls:      tlsSwitch.checked,
@@ -343,7 +348,11 @@ SettingsPage {
                     text:       qsTr("Save and connect")
                     primary:    true
                     enabled:    fourGDialog._complete
-                    onClicked:  hhu4G.connectTo(fourGDialog.save())
+                    onClicked: {
+                        const name = fourGDialog._savedName()
+                        const index = fourGDialog.save()
+                        HHUState.connectExclusive(fourGDialog.parent, name, function() { hhu4G.connectTo(index) })
+                    }
                 }
             }
         }

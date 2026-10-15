@@ -1107,6 +1107,21 @@
     </message>
   </context>
   <context>
+    <name>HHUState</name>
+    <message>
+      <source>, </source>
+      <translation>、</translation>
+    </message>
+    <message>
+      <source>Connected to %1. Only one vehicle can be connected at a time. Disconnect it and connect to %2?</source>
+      <translation>当前已连接 %1。同时只能连接一台车，要断开它并连接 %2 吗？</translation>
+    </message>
+    <message>
+      <source>Switch connection</source>
+      <translation>切换连接</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUStatus</name>
     <message>
       <source>Bluetooth</source>

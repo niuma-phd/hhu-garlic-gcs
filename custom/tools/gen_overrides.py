@@ -590,6 +590,11 @@ OVERRIDES = {
     # Link types: serial, UDP, TCP, Bluetooth only (需求说明 V1.0 §4.1); no log replay / high latency
     "AppSettings/LinkConfigurationManager.qml": [
         add_import("QGroundControl.AppSettings"),
+        add_import("HHU.Controls"),
+        # One vehicle at a time (issue #6): ask before dropping the connection in use
+        replace_once("""                        _linkManager.createConnectedLink(object)
+""", """                        HHUState.connectExclusive(_root, object.name, function() { _linkManager.createConnectedLink(object) })
+"""),
         replace_once("""                QGCCheckBoxSlider {
                     Layout.fillWidth:   true
                     text:               qsTr("High Latency")

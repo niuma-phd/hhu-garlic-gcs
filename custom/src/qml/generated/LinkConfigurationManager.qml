@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import QGroundControl
+import HHU.Controls
 import QGroundControl.AppSettings
 import QGroundControl.Controls
 import QGroundControl.FactControls
@@ -82,7 +83,7 @@ SettingsGroupLayout {
                     if (object.linkActive) {
                         _linkManager.disconnectLinkConfiguration(object)
                     } else {
-                        _linkManager.createConnectedLink(object)
+                        HHUState.connectExclusive(_root, object.name, function() { _linkManager.createConnectedLink(object) })
                     }
                 }
             }
