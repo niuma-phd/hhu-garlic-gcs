@@ -79,7 +79,7 @@ SettingsPage {
             Layout.fillWidth:   true
             label:              qsTr("Add a 4G connection")
             buttonText:         qsTr("Add")
-            onClicked:          fourGDialog.openFor(-1, { name: "4G", host: "", port: 7000, tls: true, caFile: "", vehicle: "" })
+            onClicked:          fourGDialog.openNew()
         }
 
         QGCLabel {
@@ -171,6 +171,8 @@ SettingsPage {
         modal:          true
         focus:          true
         padding:        ScreenTools.defaultFontPixelWidth * 2
+        // Only 取消 / Esc close it: a click next to the dialog used to drop the input without a word (issue #6)
+        closePolicy:    Popup.CloseOnEscape
 
         property int    editIndex: -1
         property bool   hasPassword: false
@@ -192,9 +194,18 @@ SettingsPage {
             open()
         }
 
+        /// A new connection uses the server of the saved one: 服务器 / 端口 / 加密 / 证书 are the same for
+        /// every vehicle and are folded away under 高级, so the customer only enters 车辆编号 and 密码
+        function openNew() {
+            const list = hhu4G.configs
+            const base = list.length > 0 ? list[Math.max(0, hhu4G.activeIndex)] : null
+            openFor(-1, { name: "", host: base ? base.host : "", port: base ? base.port : 7000,
+                          tls: base ? base.tls : true, caFile: base ? base.caFile : "", vehicle: "" })
+        }
+
         function save() {
             const index = hhu4G.saveConfig(editIndex, {
-                name:     nameEdit.text,
+                name:     nameEdit.text.trim() !== "" ? nameEdit.text : "4G " + vehicleEdit.text.trim(),
                 host:     hostEdit.text,
                 port:     parseInt(portEdit.text) || 7000,
                 tls:      tlsSwitch.checked,
@@ -206,7 +217,14 @@ SettingsPage {
             return index
         }
 
-        readonly property bool _complete: hostEdit.text.trim() !== "" && vehicleEdit.text.trim() !== "" && (passwordEdit.text !== "" || hasPassword)
+        readonly property var  _missing: {
+            let list = []
+            if (vehicleEdit.text.trim() === "")             list.push(qsTr("Vehicle number"))
+            if (passwordEdit.text === "" && !hasPassword)   list.push(qsTr("Password"))
+            if (hostEdit.text.trim() === "")                list.push(qsTr("Server address (under Advanced)"))
+            return list
+        }
+        readonly property bool _complete: _missing.length === 0
 
         QGCPalette { id: dlgPal; colorGroupEnabled: true }
 
@@ -237,7 +255,7 @@ SettingsPage {
             }
 
             QGCLabel { text: qsTr("Name") }
-            QGCTextField { id: nameEdit; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 30 }
+            QGCTextField { id: nameEdit; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 30; placeholderText: qsTr("4G + vehicle number") }
 
             QGCLabel { text: qsTr("Vehicle number") }
             QGCTextField { id: vehicleEdit; Layout.fillWidth: true }
@@ -295,6 +313,14 @@ SettingsPage {
                 visible: fourGDialog.advanced && tlsSwitch.checked
                 QGCTextField { id: caEdit; Layout.fillWidth: true; placeholderText: qsTr("Built in (factory preset)") }
                 QGCButton { text: qsTr("Import…"); onClicked: caDialog.open() }
+            }
+
+            // why 保存 is grey
+            QGCLabel {
+                Layout.columnSpan:  2
+                visible:            !fourGDialog._complete
+                text:               qsTr("Still to fill in: %1").arg(fourGDialog._missing.join(qsTr(", ")))
+                color:              "#B42318"
             }
 
             RowLayout {

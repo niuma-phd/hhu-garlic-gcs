@@ -47,6 +47,14 @@
       <translation>（未加密）</translation>
     </message>
     <message>
+      <source>, </source>
+      <translation>、</translation>
+    </message>
+    <message>
+      <source>4G + vehicle number</source>
+      <translation>默认“4G + 车辆编号”</translation>
+    </message>
+    <message>
       <source>4G connection</source>
       <translation>4G 连接</translation>
     </message>
@@ -187,8 +195,16 @@
       <translation>服务器地址</translation>
     </message>
     <message>
+      <source>Server address (under Advanced)</source>
+      <translation>服务器地址（在“高级”里）</translation>
+    </message>
+    <message>
       <source>Show</source>
       <translation>显示</translation>
+    </message>
+    <message>
+      <source>Still to fill in: %1</source>
+      <translation>还需填写：%1</translation>
     </message>
     <message>
       <source>This connection (up / down)</source>
