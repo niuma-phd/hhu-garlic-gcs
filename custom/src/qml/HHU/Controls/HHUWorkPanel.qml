@@ -268,7 +268,7 @@ Item {
                         Layout.fillWidth:       true
                         Layout.minimumHeight:   44 * HHUStyle.s
                         spacing:                12 * HHUStyle.s
-                        HHUText { Layout.fillWidth: true; text: modelData.t; size: 16; wrapMode: Text.WordWrap }
+                        HHUText { Layout.fillWidth: true; text: modelData.t; size: HHUStyle.bodySize; wrapMode: Text.WordWrap }
                         HHUButton {
                             visible:    modelData.btn !== ""
                             text:       modelData.btn

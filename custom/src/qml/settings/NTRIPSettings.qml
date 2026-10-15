@@ -4,6 +4,7 @@ import QtQuick.Dialogs
 import QtQuick.Layouts
 
 import QGroundControl
+import HHU.Controls
 import QGroundControl.Controls
 import QGroundControl.AppSettings
 
@@ -105,7 +106,7 @@ SettingsPage {
             Layout.fillWidth:       true
             Layout.maximumWidth:    ScreenTools.defaultFontPixelWidth * 60
             wrapMode:               Text.WordWrap
-            font.pointSize:         ScreenTools.smallFontPointSize
+            font.pixelSize:         HHUStyle.bodyFontSize
             text: _via4G ? qsTr("4G connection: the account is sent to the server, which delivers the corrections to the vehicle.")
                          : qsTr("Radio / LAN connection: this computer logs in to the RTK service and forwards the corrections to the vehicle. The computer needs internet access.")
         }

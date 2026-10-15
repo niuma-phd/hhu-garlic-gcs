@@ -42,6 +42,11 @@ QtObject {
     /// Font pixel size: design px × 字号
     function px(size) { return Math.round(size * s) }
 
+    /// Body text of cards and dialogs (正文, issue #6): the size of the 暂时不能开始 card text.
+    /// bodySize for HHUText.size, bodyFontSize (pixels) for QGC controls (QGCLabel font.pixelSize)
+    readonly property int  bodySize:        16
+    readonly property real bodyFontSize:    px(bodySize)
+
     readonly property real barH:        (compact ? 52 : 60) * s
     readonly property real tabH:        (compact ? 40 : 46) * s
     readonly property real tabPad:      (compact ? 14 : 20) * s

@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import QGroundControl
+import HHU.Controls
 import QGroundControl.FactControls
 import QGroundControl.Controls
 import QGroundControl.AppSettings
@@ -43,7 +44,7 @@ SettingsPage {
         QGCLabel {
             Layout.fillWidth:   true
             text:               qsTr("Font size applies to the status bar, work buttons, cards and alarms. Interface scale enlarges everything.")
-            font.pointSize:     ScreenTools.smallFontPointSize
+            font.pixelSize:     HHUStyle.bodyFontSize
             wrapMode:           Text.WordWrap
         }
 

@@ -4,6 +4,7 @@ import QtQuick.Dialogs
 import QtQuick.Layouts
 
 import QGroundControl
+import HHU.Controls
 import QGroundControl.Controls
 import QGroundControl.AppSettings
 
@@ -41,7 +42,7 @@ SettingsPage {
         QGCLabel {
             Layout.fillWidth:   true
             text:               qsTr("\"Command not executed\" is shown when the vehicle has not carried out a work command within this time.")
-            font.pointSize:     ScreenTools.smallFontPointSize
+            font.pixelSize:     HHUStyle.bodyFontSize
             wrapMode:           Text.WordWrap
         }
 
@@ -55,7 +56,7 @@ SettingsPage {
         QGCLabel {
             Layout.fillWidth:   true
             text:               qsTr("The link counts as lost when no data has come from the vehicle for this time.")
-            font.pointSize:     ScreenTools.smallFontPointSize
+            font.pixelSize:     HHUStyle.bodyFontSize
             wrapMode:           Text.WordWrap
         }
     }
@@ -89,7 +90,7 @@ SettingsPage {
         QGCLabel {
             Layout.fillWidth:   true
             text:               qsTr("Routes with more waypoints are flagged before upload (10 to 10000).")
-            font.pointSize:     ScreenTools.smallFontPointSize
+            font.pixelSize:     HHUStyle.bodyFontSize
             wrapMode:           Text.WordWrap
         }
     }
@@ -208,7 +209,7 @@ SettingsPage {
             Layout.fillWidth:       true
             Layout.maximumWidth:    ScreenTools.defaultFontPixelWidth * 60
             text:                   qsTr("Uploading continues in the background and resumes where it stopped. Give the ticket number to after-sales. Logs are kept for 7 days.")
-            font.pointSize:         ScreenTools.smallFontPointSize
+            font.pixelSize:         HHUStyle.bodyFontSize
             wrapMode:               Text.WordWrap
         }
     }

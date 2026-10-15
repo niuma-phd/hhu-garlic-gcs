@@ -1577,12 +1577,20 @@ Next time you can continue where it stopped.</source>
       <translation type="unfinished" />
     </message>
     <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
       <source>Click Ok to reboot the vehicle now.</source>
       <translation type="unfinished" />
     </message>
     <message>
       <source>Debug Touch Areas</source>
       <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Exit</source>
+      <translation>退出</translation>
     </message>
     <message>
       <source>Pending Parameter Updates</source>
@@ -2095,7 +2103,7 @@ Click 'Ok' to upload the Plan anyway.</source>
     </message>
     <message>
       <source>Cancel</source>
-      <translation type="unfinished" />
+      <translation>取消</translation>
     </message>
     <message>
       <source>Close</source>

@@ -36,6 +36,14 @@ def replace_once(old, new):
     return apply
 
 
+def replace_n(old, new, n):
+    def apply(text):
+        if text.count(old) != n:
+            raise SystemExit(f"anchor must occur {n}x ({text.count(old)}x): {old!r}")
+        return text.replace(old, new)
+    return apply
+
+
 def replace_tail(anchor, new):
     """Replace everything from anchor (must occur once) to the end of the file."""
     def apply(text):
@@ -92,6 +100,14 @@ OVERRIDES = {
 """),
         # QGC app messages (issue #6): the "Configuration tasks remain" dialog is dropped (no vehicle setup
         # pages here); "HHU-GCS" (QGC_APP_NAME, kept for the settings path) is shown as 无人车地面站
+        replace_once("""    function _showMessageDialogWorker(owner, dialogTitle, dialogText, buttons = Dialog.Ok, acceptFunction = null, closeFunction = null, bypassNavigationCheck = false) {
+        let dialog = simpleMessageDialogComponent.createObject(owner, { title: dialogTitle, text: dialogText, buttons: buttons, acceptFunction: acceptFunction, closeFunction: closeFunction, bypassNavigationCheck: bypassNavigationCheck })
+""", """    function _showMessageDialogWorker(owner, dialogTitle, dialogText, buttons = Dialog.Ok, acceptFunction = null, closeFunction = null, bypassNavigationCheck = false, extraProperties = null) {
+        let properties = { title: dialogTitle, text: dialogText, buttons: buttons, acceptFunction: acceptFunction, closeFunction: closeFunction, bypassNavigationCheck: bypassNavigationCheck }
+        let dialog = simpleMessageDialogComponent.createObject(owner, Object.assign(properties, extraProperties || {}))
+"""),
+        # Close checks (车辆仍在连接 etc.): 退出 / 取消 instead of 是 / 否 (issue #6)
+        replace_n("""true /* bypassNavigationCheck */)""", """true /* bypassNavigationCheck */, { acceptText: qsTr("Exit"), rejectText: qsTr("Cancel") })""", 3),
         replace_once("""    // This variant is only meant to be called by QGCApplication
     function _showMessageDialog(dialogTitle, dialogText) {
         _showMessageDialogWorker(mainWindow, dialogTitle, dialogText)
@@ -205,6 +221,18 @@ OVERRIDES = {
     # All QGC dialogs (showMessageDialog etc.) in the HHU look: white card, big title, buttons in a grey footer
     "QmlControls/QGCPopupDialog.qml": [
         add_import("HHU.Controls"),
+        # Own button words (e.g. 退出 / 取消) instead of the standard ones
+        replace_once("""    property bool   bypassNavigationCheck:  false
+""", """    property bool   bypassNavigationCheck:  false
+    property string acceptText:             ""  // HHU
+    property string rejectText:             ""  // HHU
+"""),
+        replace_once("""        closePolicy = Popup.NoAutoClose
+""", """        if (acceptText !== "") acceptButton.text = acceptText  // HHU
+        if (rejectText !== "") rejectButton.text = rejectText  // HHU
+
+        closePolicy = Popup.NoAutoClose
+"""),
         replace_once("""    background: QGCMouseArea {
         width:  mainWindow.width
         height: mainWindow.height
@@ -320,6 +348,15 @@ OVERRIDES = {
         }
     }
 }
+"""),
+    ],
+    # Text of every QGC message dialog (退出确认, 删除连接 …) in the card body size (issue #6)
+    "QmlControls/QGCSimpleMessageDialog.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""            wrapMode:               Text.WordWrap
+""", """            wrapMode:               Text.WordWrap
+            font.pixelSize:         HHUStyle.bodyFontSize
+            color:                  HHUStyle.text2
 """),
     ],
     # 航线页: waypoints only (需求说明 §6). The pattern button comes back as 地块覆盖 (Fields2Cover).

@@ -3,7 +3,7 @@ import QtQuick
 /// Text in the HHU design font. `size` is the design pixel size (scaled by 字号);
 /// `number` switches to the Barlow digits (tabular) used for values.
 Text {
-    property real size:     16
+    property real size:     HHUStyle.bodySize
     property bool number:   false
     property bool bold:     false
 

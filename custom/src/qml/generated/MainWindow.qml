@@ -186,8 +186,9 @@ ApplicationWindow {
     //-------------------------------------------------------------------------
     //-- Global simple message dialog
 
-    function _showMessageDialogWorker(owner, dialogTitle, dialogText, buttons = Dialog.Ok, acceptFunction = null, closeFunction = null, bypassNavigationCheck = false) {
-        let dialog = simpleMessageDialogComponent.createObject(owner, { title: dialogTitle, text: dialogText, buttons: buttons, acceptFunction: acceptFunction, closeFunction: closeFunction, bypassNavigationCheck: bypassNavigationCheck })
+    function _showMessageDialogWorker(owner, dialogTitle, dialogText, buttons = Dialog.Ok, acceptFunction = null, closeFunction = null, bypassNavigationCheck = false, extraProperties = null) {
+        let properties = { title: dialogTitle, text: dialogText, buttons: buttons, acceptFunction: acceptFunction, closeFunction: closeFunction, bypassNavigationCheck: bypassNavigationCheck }
+        let dialog = simpleMessageDialogComponent.createObject(owner, Object.assign(properties, extraProperties || {}))
         dialog.open()
     }
 
@@ -292,7 +293,7 @@ ApplicationWindow {
                               Dialog.Yes | Dialog.No,
                               function() { accepted = true; _closeChecksToSkip |= _skipUnsavedMissionCheckMask; performCloseChecks() },
                               function() { if (!accepted) _reentrantCloseGuard = false },
-                              true /* bypassNavigationCheck */)
+                              true /* bypassNavigationCheck */, { acceptText: qsTr("Exit"), rejectText: qsTr("Cancel") })
             return false
         } else {
             return true
@@ -309,7 +310,7 @@ ApplicationWindow {
                     Dialog.Yes | Dialog.No,
                     function() { accepted = true; _closeChecksToSkip |= _skipPendingParameterWritesCheckMask; performCloseChecks() },
                     function() { if (!accepted) _reentrantCloseGuard = false },
-                    true /* bypassNavigationCheck */)
+                    true /* bypassNavigationCheck */, { acceptText: qsTr("Exit"), rejectText: qsTr("Cancel") })
                 return false
             }
         }
@@ -325,7 +326,7 @@ ApplicationWindow {
                 Dialog.Yes | Dialog.No,
                 function() { accepted = true; _closeChecksToSkip |= _skipActiveConnectionsCheckMask; performCloseChecks() },
                 function() { if (!accepted) _reentrantCloseGuard = false },
-                true /* bypassNavigationCheck */)
+                true /* bypassNavigationCheck */, { acceptText: qsTr("Exit"), rejectText: qsTr("Cancel") })
             return false
         } else {
             return true

@@ -4,6 +4,7 @@ import QtQuick.Dialogs
 import QtQuick.Layouts
 
 import QGroundControl
+import HHU.Controls
 import QGroundControl.FactControls
 import QGroundControl.Controls
 import QGroundControl.AppSettings
@@ -37,19 +38,20 @@ SettingsPage {
                     Layout.fillWidth: true
                     spacing: 0
                     QGCLabel {
-                        text:       modelData.name + (modelData.tls ? "" : "  " + qsTr("(not encrypted)"))
-                        font.bold:  configRow._isActive
+                        text:           modelData.name + (modelData.tls ? "" : "  " + qsTr("(not encrypted)"))
+                        font.bold:      configRow._isActive
+                        font.pixelSize: HHUStyle.bodyFontSize
                     }
                     QGCLabel {
                         text:           qsTr("%1:%2 · vehicle %3").arg(modelData.host).arg(modelData.port).arg(modelData.vehicle)
-                        font.pointSize: ScreenTools.smallFontPointSize
+                        font.pixelSize: HHUStyle.bodyFontSize
                         color:          "#5B6B7F"
                     }
                     QGCLabel {
                         Layout.fillWidth: true
                         visible:        configRow._isActive && hhu4G.statusText !== ""
                         text:           hhu4G.statusText + (hhu4G.state === "retrying" && hhu4G.retryInSec > 0 ? qsTr(" (retry in %1 s)").arg(hhu4G.retryInSec) : "")
-                        font.pointSize: ScreenTools.smallFontPointSize
+                        font.pixelSize: HHUStyle.bodyFontSize
                         color:          hhu4G.state === "online" ? (hhu4G.readOnly ? "#B7791F" : "#1F8A3B") : (hhu4G.state === "failed" ? "#B42318" : "#B7791F")
                         wrapMode:       Text.WordWrap
                     }
@@ -86,7 +88,7 @@ SettingsPage {
             Layout.fillWidth:       true
             Layout.maximumWidth:    ScreenTools.defaultFontPixelWidth * 60
             text:                   qsTr("Through 4G the vehicle is reached via the server. The link can be slow or drop out: it is not an emergency stop. Stop the vehicle with its emergency stop button or the remote control.")
-            font.pointSize:         ScreenTools.smallFontPointSize
+            font.pixelSize:         HHUStyle.bodyFontSize
             wrapMode:               Text.WordWrap
         }
     }
@@ -106,7 +108,7 @@ SettingsPage {
         Layout.fillWidth:   true
         Layout.maximumWidth: ScreenTools.defaultFontPixelWidth * 60
         text:               qsTr("Tip: switch on \"Automatically Connect on Start\" for the link you use, so the ground station reconnects to the vehicle by itself.")
-        font.pointSize:     ScreenTools.smallFontPointSize
+        font.pixelSize:     HHUStyle.bodyFontSize
         wrapMode:           Text.WordWrap
     }
 
@@ -251,24 +253,25 @@ SettingsPage {
                 Layout.columnSpan:  2
                 text:               fourGDialog.editIndex < 0 ? qsTr("Add a 4G connection") : qsTr("Edit the 4G connection")
                 font.bold:          true
-                font.pointSize:     ScreenTools.mediumFontPointSize
+                font.pixelSize:     HHUStyle.px(20)
             }
 
-            QGCLabel { text: qsTr("Name") }
-            QGCTextField { id: nameEdit; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 30; placeholderText: qsTr("4G + vehicle number") }
+            QGCLabel { text: qsTr("Name"); font.pixelSize: HHUStyle.bodyFontSize }
+            QGCTextField { id: nameEdit; font.pixelSize: HHUStyle.bodyFontSize; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 30; placeholderText: qsTr("4G + vehicle number") }
 
-            QGCLabel { text: qsTr("Vehicle number") }
-            QGCTextField { id: vehicleEdit; Layout.fillWidth: true }
+            QGCLabel { text: qsTr("Vehicle number"); font.pixelSize: HHUStyle.bodyFontSize }
+            QGCTextField { id: vehicleEdit; font.pixelSize: HHUStyle.bodyFontSize; Layout.fillWidth: true }
 
-            QGCLabel { text: qsTr("Password") }
+            QGCLabel { text: qsTr("Password"); font.pixelSize: HHUStyle.bodyFontSize }
             RowLayout {
                 QGCTextField {
                     id:                 passwordEdit
                     Layout.fillWidth:   true
+                    font.pixelSize:     HHUStyle.bodyFontSize
                     echoMode:           showPassword.checked ? TextInput.Normal : TextInput.Password
                     placeholderText:    fourGDialog.hasPassword ? qsTr("Saved (leave empty to keep)") : ""
                 }
-                QGCCheckBox { id: showPassword; text: qsTr("Show") }
+                QGCCheckBox { id: showPassword; text: qsTr("Show"); font.pixelSize: HHUStyle.bodyFontSize }
             }
 
             // encryption state in one line; details for after-sales below
@@ -278,12 +281,14 @@ SettingsPage {
                                                                             : qsTr("Encryption on · own certificate"))
                                                       : qsTr("Encryption off")
                 color:              tlsSwitch.checked ? "#1E8E3E" : "#D32F2F"
+                font.pixelSize:     HHUStyle.bodyFontSize
             }
 
             QGCLabel {
                 Layout.columnSpan:  2
                 text:               (fourGDialog.advanced ? "▾ " : "▸ ") + qsTr("Advanced (after-sales)")
                 font.bold:          true
+                font.pixelSize:     HHUStyle.bodyFontSize
                 color:              "#004B97"
                 MouseArea {
                     anchors.fill:   parent
@@ -292,26 +297,27 @@ SettingsPage {
                 }
             }
 
-            QGCLabel { text: qsTr("Server address"); visible: fourGDialog.advanced }
-            QGCTextField { id: hostEdit; visible: fourGDialog.advanced; Layout.fillWidth: true; placeholderText: "gcs.example.com" }
+            QGCLabel { text: qsTr("Server address"); visible: fourGDialog.advanced; font.pixelSize: HHUStyle.bodyFontSize }
+            QGCTextField { id: hostEdit; font.pixelSize: HHUStyle.bodyFontSize; visible: fourGDialog.advanced; Layout.fillWidth: true; placeholderText: "gcs.example.com" }
 
-            QGCLabel { text: qsTr("Port"); visible: fourGDialog.advanced }
-            QGCTextField { id: portEdit; visible: fourGDialog.advanced; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 10; validator: IntValidator { bottom: 1; top: 65535 } }
+            QGCLabel { text: qsTr("Port"); visible: fourGDialog.advanced; font.pixelSize: HHUStyle.bodyFontSize }
+            QGCTextField { id: portEdit; font.pixelSize: HHUStyle.bodyFontSize; visible: fourGDialog.advanced; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 10; validator: IntValidator { bottom: 1; top: 65535 } }
 
-            QGCLabel { text: qsTr("Encryption (TLS)"); visible: fourGDialog.advanced }
+            QGCLabel { text: qsTr("Encryption (TLS)"); visible: fourGDialog.advanced; font.pixelSize: HHUStyle.bodyFontSize }
             QGCCheckBoxSlider { id: tlsSwitch; visible: fourGDialog.advanced }
 
             QGCLabel {
                 Layout.columnSpan:  2
                 visible:            fourGDialog.advanced && !tlsSwitch.checked
                 text:               qsTr("Without encryption the password is sent as plain text.")
+                font.pixelSize:     HHUStyle.bodyFontSize
                 color:              "#B42318"
             }
 
-            QGCLabel { text: qsTr("CA certificate"); visible: fourGDialog.advanced && tlsSwitch.checked }
+            QGCLabel { text: qsTr("CA certificate"); visible: fourGDialog.advanced && tlsSwitch.checked; font.pixelSize: HHUStyle.bodyFontSize }
             RowLayout {
                 visible: fourGDialog.advanced && tlsSwitch.checked
-                QGCTextField { id: caEdit; Layout.fillWidth: true; placeholderText: qsTr("Built in (factory preset)") }
+                QGCTextField { id: caEdit; font.pixelSize: HHUStyle.bodyFontSize; Layout.fillWidth: true; placeholderText: qsTr("Built in (factory preset)") }
                 QGCButton { text: qsTr("Import…"); onClicked: caDialog.open() }
             }
 
@@ -321,6 +327,7 @@ SettingsPage {
                 visible:            !fourGDialog._complete
                 text:               qsTr("Still to fill in: %1").arg(fourGDialog._missing.join(qsTr(", ")))
                 color:              "#B42318"
+                font.pixelSize:     HHUStyle.bodyFontSize
             }
 
             RowLayout {
