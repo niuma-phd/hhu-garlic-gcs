@@ -908,6 +908,10 @@
       <translation>清空</translation>
     </message>
     <message>
+      <source>Clear %1 waypoints?</source>
+      <translation>清空 %1 个航点？</translation>
+    </message>
+    <message>
       <source>Fix</source>
       <translation>去修改</translation>
     </message>

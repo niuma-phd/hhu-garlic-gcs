@@ -63,6 +63,18 @@ HHUCard {
         _mission.insertSimpleMissionItem(coordinate, _mission.visualItems.count, true)
     }
 
+    /// 清空 asks first and keeps the speed (removeAll recreates the route settings without it, issue #6)
+    function _clearRoute() {
+        QGroundControl.showMessageDialog(root, qsTr("Clear"),
+                                         qsTr("Clear %1 waypoints?").arg(_waypoints),
+                                         Dialog.Ok | Dialog.Cancel,
+                                         function() {
+                                             const speed = root._speed
+                                             root.planMasterController.removeAll()
+                                             root._setSpeed(speed)
+                                         })
+    }
+
     function _undoRoute() {
         if (_waypoints > 0) {
             _mission.removeVisualItem(_mission.visualItems.count - 1)
@@ -82,7 +94,25 @@ HHUCard {
     }
 
     readonly property var _speedSection: _mission.visualItems.count > 0 ? _mission.visualItems.get(0).speedSection : null
-    readonly property real _speed: _speedSection && _speedSection.specifyFlightSpeed ? _speedSection.flightSpeed.rawValue : 1.2
+
+    /// Highest route speed: the vehicle's WP_SPEED / VCU_V_MAX (the lower one), 1.5 m/s when they cannot be read
+    readonly property real _maxSpeed: {
+        const vehicle = status.vehicle
+        let max = 0
+        if (vehicle && vehicle.parameterManager.parametersReady) {
+            for (const name of [ "WP_SPEED", "VCU_V_MAX" ]) {
+                if (vehicle.parameterManager.parameterExists(-1, name)) {
+                    const v = vehicle.parameterManager.getParameter(-1, name).rawValue
+                    if (v > 0) max = max > 0 ? Math.min(max, v) : v
+                }
+            }
+        }
+        return max > 0 ? Math.round(max * 10) / 10 : 1.5
+    }
+    /// Route speed; a route without its own speed shows the last speed set here (never above _maxSpeed)
+    readonly property real _speed: _speedSection && _speedSection.specifyFlightSpeed
+                                   ? _speedSection.flightSpeed.rawValue
+                                   : Math.min(QGroundControl.settingsManager.appSettings.offlineEditingCruiseSpeed.rawValue, _maxSpeed)
 
     function _setSpeed(v) {
         if (!_speedSection) return
@@ -200,7 +230,7 @@ HHUCard {
                     Layout.fillWidth:   true
                     spacing:            8 * HHUStyle.s
                     HHUButton { Layout.fillWidth: true; text: qsTr("Undo"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._undoRoute() }
-                    HHUButton { Layout.fillWidth: true; text: qsTr("Clear"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: planMasterController.removeAll() }
+                    HHUButton { Layout.fillWidth: true; text: qsTr("Clear"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._clearRoute() }
                 }
                 RowLayout {
                     Layout.fillWidth:   true
@@ -209,7 +239,7 @@ HHUCard {
                     HHUStepper {
                         value:      root._speed
                         from:       0.2
-                        to:         3.0
+                        to:         root._maxSpeed
                         step:       0.1
                         decimals:   1
                         unit:       "m/s"
