@@ -24,8 +24,11 @@
 #include "MultiVehicleManager.h"
 #include "ParameterManager.h"
 #include "Fact.h"
+#include "AudioOutput.h"
 
 #include <QtCore/QApplicationStatic>
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QHash>
 #include <QtCore/QFile>
 #include <QtCore/QLocale>
 #include <QtCore/QSettings>
@@ -341,8 +344,18 @@ bool CustomPlugin::_translateStatusText(Vehicle *vehicle, const mavlink_message_
         qCWarning(CustomLog) << "cannot inject translated STATUSTEXT, showing original";
         return true;
     }
-    if (text.startsWith(QStringLiteral("PreArm"), Qt::CaseInsensitive) || text.startsWith(QStringLiteral("Arm:"), Qt::CaseInsensitive)) {
+    const bool prearm = text.startsWith(QStringLiteral("PreArm"), Qt::CaseInsensitive) || text.startsWith(QStringLiteral("Arm:"), Qt::CaseInsensitive);
+    if (prearm) {
         vehicle->setPrearmError(translated);    // shown by the work panel when starting fails
+    } else if (statusText.severity <= MAV_SEVERITY_WARNING) {
+        // Vehicle alerts are spoken in Chinese like QGC speaks its own texts (the injected text skips
+        // QGC's speech). PreArm repeats every 30 s and is shown in the 暂时不能开始 card instead.
+        static QHash<QString, QElapsedTimer> lastSpoken;
+        QElapsedTimer &timer = lastSpoken[translated];
+        if (!timer.isValid() || timer.elapsed() > 30000) {
+            timer.start();
+            AudioOutput::instance()->say(translated);
+        }
     }
     qCDebug(CustomLog) << "STATUSTEXT" << text << "->" << translated;
     return false;

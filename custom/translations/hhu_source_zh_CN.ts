@@ -4079,6 +4079,10 @@ Click 'Ok' to upload the Plan anyway.</source>
       <translation>正在等待上一次控制权请求</translation>
     </message>
     <message>
+      <source>armed</source>
+      <translation>车辆已解锁</translation>
+    </message>
+    <message>
       <source>battery %1 failed</source>
       <translation>电池 %1 故障</translation>
     </message>
@@ -4101,6 +4105,10 @@ Click 'Ok' to upload the Plan anyway.</source>
     <message>
       <source>boundary</source>
       <translation>边界</translation>
+    </message>
+    <message>
+      <source>disarmed</source>
+      <translation>车辆已上锁</translation>
     </message>
     <message>
       <source>fence breached</source>
