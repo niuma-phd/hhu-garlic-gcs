@@ -238,8 +238,9 @@ HHUCard {
                     HHUText { Layout.fillWidth: true; text: qsTr("Speed"); size: 16; bold: true }
                     HHUStepper {
                         value:      root._speed
-                        from:       0.2
+                        from:       0.1
                         to:         root._maxSpeed
+                        editable:   true
                         step:       0.1
                         decimals:   1
                         unit:       "m/s"

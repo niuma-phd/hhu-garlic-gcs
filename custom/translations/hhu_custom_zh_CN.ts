@@ -1348,6 +1348,13 @@
     </message>
   </context>
   <context>
+    <name>HHUStepper</name>
+    <message>
+      <source>Allowed %1 – %2 %3, set to %4</source>
+      <translation>可输入 %1–%2 %3，已改为 %4</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUUploadCheck</name>
     <message>
       <source>Check the route</source>
