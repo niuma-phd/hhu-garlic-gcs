@@ -9,6 +9,8 @@ set(QGC_APP_NAME "HHU-GCS" CACHE STRING "App Name" FORCE)
 set(QGC_APP_DESCRIPTION "无人车地面站" CACHE STRING "Application description" FORCE)
 set(QGC_ORG_NAME "HHU" CACHE STRING "Organization name" FORCE)
 set(QGC_ORG_DOMAIN "hhu.edu.cn" CACHE STRING "Organization domain" FORCE)
+string(TIMESTAMP _hhu_year "%Y")
+set(QGC_APP_COPYRIGHT "Copyright (c) ${_hhu_year} HHU" CACHE STRING "Copyright notice" FORCE)
 set(QGC_PACKAGE_NAME "cn.edu.hhu.gcs" CACHE STRING "Package identifier" FORCE)
 set(QGC_ANDROID_PACKAGE_NAME "cn.edu.hhu.gcs" CACHE STRING "Android package identifier" FORCE)
 
@@ -17,6 +19,10 @@ set(QGC_ANDROID_PACKAGE_NAME "cn.edu.hhu.gcs" CACHE STRING "Android package iden
 # ----------------------------------------------------------------------------
 if(EXISTS "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/windows/WindowsQGC.ico")
     set(QGC_WINDOWS_ICON_PATH "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/windows/WindowsQGC.ico" CACHE FILEPATH "Windows Icon Path" FORCE)
+endif()
+# Installer header: HHU logo + 无人车地面站 instead of the QGroundControl logo (150×57 BMP)
+if(EXISTS "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/windows/installheader.bmp")
+    set(QGC_WINDOWS_INSTALL_HEADER_PATH "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/windows/installheader.bmp" CACHE FILEPATH "Windows installer header image" FORCE)
 endif()
 
 # ----------------------------------------------------------------------------

@@ -47,6 +47,7 @@ RequestExecutionLevel admin
 !macroend
 
 Name "${DISPLAYNAME}"
+BrandingText "${DISPLAYNAME}"
 Var StartMenuFolder
 
 InstallDir "$PROGRAMFILES64\${APPNAME}"
@@ -64,11 +65,11 @@ SetCompressor /SOLID /FINAL lzma
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
-!insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "SimpChinese"
 
 Section "Install" SecMain
     SectionIn RO
-    DetailPrint "Checking for 64 bit uninstaller"
+    DetailPrint "检查已安装的版本"
     SetRegView 64
     ReadRegStr $R0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString"
     StrCmp $R0 "" doInstall checkUninstaller
@@ -80,26 +81,26 @@ checkUninstaller:
     IntOp $R2 $R2 - 1    ; Remove last quote
     StrCpy $R1 $R1 $R2
 
-    DetailPrint "Checking if uninstaller exists: $R1"
+    DetailPrint "检查卸载程序：$R1"
     IfFileExists "$R1" doUninstall cleanupOrphanedRegistry
 
 cleanupOrphanedRegistry:
-    DetailPrint "Previous uninstaller not found, cleaning up orphaned registry keys..."
+    DetailPrint "未找到旧版本的卸载程序，清理残留的注册表项…"
     SetRegView 64
     DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}"
     DeleteRegKey HKLM "SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\${EXENAME}.exe"
     Goto doInstall
 
 doUninstall:
-    DetailPrint "Uninstalling previous version..."
+    DetailPrint "正在卸载旧版本…"
     ClearErrors
     ExecWait "$R0 /S -LEAVE_DATA=1 _?=$INSTDIR"
     ${If} ${Errors}
-        MessageBox MB_OK|MB_ICONEXCLAMATION "Failed to start previous uninstaller."
+        MessageBox MB_OK|MB_ICONEXCLAMATION "无法启动旧版本的卸载程序。"
         Abort
     ${EndIf}
     IntCmp $0 0 doInstall
-    MessageBox MB_OK|MB_ICONEXCLAMATION "Could not remove a previously installed ${DISPLAYNAME} version.$\n$\nPlease remove it before continuing."
+    MessageBox MB_OK|MB_ICONEXCLAMATION "无法卸载已安装的${DISPLAYNAME}旧版本。$\n$\n请先在“设置 → 应用”里卸载它，再继续安装。"
     Abort
 
 doInstall:
@@ -126,7 +127,7 @@ doInstall:
     ; WER dumps for crash triage
     WriteRegDWORD    HKLM "SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\${EXENAME}.exe" "DumpCount" 5
     WriteRegDWORD    HKLM "SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\${EXENAME}.exe" "DumpType" 1
-    WriteRegExpandStr HKLM "SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\${EXENAME}.exe" "DumpFolder" "%LOCALAPPDATA%\QGCCrashDumps"
+    WriteRegExpandStr HKLM "SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\${EXENAME}.exe" "DumpFolder" "%LOCALAPPDATA%\${APPNAME}CrashDumps"
 
 done:
     SetRegView lastused
@@ -160,7 +161,7 @@ Section "Create Start Menu Shortcuts"
 
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
         CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME}.lnk" "$INSTDIR\bin\${EXENAME}.exe" "" "$INSTDIR\bin\${EXENAME}.exe" 0
-        CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME} (GPU Safe Mode).lnk" "$INSTDIR\bin\${EXENAME}.exe" "-swrast" "$INSTDIR\bin\${EXENAME}.exe" 0
-        !insertmacro DemoteShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME} (GPU Safe Mode).lnk"
+        CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME}（兼容显示模式）.lnk" "$INSTDIR\bin\${EXENAME}.exe" "-swrast" "$INSTDIR\bin\${EXENAME}.exe" 0
+        !insertmacro DemoteShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME}（兼容显示模式）.lnk"
     !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
