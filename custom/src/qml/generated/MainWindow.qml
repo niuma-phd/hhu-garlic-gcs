@@ -191,15 +191,35 @@ ApplicationWindow {
         dialog.open()
     }
 
+    // HHU: customer wording of QGC app messages; false = not shown
+    function _hhuAppMessage(msg) {
+        if (msg.text.indexOf(qsTranslate("AutoPilotPlugin", "Configuration tasks remain before this vehicle is ready to fly. See Vehicle Configuration for details.")) >= 0
+                || msg.text.indexOf("Configuration tasks remain") >= 0) {
+            console.log("HHU: setup message not shown:", msg.text)
+            return false
+        }
+        const name = Qt.application.name
+        const display = Qt.application.displayName
+        msg.title = msg.title.split(name).join(display)
+        msg.text = msg.text.split(name).join(display)
+        return true
+    }
+
     // This variant is only meant to be called by QGCApplication
     function _showMessageDialog(dialogTitle, dialogText) {
-        _showMessageDialogWorker(mainWindow, dialogTitle, dialogText)
+        let msg = { title: dialogTitle, text: dialogText }
+        if (!_hhuAppMessage(msg)) {
+            return
+        }
+        _showMessageDialogWorker(mainWindow, msg.title, msg.text)
     }
 
     // This variant is only meant to be called by QGCApplication. Ok reboots the active vehicle.
     function _showRebootVehicleDialog(dialogTitle, dialogText) {
-        _showMessageDialogWorker(mainWindow, dialogTitle,
-                                 dialogText + " " + qsTr("Click Ok to reboot the vehicle now."),
+        let msg = { title: dialogTitle, text: dialogText }
+        _hhuAppMessage(msg)
+        _showMessageDialogWorker(mainWindow, msg.title,
+                                 msg.text + " " + qsTr("Click Ok to reboot the vehicle now."),
                                  Dialog.Ok | Dialog.Cancel,
                                  function() {
                                      const activeVehicle = QGroundControl.multiVehicleManager.activeVehicle

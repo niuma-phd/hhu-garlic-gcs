@@ -90,6 +90,42 @@ OVERRIDES = {
 """, """    function showCriticalVehicleMessage(message) {
         if (true) {  // HHU: never shown, see the bell list
 """),
+        # QGC app messages (issue #6): the "Configuration tasks remain" dialog is dropped (no vehicle setup
+        # pages here); "HHU-GCS" (QGC_APP_NAME, kept for the settings path) is shown as 无人车地面站
+        replace_once("""    // This variant is only meant to be called by QGCApplication
+    function _showMessageDialog(dialogTitle, dialogText) {
+        _showMessageDialogWorker(mainWindow, dialogTitle, dialogText)
+    }
+""", """    // HHU: customer wording of QGC app messages; false = not shown
+    function _hhuAppMessage(msg) {
+        if (msg.text.indexOf(qsTranslate("AutoPilotPlugin", "Configuration tasks remain before this vehicle is ready to fly. See Vehicle Configuration for details.")) >= 0
+                || msg.text.indexOf("Configuration tasks remain") >= 0) {
+            console.log("HHU: setup message not shown:", msg.text)
+            return false
+        }
+        const name = Qt.application.name
+        const display = Qt.application.displayName
+        msg.title = msg.title.split(name).join(display)
+        msg.text = msg.text.split(name).join(display)
+        return true
+    }
+
+    // This variant is only meant to be called by QGCApplication
+    function _showMessageDialog(dialogTitle, dialogText) {
+        let msg = { title: dialogTitle, text: dialogText }
+        if (!_hhuAppMessage(msg)) {
+            return
+        }
+        _showMessageDialogWorker(mainWindow, msg.title, msg.text)
+    }
+"""),
+        replace_once("""    function _showRebootVehicleDialog(dialogTitle, dialogText) {
+        _showMessageDialogWorker(mainWindow, dialogTitle,
+                                 dialogText + " " + qsTr("Click Ok to reboot the vehicle now."),""", """    function _showRebootVehicleDialog(dialogTitle, dialogText) {
+        let msg = { title: dialogTitle, text: dialogText }
+        _hhuAppMessage(msg)
+        _showMessageDialogWorker(mainWindow, msg.title,
+                                 msg.text + " " + qsTr("Click Ok to reboot the vehicle now."),"""),
     ],
     # Settings groups (设计稿 6a–6d): white cards with a light border on the grey settings page
     "QmlControls/SettingsGroupLayout.qml": [
