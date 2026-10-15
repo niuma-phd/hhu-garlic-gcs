@@ -187,10 +187,8 @@ Item {
         ]
     }
 
-    VehicleWarnings {
-        anchors.centerIn:   parent
-        z:                  QGroundControl.zOrderTopMost
-    }
+    // No VehicleWarnings (QGC's grey "not ready to arm" box in the middle of the map): it covered the
+    // route and repeated the 暂时不能开始 card (issue #6)
 
     // No FlyViewMissionCompleteDialog: its "resume mission" rewrites the route on the vehicle and
     // conflicts with 断点续作 (HHUStartDialog)

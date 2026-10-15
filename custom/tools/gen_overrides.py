@@ -83,6 +83,13 @@ OVERRIDES = {
                 id:                 toolDrawerToolbarLayout
                 visible:            false  // HHU
 """),
+        # No yellow critical message banner ("车辆错误" / "收到更多错误"): the vehicle messages are in the
+        # bell list, the reasons that block work in the 暂时不能开始 card (issue #6)
+        replace_once("""    function showCriticalVehicleMessage(message) {
+        if (suppressCriticalVehicleMessages) {
+""", """    function showCriticalVehicleMessage(message) {
+        if (true) {  // HHU: never shown, see the bell list
+"""),
     ],
     # Settings groups (设计稿 6a–6d): white cards with a light border on the grey settings page
     "QmlControls/SettingsGroupLayout.qml": [

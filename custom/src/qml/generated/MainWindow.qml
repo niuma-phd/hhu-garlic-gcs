@@ -484,7 +484,7 @@ ApplicationWindow {
     //-- Critical Vehicle Message Popup
 
     function showCriticalVehicleMessage(message) {
-        if (suppressCriticalVehicleMessages) {
+        if (true) {  // HHU: never shown, see the bell list
             return
         }
         if (criticalVehicleMessagePopup.visible || QGroundControl.videoManager.fullScreen) {
