@@ -32,15 +32,20 @@ Item {
     readonly property bool  _paused:            status.inPause && status.armed
     readonly property bool  _idle:              !!_vehicle && !status.inAuto && !_paused && !status.inReturn && !status.inGuided
 
-    /// Why 开始作业 is not possible ([] when it is): { t, btn, page } - btn opens the place to fix it
+    /// Why 开始作业 is not possible ([] when it is): { t, btn, page } - btn opens the place to fix it.
+    /// Most important first (issue #6): 底盘通信中断 > 未授权 / 故障 > 无航线 > 定位. With the chassis
+    /// link down nothing about 授权 is known, so 切无人 is not suggested then.
     readonly property var _startBlocked: {
         let list = []
-        // 授权 / 底盘 checks come first: the operator handles them in this order (遥控器闸门, Nav v1.0)
-        if (status.vcuValid && !status.vcuAuthorized)                 list.push({ t: qsTr("Switch to unmanned mode with the remote control"), btn: "", page: "" })
-        if (status.vcuValid && status.vcuAuthorized && !hhuVcu.ok)    list.push({ t: qsTr("Chassis not ready, see the message list"), btn: "", page: "" })
+        if (status.chassisLinkLost) {
+            list.push({ t: qsTr("Chassis communication lost, check the CAN cable and the VCU"), btn: "", page: "" })
+        } else if (status.vcuValid) {
+            if (_vcuFault)                  list.push({ t: qsTr("Chassis fault: %1").arg(status.faultText), btn: "", page: "" })
+            if (!status.vcuAuthorized)      list.push({ t: qsTr("Switch to unmanned mode with the remote control"), btn: "", page: "" })
+            else if (!hhuVcu.ok && !_vcuFault) list.push({ t: qsTr("Chassis not ready, see the message list"), btn: "", page: "" })
+        }
         if (!_missionAvailable)     list.push({ t: qsTr("No route on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
         if (!status.rtkFixed)       list.push({ t: qsTr("Wait for a good position, about 1-3 minutes"), btn: "", page: "" })
-        if (_vcuFault)              list.push({ t: qsTr("Chassis fault: %1").arg(status.faultText), btn: "", page: "" })
         return list
     }
     readonly property bool  _vcuFault:  status.vcuValid && hhuVcu.fault !== 0

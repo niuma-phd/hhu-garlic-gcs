@@ -501,10 +501,6 @@
       <translation>字体：本软件使用 HarmonyOS Sans 字体（© 华为终端有限公司，HarmonyOS Sans 字体许可协议）和 Barlow 字体（SIL Open Font License 1.1）。</translation>
     </message>
     <message>
-      <source>Unmanned Vehicle Ground Station</source>
-      <translation>无人车地面站</translation>
-    </message>
-    <message>
       <source>Message tables</source>
       <translation>车端提示翻译表</translation>
     </message>
@@ -519,6 +515,10 @@
     <message>
       <source>This software is based on QGroundControl (&lt;a href="https://github.com/mavlink/qgroundcontrol"&gt;github.com/mavlink/qgroundcontrol&lt;/a&gt;), licensed under the Apache License 2.0 and the GNU General Public License v3. It uses the Qt framework (&lt;a href="https://www.qt.io"&gt;qt.io&lt;/a&gt;) under the GNU LGPL v3, MAVLink (MIT License) and map data from TianDiTu (&lt;a href="https://www.tianditu.gov.cn"&gt;tianditu.gov.cn&lt;/a&gt;). The source code of the open source parts is available on request.</source>
       <translation>本软件基于开源地面站 QGroundControl（&lt;a href="https://github.com/mavlink/qgroundcontrol"&gt;github.com/mavlink/qgroundcontrol&lt;/a&gt;）开发，其许可证为 Apache License 2.0 和 GNU General Public License v3。本软件使用 Qt 框架（&lt;a href="https://www.qt.io"&gt;qt.io&lt;/a&gt;，GNU LGPL v3）、MAVLink（MIT 许可证），地图数据来自天地图（&lt;a href="https://www.tianditu.gov.cn"&gt;tianditu.gov.cn&lt;/a&gt;）。开源部分的源代码可应要求提供。</translation>
+    </message>
+    <message>
+      <source>Unmanned Vehicle Ground Station</source>
+      <translation>无人车地面站</translation>
     </message>
     <message>
       <source>Version</source>
@@ -542,10 +542,6 @@
     <message>
       <source>(large: upload over WiFi recommended)</source>
       <translation>（日志较大，建议连接 WiFi 后上传）</translation>
-    </message>
-    <message>
-      <source>Upload check</source>
-      <translation>上传检查</translation>
     </message>
     <message>
       <source>Command timeout</source>
@@ -626,6 +622,10 @@
     <message>
       <source>Upload again</source>
       <translation>继续上传</translation>
+    </message>
+    <message>
+      <source>Upload check</source>
+      <translation>上传检查</translation>
     </message>
     <message>
       <source>Uploading continues in the background and resumes where it stopped. Give the ticket number to after-sales. Logs are kept for 7 days.</source>
@@ -1364,6 +1364,10 @@
     <message>
       <source>Cannot start yet</source>
       <translation>暂时不能开始</translation>
+    </message>
+    <message>
+      <source>Chassis communication lost, check the CAN cable and the VCU</source>
+      <translation>底盘通信中断，请检查 CAN 线和 VCU</translation>
     </message>
     <message>
       <source>Chassis fault: %1</source>
@@ -2126,16 +2130,16 @@ Click 'Ok' to upload the Plan anyway.</source>
       <translation>退出</translation>
     </message>
     <message>
-      <source>Unmanned Vehicle Ground Station</source>
-      <translation>无人车地面站</translation>
-    </message>
-    <message>
       <source>Route</source>
       <translation>航线</translation>
     </message>
     <message>
       <source>Settings</source>
       <translation>设置</translation>
+    </message>
+    <message>
+      <source>Unmanned Vehicle Ground Station</source>
+      <translation>无人车地面站</translation>
     </message>
     <message>
       <source>Version %1</source>

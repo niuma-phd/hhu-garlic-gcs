@@ -49,6 +49,9 @@ QtObject {
     readonly property bool  vcuValid:       !!vehicle && hhuVcu.valid
     /// OpSource = 2: the remote control handed the chassis over to Nav (Nav ↔ VCU CAN v1.0)
     readonly property bool  vcuAuthorized:  vcuValid && hhuVcu.mode === 2
+    /// Nav ↔ VCU CAN link down: vcu_can.lua reports VCU_MODE 0 when NavSta is lost ("VCU: NavSta lost"),
+    /// or the VCU_* values stopped coming altogether
+    readonly property bool  chassisLinkLost: !!vehicle && hhuVcu.seen && (!hhuVcu.valid || hhuVcu.mode === 0)
 
     /// "0x1A 电机过流" style text for the current VCU fault ("" when there is no fault)
     readonly property string faultText: {
