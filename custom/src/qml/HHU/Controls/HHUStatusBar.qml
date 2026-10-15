@@ -74,7 +74,7 @@ Rectangle {
         if (status.inGuided && status.armed) return { t: qsTr("To target"), bg: HHUStyle.blue,    fg: "white",        bd: HHUStyle.blue }
         if (status.armed)       return { t: qsTr("Manual"),             bg: "white",              fg: HHUStyle.text,  bd: HHUStyle.text }
         // 未解锁细化（Nav v1.0 遥控器闸门）: 未授权引导去遥控器; 已授权且底盘正常 = 就绪, 可按遥控器启动
-        if (status.vcuValid && !status.vcuAuthorized) return { t: qsTr("Not authorized"), bg: HHUStyle.grey2, fg: HHUStyle.text, bd: HHUStyle.border }
+        if (status.vcuValid && !status.vcuAuthorized && !status.chassisLinkLost) return { t: qsTr("Not authorized"), bg: HHUStyle.grey2, fg: HHUStyle.text, bd: HHUStyle.border }
         if (status.vcuAuthorized && hhuVcu.ok) return { t: qsTr("Ready"), bg: HHUStyle.blue,      fg: "white",        bd: HHUStyle.blue }
         if (hhuVcu.seen && (!status.vcuValid || !hhuVcu.ok)) return { t: qsTr("Chassis not ready"), bg: HHUStyle.yellowLight, fg: HHUStyle.text, bd: HHUStyle.yellow }
         return { t: qsTr("Standby"), bg: HHUStyle.grey2, fg: HHUStyle.text, bd: HHUStyle.border }
