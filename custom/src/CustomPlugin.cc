@@ -318,13 +318,16 @@ bool CustomPlugin::_translateStatusText(Vehicle *vehicle, const mavlink_message_
 
     mavlink_statustext_t statusText{};
     mavlink_msg_statustext_decode(&message, &statusText);
-    if (statusText.id != 0) {
-        return true;    // chunked text (never sent by our Rover firmware): leave it to QGC
-    }
     const QString text = QString::fromUtf8(statusText.text, static_cast<int>(strnlen(statusText.text, sizeof(statusText.text))));
-    const QString translated = _hhuConfig->translateStatusText(text);
+    // Only texts with a hhu_config.json translation reach the message list (bell, issue #6); the
+    // technical rest (firmware version, IMU / EKF / GPS details, chunked texts) goes to the log only
+    const QString translated = (statusText.id == 0) ? _hhuConfig->translateStatusText(text) : QString();
     if (translated.isEmpty()) {
-        return true;
+        qCInfo(CustomLog) << "STATUSTEXT (log only)" << statusText.severity << text;
+        if (text.startsWith(QStringLiteral("PreArm"), Qt::CaseInsensitive) || text.startsWith(QStringLiteral("Arm:"), Qt::CaseInsensitive)) {
+            vehicle->setPrearmError(text);    // still named when starting fails (指令未执行)
+        }
+        return false;
     }
 
     // Hand the translated text to the vehicle's message list the way QGC adds event texts

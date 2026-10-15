@@ -2,7 +2,7 @@
     "_readme": [
         "无人车地面站 配置文件。修改后重启地面站生效，无需重新编译。",
         "位置：安装目录下的 config/hhu_config.json。文件缺失或格式错误时使用程序内置的默认表。",
-        "statusText：车端 STATUSTEXT 按前缀匹配（不区分大小写，最长前缀优先），未匹配的显示原文。",
+        "statusText：车端 STATUSTEXT 按前缀匹配（不区分大小写，最长前缀优先），未匹配的只写进日志，不在铃铛里显示（PreArm / Arm 的原因在 preArm 表里找不到时也一样）。",
         "  {rest} = 前缀后面的原文；{reason} = 前缀后面的原文按 preArm 表再翻译一次；{fault} = 故障码及 faultCodes 中的说明。",
         "preArm：PreArm / Arm 原因的翻译，同样按前缀匹配。",
         "faultCodes：VCU 故障码（十六进制或十进制写法均可）对应的中文说明，由底盘厂提供。",
@@ -61,6 +61,10 @@
         {
             "prefix": "VCU: no scripting CAN",
             "text": "车辆 CAN 配置错误，请联系售后"
+        },
+        {
+            "prefix": "VCU:",
+            "text": "底盘提示：{rest}"
         },
         {
             "prefix": "PreArm:",

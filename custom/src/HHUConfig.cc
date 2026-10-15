@@ -93,9 +93,12 @@ QString HHUConfig::translateStatusText(const QString &text) const
     QString result = e->text;
 
     if (result.contains(QStringLiteral("{reason}"))) {
-        // PreArm / Arm: translate the reason itself, keep the original when unknown
+        // PreArm / Arm: translate the reason itself; an unknown reason counts as untranslated
         const Entry *r = _match(_preArm, rest);
-        result.replace(QStringLiteral("{reason}"), r ? r->text : rest);
+        if (!r) {
+            return QString();
+        }
+        result.replace(QStringLiteral("{reason}"), r->text);
     }
     if (result.contains(QStringLiteral("{fault}"))) {
         // "VCU: fault 0x1A" -> "0x1A 电机过流" (description from faultCodes when known)
