@@ -196,7 +196,7 @@ ApplicationWindow {
     function _hhuAppMessage(msg) {
         if (msg.text.indexOf(qsTranslate("AutoPilotPlugin", "Configuration tasks remain before this vehicle is ready to fly. See Vehicle Configuration for details.")) >= 0
                 || msg.text.indexOf("Configuration tasks remain") >= 0) {
-            console.log("HHU: setup message not shown:", msg.text)
+            console.warn("HHU: setup message not shown:", msg.text)
             return false
         }
         const name = Qt.application.name
