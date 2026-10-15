@@ -326,7 +326,8 @@ bool CustomPlugin::_translateStatusText(Vehicle *vehicle, const mavlink_message_
     // technical rest (firmware version, IMU / EKF / GPS details, chunked texts) goes to the log only
     const QString translated = (statusText.id == 0) ? _hhuConfig->translateStatusText(text) : QString();
     if (translated.isEmpty()) {
-        qCInfo(CustomLog) << "STATUSTEXT (log only)" << statusText.severity << text;
+        // plain qInfo: QGC turns info off for its own categories, the app log keeps the default category
+        qInfo().noquote() << "HHU STATUSTEXT (log only)" << statusText.severity << text;
         if (text.startsWith(QStringLiteral("PreArm"), Qt::CaseInsensitive) || text.startsWith(QStringLiteral("Arm:"), Qt::CaseInsensitive)) {
             vehicle->setPrearmError(text);    // still named when starting fails (指令未执行)
         }
@@ -409,21 +410,47 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
         (void) connect(_link4G, &HHU4GLink::stateChanged, this, [this]() { _ntrip->applyForwarding(!_link4G->active()); });
         // TURN_RADIUS for the route check (急弯标红), kept for offline planning
         (void) connect(MultiVehicleManager::instance(), &MultiVehicleManager::activeVehicleChanged, this, [this](Vehicle *vehicle) {
+            _hhuSettings->setVehicleMaxSpeed(0);
             if (!vehicle) {
                 return;
             }
             ParameterManager *params = vehicle->parameterManager();
-            auto readTurnRadius = [this, params]() {
-                if (params->parametersReady() && params->parameterExists(ParameterManager::defaultComponentId, QStringLiteral("TURN_RADIUS"))) {
+            // Route speed limit for the 规划 page (issue #6): the lower of WP_SPEED / VCU_V_MAX
+            auto readMaxSpeed = [this, params]() {
+                double max = 0;
+                for (const QString &name : { QStringLiteral("WP_SPEED"), QStringLiteral("VCU_V_MAX") }) {
+                    if (params->parameterExists(ParameterManager::defaultComponentId, name)) {
+                        const double v = params->getParameter(ParameterManager::defaultComponentId, name)->rawValue().toDouble();
+                        if (v > 0) {
+                            max = (max > 0) ? qMin(max, v) : v;
+                        }
+                    }
+                }
+                _hhuSettings->setVehicleMaxSpeed(max);
+            };
+            auto readParams = [this, params, readMaxSpeed]() {
+                if (!params->parametersReady()) {
+                    return;
+                }
+                if (params->parameterExists(ParameterManager::defaultComponentId, QStringLiteral("TURN_RADIUS"))) {
                     Fact *fact = params->getParameter(ParameterManager::defaultComponentId, QStringLiteral("TURN_RADIUS"));
                     _hhuSettings->setLastTurnRadius(fact->rawValue().toDouble());
+                    (void) disconnect(fact, &Fact::rawValueChanged, this, nullptr);
                     (void) connect(fact, &Fact::rawValueChanged, this, [this](const QVariant &value) {
                         _hhuSettings->setLastTurnRadius(value.toDouble());
-                    }, Qt::UniqueConnection);
+                    });
+                }
+                readMaxSpeed();
+                for (const QString &name : { QStringLiteral("WP_SPEED"), QStringLiteral("VCU_V_MAX") }) {
+                    if (params->parameterExists(ParameterManager::defaultComponentId, name)) {
+                        Fact *fact = params->getParameter(ParameterManager::defaultComponentId, name);
+                        (void) disconnect(fact, &Fact::rawValueChanged, this, nullptr);
+                        (void) connect(fact, &Fact::rawValueChanged, this, readMaxSpeed);
+                    }
                 }
             };
-            (void) connect(params, &ParameterManager::parametersReadyChanged, this, readTurnRadius);
-            readTurnRadius();
+            (void) connect(params, &ParameterManager::parametersReadyChanged, this, readParams);
+            readParams();
         });
         QTimer::singleShot(0, this, [this]() {
             _link4G->autoStart();
