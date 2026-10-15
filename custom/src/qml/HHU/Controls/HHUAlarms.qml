@@ -10,8 +10,7 @@ import QGroundControl.Controls
 /// Alarm banners of the 作业 page (设计稿 5.3, 需求说明 V1.0 §3.6), top center, one line title + at
 /// most one line of text, at most two at a time (the most severe first; all are in the message list too).
 ///   提示 (info):     light blue, blue border, one beep          - link restored, view only
-///   注意 (warning):  yellow, dark text, beep every 30 s         - battery low, position lost while working,
-///                                                                 chassis data lost
+///   注意 (warning):  yellow, dark text, beep every 30 s         - position lost while working, chassis data lost
 ///   危险 (danger):   red, white text, beeps until tapped (mute) - link lost, chassis fault
 /// Link lost: label at the vehicle's last position. Link back: the route is reloaded from the vehicle.
 Item {
@@ -58,9 +57,6 @@ Item {
         }
         if (status.connected && status.inAuto && !status.rtkFixed) {
             list.push({ id: "rtk", level: 1, title: qsTr("Position poor while working"), text: qsTr("The vehicle may leave the route. Watch it or pause.") })
-        }
-        if (status.connected && !isNaN(status.batteryPct) && status.batteryPct < hhuSettings.lowBatteryPct) {
-            list.push({ id: "battery", level: 1, title: qsTr("Battery low %1%, please come back to charge").arg(status.batteryPct.toFixed(0)), text: "" })
         }
         if (status.readOnly) {
             list.push({ id: "readOnly", level: 0, title: qsTr("View only"), text: qsTr("Another ground station controls this vehicle.") })

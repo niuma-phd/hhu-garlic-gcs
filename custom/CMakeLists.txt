@@ -1,12 +1,12 @@
 # ============================================================================
-# 河海大学 大蒜播种车地面站 — QGC custom plugin
+# 无人车地面站 — QGC custom plugin
 # Derived from upstream custom-example (QGC v5.1.4)
 # ============================================================================
 
 message(STATUS "QGC: Adding HHU Custom Plugin")
 
 # Product version (检查更新 compares against it; sent in the 4G login)
-set(HHU_APP_VERSION "1.1.0")
+set(HHU_APP_VERSION "1.2.0")
 
 # ============================================================================
 # Custom Resources

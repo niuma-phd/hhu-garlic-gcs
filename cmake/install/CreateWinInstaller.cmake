@@ -54,6 +54,10 @@ set(_nsis_args
     "/DDESTDIR=${QGC_PAYLOAD_DIR}"
 )
 
+if(QGC_APP_DESCRIPTION)
+    list(APPEND _nsis_args "/DDISPLAYNAME=${QGC_APP_DESCRIPTION}")
+endif()
+
 if(EXISTS "${QGC_INSTALLER_ICON}")
     list(APPEND _nsis_args "/DINSTALLER_ICON=${QGC_INSTALLER_ICON}")
 endif()

@@ -137,11 +137,16 @@ jobs:
         with:
           tag_name: ${{ env.TAG }}
           target_commitish: ${{ github.sha }}
-          name: HHU-GCS 简化版 ${{ needs.build.outputs.version }}
+          name: 无人车地面站 简化版 ${{ needs.build.outputs.version }}
           prerelease: true
           files: dist/*.exe
           body: |
-            河海大学 大蒜播种车地面站 **简化版** Windows 安装包（预发布，滚动更新，基于 QGroundControl v5.1.4）。
+            无人车地面站 **简化版** Windows 安装包（预发布，滚动更新，基于 QGroundControl v5.1.4）。
+
+            **v1.2.0 改动**
+            - 移除电量 / 电压显示、低电量告警和设置页的低电量阈值（issue #5：飞控独立供电，VCU 未必上报电池数据，之前会误报“电量低 0%”）；同时关闭 QGC 自带的电池语音播报
+            - 软件名改为“无人车地面站”（窗口标题、关于页、安装程序、开始菜单）；安装目录和保存的设置不变，覆盖安装后 4G 连接、差分账号仍在
+            - 临时目录无法创建单实例锁文件时不再误报“已有实例在运行”
 
             - 来源分支：`simplify-work-flow`，提交 ${{ github.sha }}，构建 #${{ github.run_number }}
             - 简化内容：作业控制流程简化（Nav v1.0 授权闸门适配：开始/继续合并为单入口、断点续作、未授权状态引导）

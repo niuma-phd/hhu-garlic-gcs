@@ -501,8 +501,8 @@
       <translation>字体：本软件使用 HarmonyOS Sans 字体（© 华为终端有限公司，HarmonyOS Sans 字体许可协议）和 Barlow 字体（SIL Open Font License 1.1）。</translation>
     </message>
     <message>
-      <source>Hohai University Garlic Seeder Ground Station</source>
-      <translation>河海大学 大蒜播种车地面站</translation>
+      <source>Unmanned Vehicle Ground Station</source>
+      <translation>无人车地面站</translation>
     </message>
     <message>
       <source>Message tables</source>
@@ -544,8 +544,8 @@
       <translation>（日志较大，建议连接 WiFi 后上传）</translation>
     </message>
     <message>
-      <source>Alarms and checks</source>
-      <translation>告警与检查</translation>
+      <source>Upload check</source>
+      <translation>上传检查</translation>
     </message>
     <message>
       <source>Command timeout</source>
@@ -566,10 +566,6 @@
     <message>
       <source>Link lost after</source>
       <translation>连接中断判定时间</translation>
-    </message>
-    <message>
-      <source>Low battery alarm below</source>
-      <translation>低电量告警阈值</translation>
     </message>
     <message>
       <source>Pack logs</source>
@@ -661,10 +657,6 @@
     <message>
       <source>Another ground station controls this vehicle.</source>
       <translation>另一台地面站正在控制这辆车。</translation>
-    </message>
-    <message>
-      <source>Battery low %1%, please come back to charge</source>
-      <translation>电量低 %1%，请回来充电</translation>
     </message>
     <message>
       <source>Chassis fault %1</source>
@@ -1248,24 +1240,12 @@
   <context>
     <name>HHUStatusDetail</name>
     <message>
-      <source>%1 V</source>
-      <translation>%1 V</translation>
-    </message>
-    <message>
       <source>%1 ms</source>
       <translation>%1 毫秒</translation>
     </message>
     <message>
-      <source>Alarm below</source>
-      <translation>低于此值告警</translation>
-    </message>
-    <message>
       <source>Another ground station controls the vehicle</source>
       <translation>另一台地面站正在控制</translation>
-    </message>
-    <message>
-      <source>Battery</source>
-      <translation>电量</translation>
     </message>
     <message>
       <source>Connection</source>
@@ -1334,10 +1314,6 @@
     <message>
       <source>State</source>
       <translation>状态</translation>
-    </message>
-    <message>
-      <source>Voltage</source>
-      <translation>电压</translation>
     </message>
   </context>
   <context>
@@ -2150,8 +2126,8 @@ Click 'Ok' to upload the Plan anyway.</source>
       <translation>退出</translation>
     </message>
     <message>
-      <source>Hohai University Garlic Seeder Ground Station</source>
-      <translation>河海大学 大蒜播种车地面站</translation>
+      <source>Unmanned Vehicle Ground Station</source>
+      <translation>无人车地面站</translation>
     </message>
     <message>
       <source>Route</source>

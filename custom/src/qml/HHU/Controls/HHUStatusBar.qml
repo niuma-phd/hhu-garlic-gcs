@@ -5,8 +5,8 @@ import QGroundControl
 import QGroundControl.Controls
 import QGroundControl.Toolbar
 
-/// Top bar of the 作业 / 规划 / 设置 pages (设计稿 5.1): 作业 / 规划 switch, connection, position and
-/// battery as color dot + short word (tap for details), vehicle state tag, messages, settings.
+/// Top bar of the 作业 / 规划 / 设置 pages (设计稿 5.1): 作业 / 规划 switch, connection and position
+/// as color dot + short word (tap for details), vehicle state tag, messages, settings.
 /// `page`: "work" | "plan" | "settings" (no tab highlighted, no status items).
 /// Children are placed in the free space in the middle (e.g. the slide-to-confirm of the 作业 page).
 Rectangle {
@@ -140,7 +140,7 @@ Rectangle {
             }
         }
 
-        // ---- 连接 / 定位 / 电量 ----------------------------------------------------------
+        // ---- 连接 / 定位 ----------------------------------------------------------
         HHUStatusItem {
             id:         connItem
             visible:    root._statusShown
@@ -155,15 +155,6 @@ Rectangle {
             text:       root._pos.t
             onClicked:  detail.openPosition(posItem)
         }
-        HHUStatusItem {
-            id:         battItem
-            visible:    root._statusShown
-            battery:    true
-            batteryPct: !!root._vehicle ? status.batteryPct : NaN
-            batteryLow: status.batteryPct <= hhuSettings.lowBatteryPct
-            onClicked:  detail.openBattery(battItem)
-        }
-
         Item {
             id:                 centerSlot
             Layout.fillWidth:   true

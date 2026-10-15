@@ -1,3 +1,11 @@
+Unicode true
+
+; Name shown to the user (wizard, Apps & Features, Start menu). APPNAME stays the key for the
+; install dir and the uninstall registry entry, so upgrades find the previous install.
+!ifndef DISPLAYNAME
+    !define DISPLAYNAME "${APPNAME}"
+!endif
+
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
 !include "Win\COM.nsh"
@@ -38,7 +46,7 @@ RequestExecutionLevel admin
     ${EndIf}
 !macroend
 
-Name "${APPNAME}"
+Name "${DISPLAYNAME}"
 Var StartMenuFolder
 
 InstallDir "$PROGRAMFILES64\${APPNAME}"
@@ -91,7 +99,7 @@ doUninstall:
         Abort
     ${EndIf}
     IntCmp $0 0 doInstall
-    MessageBox MB_OK|MB_ICONEXCLAMATION "Could not remove a previously installed ${APPNAME} version.$\n$\nPlease remove it before continuing."
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Could not remove a previously installed ${DISPLAYNAME} version.$\n$\nPlease remove it before continuing."
     Abort
 
 doInstall:
@@ -102,7 +110,7 @@ doInstall:
 
     ; Create uninstaller and ARP data
     WriteUninstaller "$INSTDIR\${EXENAME}-Uninstall.exe"
-    WriteRegStr   HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName"    "${APPNAME}"
+    WriteRegStr   HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName"    "${DISPLAYNAME}"
     WriteRegStr   HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$\"$INSTDIR\${EXENAME}-Uninstall.exe$\""
     WriteRegStr   HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayIcon"     "$INSTDIR\bin\${EXENAME}.exe"
     WriteRegStr   HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "InstallLocation" "$INSTDIR"
@@ -151,8 +159,8 @@ Section "Create Start Menu Shortcuts"
     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
 
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
-        CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${APPNAME}.lnk" "$INSTDIR\bin\${EXENAME}.exe" "" "$INSTDIR\bin\${EXENAME}.exe" 0
-        CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${APPNAME} (GPU Safe Mode).lnk" "$INSTDIR\bin\${EXENAME}.exe" "-swrast" "$INSTDIR\bin\${EXENAME}.exe" 0
-        !insertmacro DemoteShortCut "$SMPROGRAMS\$StartMenuFolder\${APPNAME} (GPU Safe Mode).lnk"
+        CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME}.lnk" "$INSTDIR\bin\${EXENAME}.exe" "" "$INSTDIR\bin\${EXENAME}.exe" 0
+        CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME} (GPU Safe Mode).lnk" "$INSTDIR\bin\${EXENAME}.exe" "-swrast" "$INSTDIR\bin\${EXENAME}.exe" 0
+        !insertmacro DemoteShortCut "$SMPROGRAMS\$StartMenuFolder\${DISPLAYNAME} (GPU Safe Mode).lnk"
     !insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd

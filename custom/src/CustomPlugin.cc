@@ -84,7 +84,7 @@ CustomPlugin::CustomPlugin(QObject *parent)
     , _workLog(new HHUWorkLog(this))
 {
     _showAdvancedUI = false;
-    QGuiApplication::setApplicationDisplayName(QStringLiteral("河海大学 大蒜播种车地面站"));
+    QGuiApplication::setApplicationDisplayName(QStringLiteral("无人车地面站"));
 
     // QGC renders with Open Sans; give Chinese glyphs a sans-serif fallback instead of the system Song font
     QFont::insertSubstitutions(QStringLiteral("Open Sans"),
@@ -301,6 +301,10 @@ bool CustomPlugin::mavlinkMessage(Vehicle *vehicle, LinkInterface *link, const m
         _workLog->itemReached(vehicle, mavlink_msg_mission_item_reached_get_seq(&message));
     } else if (message.msgid == MAVLINK_MSG_ID_STATUSTEXT) {
         return _translateStatusText(vehicle, message);
+    } else if (message.msgid == MAVLINK_MSG_ID_BATTERY_STATUS) {
+        // The autopilot has its own supply, so its battery monitor says nothing about the chassis
+        // battery (issue #5). Drop it so QGC neither speaks "battery level low" nor lists a battery.
+        return false;
     }
     return true;
 }

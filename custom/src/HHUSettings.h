@@ -11,8 +11,6 @@ class HHUSettings : public QObject
     Q_PROPERTY(int    commandTimeoutSec READ commandTimeoutSec WRITE setCommandTimeoutSec NOTIFY changed)
     /// 连接中断判定时间: seconds without vehicle data before the link counts as lost
     Q_PROPERTY(int    linkLostSec       READ linkLostSec       WRITE setLinkLostSec       NOTIFY changed)
-    /// 低电量告警阈值 (%)
-    Q_PROPERTY(int    lowBatteryPct     READ lowBatteryPct     WRITE setLowBatteryPct     NOTIFY changed)
     /// 航点数上限 used by the upload check
     Q_PROPERTY(int    maxWaypoints      READ maxWaypoints      WRITE setMaxWaypoints      NOTIFY changed)
     /// 字号: 0 标准, 1 大, 2 特大 (HHU status bar, work panel, dialogs)
@@ -30,7 +28,6 @@ public:
 
     int    commandTimeoutSec() const { return _commandTimeoutSec; }
     int    linkLostSec()       const { return _linkLostSec; }
-    int    lowBatteryPct()     const { return _lowBatteryPct; }
     int    maxWaypoints()      const { return _maxWaypoints; }
     int    fontSize()          const { return _fontSize; }
     double fontScale()         const;
@@ -40,7 +37,6 @@ public:
 
     void setCommandTimeoutSec(int value);
     void setLinkLostSec(int value);
-    void setLowBatteryPct(int value);
     void setMaxWaypoints(int value);
     void setFontSize(int value);
     void setHighContrast(bool value);
@@ -55,7 +51,6 @@ private:
 
     int    _commandTimeoutSec = 5;
     int    _linkLostSec       = 5;
-    int    _lowBatteryPct     = 20;
     int    _maxWaypoints      = 700;
     int    _fontSize          = 0;
     bool   _highContrast      = false;

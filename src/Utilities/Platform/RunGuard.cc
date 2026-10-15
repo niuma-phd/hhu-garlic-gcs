@@ -1,6 +1,7 @@
 #include "RunGuard.h"
 
 #include <QtCore/QCryptographicHash>
+#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
 
@@ -49,7 +50,27 @@ bool RunGuard::isAnotherRunning()
 
 bool RunGuard::tryToRun()
 {
-    return (_lockFile.isLocked() ? true : _lockFile.tryLock(0));
+    if (_lockFile.isLocked()) {
+        return true;
+    }
+
+    if (_lockFile.tryLock(0)) {
+        return true;
+    }
+
+    // Only LockFailedError means another process really holds the lock. PermissionError
+    // (the lock file cannot be created in the temp directory) and UnknownError mean the
+    // lock file is unusable — that must not stop the application, since single-instance is
+    // a convenience for the user, not a safety function. Report the real reason instead of
+    // letting the caller turn every failure into "another instance is already running".
+    if (_lockFile.error() != QLockFile::LockFailedError) {
+        qWarning() << "RunGuard: unusable single-instance lock file" << _lockFile.fileName()
+                   << "error" << int(_lockFile.error())
+                   << "- continuing without single-instance protection";
+        return true;
+    }
+
+    return false;
 }
 
 void RunGuard::release()

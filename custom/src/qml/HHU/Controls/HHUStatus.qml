@@ -45,13 +45,10 @@ QtObject {
     readonly property bool  rtkFixed:       fixType >= 6
     readonly property bool  rtkFloat:       fixType === 5
 
-    // Chassis battery (VCU_SOC / VCU_BATV from vcu_can.lua) when fresh, otherwise the autopilot battery
+    // Chassis data from vcu_can.lua (VCU_OK / VCU_MODE / VCU_FAULT) is fresh
     readonly property bool  vcuValid:       !!vehicle && hhuVcu.valid
     /// OpSource = 2: the remote control handed the chassis over to Nav (Nav ↔ VCU CAN v1.0)
     readonly property bool  vcuAuthorized:  vcuValid && hhuVcu.mode === 2
-    readonly property var   battery:        vehicle && vehicle.batteries.count > 0 ? vehicle.batteries.get(0) : null
-    readonly property real  batteryPct:     vcuValid && !isNaN(hhuVcu.soc) ? hhuVcu.soc : (battery ? battery.percentRemaining.rawValue : NaN)
-    readonly property real  batteryVolts:   vcuValid && !isNaN(hhuVcu.batV) ? hhuVcu.batV : (battery ? battery.voltage.rawValue : NaN)
 
     /// "0x1A 电机过流" style text for the current VCU fault ("" when there is no fault)
     readonly property string faultText: {

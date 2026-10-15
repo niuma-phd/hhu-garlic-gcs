@@ -1,6 +1,6 @@
 {
     "_readme": [
-        "河海大学 大蒜播种车地面站 配置文件。修改后重启地面站生效，无需重新编译。",
+        "无人车地面站 配置文件。修改后重启地面站生效，无需重新编译。",
         "位置：安装目录下的 config/hhu_config.json。文件缺失或格式错误时使用程序内置的默认表。",
         "statusText：车端 STATUSTEXT 按前缀匹配（不区分大小写，最长前缀优先），未匹配的显示原文。",
         "  {rest} = 前缀后面的原文；{reason} = 前缀后面的原文按 preArm 表再翻译一次；{fault} = 故障码及 faultCodes 中的说明。",
@@ -199,14 +199,6 @@
         {
             "prefix": "Gyros inconsistent",
             "text": "陀螺仪数据不一致，请联系售后"
-        },
-        {
-            "prefix": "Battery 1 below minimum arming",
-            "text": "电池电压过低"
-        },
-        {
-            "prefix": "Battery",
-            "text": "电池检查未通过：{rest}"
         },
         {
             "prefix": "Mode not armable",

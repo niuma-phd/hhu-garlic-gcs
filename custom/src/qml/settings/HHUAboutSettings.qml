@@ -14,7 +14,7 @@ SettingsPage {
 
     SettingsGroupLayout {
         Layout.fillWidth:   true
-        heading:            qsTr("Hohai University Garlic Seeder Ground Station")
+        heading:            qsTr("Unmanned Vehicle Ground Station")
 
         Image {
             Layout.alignment:       Qt.AlignHCenter

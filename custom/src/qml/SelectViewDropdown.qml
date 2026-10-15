@@ -83,7 +83,7 @@ ToolIndicatorPage {
                 QGCLabel {
                     Layout.fillWidth: true
                     horizontalAlignment: Text.AlignHCenter
-                    text: qsTr("Hohai University Garlic Seeder Ground Station")
+                    text: qsTr("Unmanned Vehicle Ground Station")
                     font.pointSize: ScreenTools.smallFontPointSize
                     wrapMode: QGCLabel.WordWrap
                 }
