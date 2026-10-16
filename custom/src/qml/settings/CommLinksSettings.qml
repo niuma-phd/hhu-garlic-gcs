@@ -30,19 +30,25 @@ SettingsPage {
             RowLayout {
                 id:                 configRow
                 Layout.fillWidth:   true
+                Layout.preferredWidth: parent ? parent.width : implicitWidth  // buttons of every row right aligned
                 spacing:            ScreenTools.defaultFontPixelWidth
 
                 readonly property bool _isActive: hhu4G.activeIndex === index
 
                 ColumnLayout {
-                    Layout.fillWidth: true
+                    Layout.fillWidth:       true
+                    Layout.preferredWidth:  1     // takes what the buttons leave, long texts elide
                     spacing: 0
                     QGCLabel {
+                        Layout.fillWidth: true
+                        elide:          Text.ElideRight
                         text:           modelData.name + (modelData.tls ? "" : "  " + qsTr("(not encrypted)"))
                         font.bold:      configRow._isActive
                         font.pixelSize: HHUStyle.bodyFontSize
                     }
                     QGCLabel {
+                        Layout.fillWidth: true
+                        wrapMode:       Text.WrapAtWordBoundaryOrAnywhere
                         text:           qsTr("%1:%2 · vehicle %3").arg(modelData.host).arg(modelData.port).arg(modelData.vehicle)
                         font.pixelSize: HHUStyle.bodyFontSize
                         color:          "#5B6B7F"
@@ -64,16 +70,16 @@ SettingsPage {
                 QGCButton {
                     text:       qsTr("Delete")
                     enabled:    !configRow._isActive
-                    onClicked:  QGroundControl.showMessageDialog(configRow, qsTr("Delete"),
-                                                                 qsTr("Delete the 4G connection \"%1\"?").arg(modelData.name),
-                                                                 Dialog.Yes | Dialog.Cancel,
-                                                                 function() { hhu4G.removeConfig(index) })
+                    onClicked:  mainWindow.hhuConfirm(configRow, qsTr("Delete connection"),
+                                                      qsTr("Delete the 4G connection \"%1\"?").arg(modelData.name),
+                                                      qsTr("Delete"),
+                                                      function() { hhu4G.removeConfig(index) })
                 }
                 QGCButton {
                     text:       configRow._isActive ? qsTr("Disconnect") : qsTr("Connect")
                     primary:    !configRow._isActive
                     onClicked:  configRow._isActive ? hhu4G.disconnectLink()
-                                                    : HHUState.connectExclusive(configRow, modelData.name, function() { hhu4G.connectTo(index) })
+                                                    : mainWindow.hhuConnectExclusive(configRow, modelData.name, function() { hhu4G.connectTo(index) })
                 }
             }
         }
@@ -272,6 +278,7 @@ SettingsPage {
                 QGCTextField {
                     id:                 passwordEdit
                     Layout.fillWidth:   true
+                    Layout.minimumWidth: ScreenTools.defaultFontPixelWidth * 24
                     font.pixelSize:     HHUStyle.bodyFontSize
                     echoMode:           showPassword.checked ? TextInput.Normal : TextInput.Password
                     placeholderText:    fourGDialog.hasPassword ? qsTr("Saved (leave empty to keep)") : ""
@@ -351,7 +358,7 @@ SettingsPage {
                     onClicked: {
                         const name = fourGDialog._savedName()
                         const index = fourGDialog.save()
-                        HHUState.connectExclusive(fourGDialog.parent, name, function() { hhu4G.connectTo(index) })
+                        mainWindow.hhuConnectExclusive(fourGDialog.parent, name, function() { hhu4G.connectTo(index) })
                     }
                 }
             }

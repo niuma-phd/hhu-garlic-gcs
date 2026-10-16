@@ -67,14 +67,10 @@ SettingsGroupLayout {
 
                 QGCMouseArea {
                     fillItem:   parent
-                    onClicked:  QGroundControl.showMessageDialog(
-                                    _root,
-                                    qsTr("Delete Link"),
-                                    qsTr("Are you sure you want to delete '%1'?").arg(object.name),
-                                    Dialog.Ok | Dialog.Cancel,
-                                    function () {
-                                        _linkManager.removeConfiguration(object)
-                                    })
+                    onClicked:  mainWindow.hhuConfirm(_root, qsTr("Delete connection"),
+                                                      qsTr("Delete the connection \"%1\"?").arg(object.name),
+                                                      qsTr("Delete"),
+                                                      function () { _linkManager.removeConfiguration(object) })
                 }
             }
             QGCButton {
@@ -83,7 +79,7 @@ SettingsGroupLayout {
                     if (object.linkActive) {
                         _linkManager.disconnectLinkConfiguration(object)
                     } else {
-                        HHUState.connectExclusive(_root, object.name, function() { _linkManager.createConnectedLink(object) })
+                        mainWindow.hhuConnectExclusive(_root, object.name, function() { _linkManager.createConnectedLink(object) })
                     }
                 }
             }

@@ -1,6 +1,5 @@
 pragma Singleton
 import QtQuick
-import QtQuick.Dialogs
 
 import QGroundControl
 
@@ -14,7 +13,8 @@ QtObject {
 
     // ---- One vehicle at a time (issue #6) --------------------------------------------------
     // Our vehicles all use system id 1: two links at once feed the same QGC vehicle with the data of
-    // two vehicles. So a new connection first asks to disconnect the one in use.
+    // two vehicles. So a new connection first asks to disconnect the one in use
+    // (mainWindow.hhuConnectExclusive).
 
     /// Names of the connections in use (4G and radio / LAN links)
     function connectionsInUse() {
@@ -44,22 +44,5 @@ QtObject {
                 QGroundControl.linkManager.disconnectLinkConfiguration(config)
             }
         }
-    }
-
-    /// Runs connectFunction for the connection `name`; when another one is in use, after asking to drop it
-    function connectExclusive(owner, name, connectFunction) {
-        const inUse = connectionsInUse()
-        if (inUse.length === 0) {
-            connectFunction()
-            return
-        }
-        QGroundControl.showMessageDialog(owner, qsTr("Switch connection"),
-                                         qsTr("Connected to %1. Only one vehicle can be connected at a time. Disconnect it and connect to %2?")
-                                             .arg(inUse.join(qsTr(", "))).arg(name),
-                                         Dialog.Ok | Dialog.Cancel,
-                                         function() {
-                                             disconnectAll()
-                                             connectFunction()
-                                         })
     }
 }

@@ -118,6 +118,10 @@
       <translation>删除</translation>
     </message>
     <message>
+      <source>Delete connection</source>
+      <translation>删除连接</translation>
+    </message>
+    <message>
       <source>Delete the 4G connection "%1"?</source>
       <translation>删除 4G 连接“%1”？</translation>
     </message>
@@ -362,8 +366,8 @@
       <translation>字号</translation>
     </message>
     <message>
-      <source>Font size applies to the status bar, work buttons, cards and alarms. Interface scale enlarges everything.</source>
-      <translation>字号作用于状态栏、作业按钮、信息卡片和告警；界面缩放会放大整个界面。</translation>
+      <source>Font size applies to all text. Interface scale also enlarges buttons, icons and spacing.</source>
+      <translation>字号作用于所有文字；界面缩放还会放大按钮、图标和间距。</translation>
     </message>
     <message>
       <source>Interface scale</source>
@@ -912,6 +916,10 @@
       <translation>清空 %1 个航点？</translation>
     </message>
     <message>
+      <source>Clear the route</source>
+      <translation>清空航线</translation>
+    </message>
+    <message>
       <source>Fix</source>
       <translation>去修改</translation>
     </message>
@@ -1104,21 +1112,6 @@
     <message>
       <source>Start work</source>
       <translation>开始作业</translation>
-    </message>
-  </context>
-  <context>
-    <name>HHUState</name>
-    <message>
-      <source>, </source>
-      <translation>、</translation>
-    </message>
-    <message>
-      <source>Connected to %1. Only one vehicle can be connected at a time. Disconnect it and connect to %2?</source>
-      <translation>当前已连接 %1。同时只能连接一台车，要断开它并连接 %2 吗？</translation>
-    </message>
-    <message>
-      <source>Switch connection</source>
-      <translation>切换连接</translation>
     </message>
   </context>
   <context>
@@ -1536,10 +1529,6 @@ Next time you can continue where it stopped.</source>
       <translation type="unfinished" />
     </message>
     <message>
-      <source>Are you sure you want to delete '%1'?</source>
-      <translation type="unfinished" />
-    </message>
-    <message>
       <source>Automatically Connect on Start</source>
       <translation type="unfinished" />
     </message>
@@ -1548,8 +1537,16 @@ Next time you can continue where it stopped.</source>
       <translation type="unfinished" />
     </message>
     <message>
-      <source>Delete Link</source>
-      <translation type="unfinished" />
+      <source>Delete</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Delete connection</source>
+      <translation>删除连接</translation>
+    </message>
+    <message>
+      <source>Delete the connection "%1"?</source>
+      <translation>删除连接“%1”？</translation>
     </message>
     <message>
       <source>Disconnect</source>
@@ -1583,6 +1580,10 @@ Next time you can continue where it stopped.</source>
   <context>
     <name>MainWindow</name>
     <message>
+      <source>, </source>
+      <translation>、</translation>
+    </message>
+    <message>
       <source>Active Vehicle Connections</source>
       <translation type="unfinished" />
     </message>
@@ -1611,8 +1612,16 @@ Next time you can continue where it stopped.</source>
       <translation type="unfinished" />
     </message>
     <message>
+      <source>Connected to %1. Only one vehicle can be connected at a time. Disconnect it and connect to %2?</source>
+      <translation>当前已连接 %1。同时只能连接一台车，要断开它并连接 %2 吗？</translation>
+    </message>
+    <message>
       <source>Debug Touch Areas</source>
       <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Disconnect and connect</source>
+      <translation>断开并连接</translation>
     </message>
     <message>
       <source>Exit</source>
@@ -1625,6 +1634,10 @@ Next time you can continue where it stopped.</source>
     <message>
       <source>Please correct the invalid value before continuing</source>
       <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Switch connection</source>
+      <translation>切换连接</translation>
     </message>
     <message>
       <source>There are still active connections to vehicles. Are you sure you want to exit?</source>
@@ -1899,7 +1912,7 @@ Next time you can continue where it stopped.</source>
     </message>
     <message>
       <source>Clear</source>
-      <translation type="unfinished" />
+      <translation>清空</translation>
     </message>
     <message>
       <source>Click in map to add rally points</source>

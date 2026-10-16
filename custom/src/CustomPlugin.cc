@@ -277,9 +277,10 @@ void CustomPlugin::paletteOverride(const QString &colorName, QGCPalette::Palette
         colorInfo[QGCPalette::Light][QGCPalette::ColorGroupEnabled] = blue;
         colorInfo[QGCPalette::Light][QGCPalette::ColorGroupDisabled] = grey;
     } else if (colorName == QStringLiteral("primaryButton")) {
-        setAll(colorInfo, blue, QColor(QStringLiteral("#585858")));
+        // disabled: light grey like the HHU buttons, so it does not look clickable (issue #6)
+        setAll(colorInfo, blue, QColor(QStringLiteral("#C9D0D8")));
     } else if (colorName == QStringLiteral("primaryButtonText")) {
-        setAll(colorInfo, white, QColor(QStringLiteral("#cad0d0")));
+        setAll(colorInfo, white, QColor(QStringLiteral("#4A5868")));
     } else if (colorName == QStringLiteral("missionItemEditor")) {
         colorInfo[QGCPalette::Light][QGCPalette::ColorGroupEnabled] = tint;
     } else if (colorName == QStringLiteral("toolStripHoverColor")) {

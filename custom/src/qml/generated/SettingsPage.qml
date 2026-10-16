@@ -24,7 +24,7 @@ Item {
         ColumnLayout {
             id:         mainLayout
             x:          0
-            width:      Math.min(Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 50), Math.max(820 * HHUStyle.s, root.width * 0.6))
+            width:      Math.min(Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 50), Math.max(820 * HHUStyle.s, root.width * 0.6), root.width)
             spacing:    ScreenTools.defaultFontPixelHeight
         }
     }

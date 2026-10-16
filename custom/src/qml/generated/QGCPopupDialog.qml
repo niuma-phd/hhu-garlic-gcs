@@ -245,8 +245,8 @@ Popup {
             Layout.preferredHeight: Math.min(maxAvailableHeight, totalContentHeight)
             color:                  "white"
 
-            property real totalContentWidth:    dialogContentParent.childrenRect.width + _contentMargin * 2
-            property real totalContentHeight:   dialogContentParent.childrenRect.height + _contentMargin * 2
+            property real totalContentWidth:    dialogContentParent.childrenRect.width + _contentMargin * 2 + 2
+            property real totalContentHeight:   dialogContentParent.childrenRect.height + _contentMargin * 2 + 2
             property real maxAvailableWidth:    mainWindow.width - 80 * HHUStyle.s
             property real maxAvailableHeight:   mainWindow.height - titleRowLayout.height - footer.height - 80 * HHUStyle.s
 

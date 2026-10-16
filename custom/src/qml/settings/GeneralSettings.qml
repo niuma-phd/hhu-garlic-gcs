@@ -43,7 +43,7 @@ SettingsPage {
 
         QGCLabel {
             Layout.fillWidth:   true
-            text:               qsTr("Font size applies to the status bar, work buttons, cards and alarms. Interface scale enlarges everything.")
+            text:               qsTr("Font size applies to all text. Interface scale also enlarges buttons, icons and spacing.")
             font.pixelSize:     HHUStyle.bodyFontSize
             wrapMode:           Text.WordWrap
         }

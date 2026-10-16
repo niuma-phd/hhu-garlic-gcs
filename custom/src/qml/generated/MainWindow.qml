@@ -192,6 +192,28 @@ ApplicationWindow {
         dialog.open()
     }
 
+    function hhuConfirm(owner, title, text, acceptText, acceptFunction) {
+        _showMessageDialogWorker(owner, title, text, Dialog.Ok | Dialog.Cancel, acceptFunction, null, false,
+                                 { acceptText: acceptText, rejectText: qsTr("Cancel") })
+    }
+
+    /// One vehicle at a time: connecting asks first to drop the connection in use (HHUState)
+    function hhuConnectExclusive(owner, name, connectFunction) {
+        const inUse = HHUState.connectionsInUse()
+        if (inUse.length === 0) {
+            connectFunction()
+            return
+        }
+        hhuConfirm(owner, qsTr("Switch connection"),
+                   qsTr("Connected to %1. Only one vehicle can be connected at a time. Disconnect it and connect to %2?")
+                       .arg(inUse.join(qsTr(", "))).arg(name),
+                   qsTr("Disconnect and connect"),
+                   function() {
+                       HHUState.disconnectAll()
+                       connectFunction()
+                   })
+    }
+
     // HHU: customer wording of QGC app messages; false = not shown
     function _hhuAppMessage(msg) {
         if (msg.text.indexOf(qsTranslate("AutoPilotPlugin", "Configuration tasks remain before this vehicle is ready to fly. See Vehicle Configuration for details.")) >= 0

@@ -14,6 +14,20 @@ Popup {
     width:          Math.min(420 * HHUStyle.s, parent ? parent.width - 16 : 420)
     height:         Math.min(list.contentHeight + header.height + (_items.length === 0 ? 60 * HHUStyle.s : 2), (parent ? parent.height : 600) * 0.7)
     closePolicy:    Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    focus:          true    // Esc closes it
+
+    /// Tapping the bell again closes the list: the press outside has just closed it, so the click
+    /// on the bell must not open it again
+    property real _closedAt: 0
+    onClosed: _closedAt = Date.now()
+
+    function toggleAt(item) {
+        if (visible || Date.now() - _closedAt < 400) {
+            close()
+        } else {
+            openAt(item)
+        }
+    }
 
     readonly property var _vehicle: QGroundControl.multiVehicleManager.activeVehicle
 

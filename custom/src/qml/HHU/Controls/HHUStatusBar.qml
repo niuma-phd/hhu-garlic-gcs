@@ -236,7 +236,7 @@ Rectangle {
                 anchors.fill:   parent
                 hoverEnabled:   true
                 cursorShape:    Qt.PointingHandCursor
-                onClicked:      messages.openAt(bellButton)
+                onClicked:      messages.toggleAt(bellButton)
             }
         }
 

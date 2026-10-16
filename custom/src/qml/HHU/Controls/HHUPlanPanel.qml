@@ -65,9 +65,9 @@ HHUCard {
 
     /// 清空 asks first and keeps the speed (removeAll recreates the route settings without it, issue #6)
     function _clearRoute() {
-        QGroundControl.showMessageDialog(root, qsTr("Clear"),
+        mainWindow.hhuConfirm(root, qsTr("Clear the route"),
                                          qsTr("Clear %1 waypoints?").arg(_waypoints),
-                                         Dialog.Ok | Dialog.Cancel,
+                                         qsTr("Clear"),
                                          function() {
                                              const speed = root._speed
                                              root.planMasterController.removeAll()
@@ -190,123 +190,136 @@ HHUCard {
             }
         }
 
-        StackLayout {
+        // Step content scrolls on short screens; 下一步 / 上传 below always stay visible
+        Flickable {
+            id:                 stepFlick
             Layout.fillWidth:   true
             Layout.fillHeight:  true
-            currentIndex:       root.step
+            clip:               true
+            contentWidth:       width
+            contentHeight:      stepStack.height
+            boundsBehavior:     Flickable.StopAtBounds
+            interactive:        contentHeight > height
 
-            // ① 排航线 ---------------------------------------------------------------------
-            ColumnLayout {
-                spacing: 10 * HHUStyle.s
+            StackLayout {
+                id:             stepStack
+                width:          stepFlick.width
+                height:         Math.max(implicitHeight, stepFlick.height)
+                currentIndex:       root.step
 
-                Row {
-                    spacing: 6 * HHUStyle.s
-                    HHUText { text: String(root._waypoints); number: true; size: 30; anchors.bottom: parent.bottom }
-                    HHUText { text: qsTr("waypoints"); size: 15; color: HHUStyle.text3; anchors.bottom: parent.bottom; bottomPadding: 4 }
-                }
-                HHUButton {
-                    Layout.fillWidth:   true
-                    text:               qsTr("Add a waypoint at the vehicle")
-                    icon:               "pin"
-                    kind:               "outline"
-                    size:               16
-                    h:                  56 * HHUStyle.s
-                    enabled:            !!status.vehicle && status.vehicle.coordinate.isValid
-                    onClicked:          root._addWaypointAtVehicle(text)
-                }
-                RowLayout {
-                    Layout.fillWidth:   true
-                    spacing:            8 * HHUStyle.s
-                    HHUButton { Layout.fillWidth: true; text: qsTr("Undo"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._undoRoute() }
-                    HHUButton { Layout.fillWidth: true; text: qsTr("Clear"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._clearRoute() }
-                }
-                RowLayout {
-                    Layout.fillWidth:   true
-                    Layout.topMargin:   8 * HHUStyle.s
-                    HHUText { Layout.fillWidth: true; text: qsTr("Speed"); size: 16; bold: true }
-                    HHUStepper {
-                        value:      root._speed
-                        from:       0.1
-                        to:         root._maxSpeed
-                        editable:   true
-                        step:       0.1
-                        decimals:   1
-                        unit:       "m/s"
-                        onEdited:   (v) => root._setSpeed(v)
+                // ① 排航线 ---------------------------------------------------------------------
+                ColumnLayout {
+                    spacing: 10 * HHUStyle.s
+
+                    Row {
+                        spacing: 6 * HHUStyle.s
+                        HHUText { text: String(root._waypoints); number: true; size: 30; anchors.bottom: parent.bottom }
+                        HHUText { text: qsTr("waypoints"); size: 15; color: HHUStyle.text3; anchors.bottom: parent.bottom; bottomPadding: 4 }
                     }
-                }
-                Item { Layout.fillHeight: true }
-            }
-
-            // ② 检查上传 -------------------------------------------------------------------
-            ColumnLayout {
-                spacing: 10 * HHUStyle.s
-
-                Rectangle {
-                    Layout.fillWidth:       true
-                    Layout.preferredHeight: 52 * HHUStyle.s
-                    radius:                 10 * HHUStyle.s
-                    readonly property bool _ok: root._check.errors.length === 0
-                    color:          _ok ? HHUStyle.greenLight : HHUStyle.redLight
-                    border.color:   _ok ? HHUStyle.green : HHUStyle.red
-                    border.width:   2
+                    HHUButton {
+                        Layout.fillWidth:   true
+                        text:               qsTr("Add a waypoint at the vehicle")
+                        icon:               "pin"
+                        kind:               "outline"
+                        size:               16
+                        h:                  56 * HHUStyle.s
+                        enabled:            !!status.vehicle && status.vehicle.coordinate.isValid
+                        onClicked:          root._addWaypointAtVehicle(text)
+                    }
                     RowLayout {
-                        anchors.fill:       parent
-                        anchors.leftMargin: 14 * HHUStyle.s
-                        spacing:            10 * HHUStyle.s
-                        HHUIcon { name: parent.parent._ok ? "check" : "close"; color: parent.parent._ok ? HHUStyle.green : HHUStyle.red }
-                        HHUText {
-                            Layout.fillWidth: true
-                            text:   parent.parent._ok ? (root._uploaded ? qsTr("Uploaded to the vehicle") : qsTr("Check passed"))
-                                                      : qsTr("%1 items to fix").arg(root._check.errors.length)
-                            size:   17
-                            bold:   true
+                        Layout.fillWidth:   true
+                        spacing:            8 * HHUStyle.s
+                        HHUButton { Layout.fillWidth: true; text: qsTr("Undo"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._undoRoute() }
+                        HHUButton { Layout.fillWidth: true; text: qsTr("Clear"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._clearRoute() }
+                    }
+                    RowLayout {
+                        Layout.fillWidth:   true
+                        Layout.topMargin:   8 * HHUStyle.s
+                        HHUText { Layout.fillWidth: true; text: qsTr("Speed"); size: 16; bold: true }
+                        HHUStepper {
+                            value:      root._speed
+                            from:       0.1
+                            to:         root._maxSpeed
+                            editable:   true
+                            step:       0.1
+                            decimals:   1
+                            unit:       "m/s"
+                            onEdited:   (v) => root._setSpeed(v)
                         }
                     }
+                    Item { Layout.fillHeight: true }
                 }
 
-                ListView {
-                    Layout.fillWidth:   true
-                    Layout.fillHeight:  true
-                    clip:               true
-                    spacing:            8 * HHUStyle.s
-                    model:              root._check.items
-                    delegate: Rectangle {
-                        width:          ListView.view.width
-                        height:         itemColumn.implicitHeight + 20 * HHUStyle.s
-                        radius:         10 * HHUStyle.s
-                        color:          modelData.error ? HHUStyle.redLight : HHUStyle.yellowLight
-                        ColumnLayout {
-                            id:         itemColumn
-                            x:          12 * HHUStyle.s
-                            y:          10 * HHUStyle.s
-                            width:      parent.width - 24 * HHUStyle.s
-                            spacing:    6 * HHUStyle.s
-                            HHUText { Layout.fillWidth: true; text: modelData.t; size: 15; wrapMode: Text.WordWrap }
-                            HHUButton {
-                                visible:            modelData.step >= 0
-                                Layout.alignment:   Qt.AlignRight
-                                text:               modelData.look ? qsTr("Show") : qsTr("Fix")
-                                size:               15
-                                h:                  40 * HHUStyle.s
-                                onClicked: {
-                                    if (modelData.look && checker.tightTurns.length > 0) {
-                                        root.editorMap.center = checker.tightTurns[0].coordinate
+                // ② 检查上传 -------------------------------------------------------------------
+                ColumnLayout {
+                    spacing: 10 * HHUStyle.s
+
+                    Rectangle {
+                        Layout.fillWidth:       true
+                        Layout.preferredHeight: 52 * HHUStyle.s
+                        radius:                 10 * HHUStyle.s
+                        readonly property bool _ok: root._check.errors.length === 0
+                        color:          _ok ? HHUStyle.greenLight : HHUStyle.redLight
+                        border.color:   _ok ? HHUStyle.green : HHUStyle.red
+                        border.width:   2
+                        RowLayout {
+                            anchors.fill:       parent
+                            anchors.leftMargin: 14 * HHUStyle.s
+                            spacing:            10 * HHUStyle.s
+                            HHUIcon { name: parent.parent._ok ? "check" : "close"; color: parent.parent._ok ? HHUStyle.green : HHUStyle.red }
+                            HHUText {
+                                Layout.fillWidth: true
+                                text:   parent.parent._ok ? (root._uploaded ? qsTr("Uploaded to the vehicle") : qsTr("Check passed"))
+                                                          : qsTr("%1 items to fix").arg(root._check.errors.length)
+                                size:   17
+                                bold:   true
+                            }
+                        }
+                    }
+
+                    ListView {
+                        Layout.fillWidth:   true
+                        Layout.fillHeight:  true
+                        clip:               true
+                        spacing:            8 * HHUStyle.s
+                        model:              root._check.items
+                        delegate: Rectangle {
+                            width:          ListView.view.width
+                            height:         itemColumn.implicitHeight + 20 * HHUStyle.s
+                            radius:         10 * HHUStyle.s
+                            color:          modelData.error ? HHUStyle.redLight : HHUStyle.yellowLight
+                            ColumnLayout {
+                                id:         itemColumn
+                                x:          12 * HHUStyle.s
+                                y:          10 * HHUStyle.s
+                                width:      parent.width - 24 * HHUStyle.s
+                                spacing:    6 * HHUStyle.s
+                                HHUText { Layout.fillWidth: true; text: modelData.t; size: 15; wrapMode: Text.WordWrap }
+                                HHUButton {
+                                    visible:            modelData.step >= 0
+                                    Layout.alignment:   Qt.AlignRight
+                                    text:               modelData.look ? qsTr("Show") : qsTr("Fix")
+                                    size:               15
+                                    h:                  40 * HHUStyle.s
+                                    onClicked: {
+                                        if (modelData.look && checker.tightTurns.length > 0) {
+                                            root.editorMap.center = checker.tightTurns[0].coordinate
+                                        }
+                                        root.goTo(modelData.step)
                                     }
-                                    root.goTo(modelData.step)
                                 }
                             }
                         }
                     }
-                }
 
-                HHUText {
-                    visible:            root._check.items.length === 0
-                    Layout.fillWidth:   true
-                    text:               qsTr("Tight turns, waypoint count and connection are all fine.")
-                    size:               15
-                    color:              HHUStyle.text3
-                    wrapMode:           Text.WordWrap
+                    HHUText {
+                        visible:            root._check.items.length === 0
+                        Layout.fillWidth:   true
+                        text:               qsTr("Tight turns, waypoint count and connection are all fine.")
+                        size:               15
+                        color:              HHUStyle.text3
+                        wrapMode:           Text.WordWrap
+                    }
                 }
             }
         }

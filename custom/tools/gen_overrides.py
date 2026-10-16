@@ -68,7 +68,7 @@ OVERRIDES = {
         replace_once("""            x:          Math.max(0, root.width / 2 - width / 2)
             width:      Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 50)
 """, """            x:          0
-            width:      Math.min(Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 50), Math.max(820 * HHUStyle.s, root.width * 0.6))
+            width:      Math.min(Math.max(implicitWidth, ScreenTools.defaultFontPixelWidth * 50), Math.max(820 * HHUStyle.s, root.width * 0.6), root.width)
 """),
     ],
     # Settings (设计稿 6a): the top bar keeps only 作业 / 规划 (none highlighted), no back button or title
@@ -106,6 +106,33 @@ OVERRIDES = {
         let properties = { title: dialogTitle, text: dialogText, buttons: buttons, acceptFunction: acceptFunction, closeFunction: closeFunction, bypassNavigationCheck: bypassNavigationCheck }
         let dialog = simpleMessageDialogComponent.createObject(owner, Object.assign(properties, extraProperties || {}))
 """),
+        # HHU confirmations in one style (issue #6): title = what happens, accept button = the verb
+        # (删除 / 清空 / 断开并连接), reject = 取消
+        replace_once("""    // This variant is only meant to be called by QGCApplication
+    function _showMessageDialog(dialogTitle, dialogText) {""", """    function hhuConfirm(owner, title, text, acceptText, acceptFunction) {
+        _showMessageDialogWorker(owner, title, text, Dialog.Ok | Dialog.Cancel, acceptFunction, null, false,
+                                 { acceptText: acceptText, rejectText: qsTr("Cancel") })
+    }
+
+    /// One vehicle at a time: connecting asks first to drop the connection in use (HHUState)
+    function hhuConnectExclusive(owner, name, connectFunction) {
+        const inUse = HHUState.connectionsInUse()
+        if (inUse.length === 0) {
+            connectFunction()
+            return
+        }
+        hhuConfirm(owner, qsTr("Switch connection"),
+                   qsTr("Connected to %1. Only one vehicle can be connected at a time. Disconnect it and connect to %2?")
+                       .arg(inUse.join(qsTr(", "))).arg(name),
+                   qsTr("Disconnect and connect"),
+                   function() {
+                       HHUState.disconnectAll()
+                       connectFunction()
+                   })
+    }
+
+    // This variant is only meant to be called by QGCApplication
+    function _showMessageDialog(dialogTitle, dialogText) {"""),
         # Close checks (车辆仍在连接 etc.): 退出 / 取消 instead of 是 / 否 (issue #6)
         replace_n("""true /* bypassNavigationCheck */)""", """true /* bypassNavigationCheck */, { acceptText: qsTr("Exit"), rejectText: qsTr("Cancel") })""", 3),
         replace_once("""    // This variant is only meant to be called by QGCApplication
@@ -282,8 +309,8 @@ OVERRIDES = {
             Layout.preferredHeight: Math.min(maxAvailableHeight, totalContentHeight)
             color:                  "white"
 
-            property real totalContentWidth:    dialogContentParent.childrenRect.width + _contentMargin * 2
-            property real totalContentHeight:   dialogContentParent.childrenRect.height + _contentMargin * 2
+            property real totalContentWidth:    dialogContentParent.childrenRect.width + _contentMargin * 2 + 2
+            property real totalContentHeight:   dialogContentParent.childrenRect.height + _contentMargin * 2 + 2
             property real maxAvailableWidth:    mainWindow.width - 80 * HHUStyle.s
             property real maxAvailableHeight:   mainWindow.height - titleRowLayout.height - footer.height - 80 * HHUStyle.s
 
@@ -357,6 +384,35 @@ OVERRIDES = {
 """, """            wrapMode:               Text.WordWrap
             font.pixelSize:         HHUStyle.bodyFontSize
             color:                  HHUStyle.text2
+"""),
+    ],
+    # QGC's base font = the HHU body size (issue #6): labels, buttons, group headings and fields of the
+    # QGC controls match the card text and follow the 字号 setting; 界面缩放 still scales on top
+    "QmlControls/ScreenTools.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""                platformFontPointSize = _defaultFont.font.pointSize;
+""", """                platformFontPointSize = HHUStyle.bodyFontSize * 0.75;  // HHU: px -> pt at 96 logical dpi
+"""),
+        replace_once("""    onRealPixelDensityChanged: {""", """    // HHU: 字号 changed
+    Connections {
+        target: HHUStyle
+        function onBodyFontSizeChanged() {
+            if (!ScreenToolsController.isMobile) {
+                platformFontPointSize = HHUStyle.bodyFontSize * 0.75
+                _setBasePointSize(platformFontPointSize * QGroundControl.settingsManager.appSettings.uiScalePercent.value / 100)
+            }
+        }
+    }
+
+    onRealPixelDensityChanged: {"""),
+    ],
+    # Smallest window: fixed logical size instead of 100 × character width, which outgrew a 1920×1080
+    # screen at 150 % once the base font follows the card text (1280×720 at 150 % ≈ 853×480 is the design minimum)
+    "MainWindow/MainWindowSavedState.qml": [
+        replace_once("""            window.minimumWidth = Math.min(ScreenTools.defaultFontPixelWidth * 100, Screen.width)
+            window.minimumHeight = Math.min(ScreenTools.defaultFontPixelWidth * 50, Screen.height)
+""", """            window.minimumWidth = Math.min(800, Screen.width)    // HHU
+            window.minimumHeight = Math.min(450, Screen.height)  // HHU
 """),
     ],
     # 航线页: waypoints only (需求说明 §6). The pattern button comes back as 地块覆盖 (Fields2Cover).
@@ -592,8 +648,21 @@ OVERRIDES = {
         add_import("QGroundControl.AppSettings"),
         add_import("HHU.Controls"),
         # One vehicle at a time (issue #6): ask before dropping the connection in use
+        replace_once("""                    onClicked:  QGroundControl.showMessageDialog(
+                                    _root,
+                                    qsTr("Delete Link"),
+                                    qsTr("Are you sure you want to delete '%1'?").arg(object.name),
+                                    Dialog.Ok | Dialog.Cancel,
+                                    function () {
+                                        _linkManager.removeConfiguration(object)
+                                    })
+""", """                    onClicked:  mainWindow.hhuConfirm(_root, qsTr("Delete connection"),
+                                                      qsTr("Delete the connection \\"%1\\"?").arg(object.name),
+                                                      qsTr("Delete"),
+                                                      function () { _linkManager.removeConfiguration(object) })
+"""),
         replace_once("""                        _linkManager.createConnectedLink(object)
-""", """                        HHUState.connectExclusive(_root, object.name, function() { _linkManager.createConnectedLink(object) })
+""", """                        mainWindow.hhuConnectExclusive(_root, object.name, function() { _linkManager.createConnectedLink(object) })
 """),
         replace_once("""                QGCCheckBoxSlider {
                     Layout.fillWidth:   true

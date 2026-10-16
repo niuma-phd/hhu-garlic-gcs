@@ -138,8 +138,9 @@ Rectangle {
                 Keys.onEscapePressed:   { text = root._fmt(root.value); focus = false }
 
                 Binding on text {
-                    when:   !input.activeFocus
-                    value:  root._fmt(root.value)
+                    when:           !input.activeFocus
+                    value:          root._fmt(root.value)
+                    restoreMode:    Binding.RestoreNone   // keep the number (selected) while typing
                 }
 
                 Rectangle {
