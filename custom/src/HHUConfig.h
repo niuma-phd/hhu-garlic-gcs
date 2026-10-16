@@ -6,6 +6,8 @@
 #include <QtCore/QString>
 #include <QtCore/QVariantList>
 
+#include <functional>
+
 /// Editable product tables (需求说明 V1.0 §3.6, §5 配置文件): vehicle STATUSTEXT translations,
 /// PreArm reasons and VCU fault codes. Read from <exe dir>/config/hhu_config.json so they can be
 /// changed without rebuilding; the copy built into the program is used when that file is missing
@@ -24,8 +26,10 @@ public:
     QString source() const { return _source; }
     static QString buildDate();
 
-    /// Customer wording for a vehicle STATUSTEXT, or an empty string when no entry matches
-    QString translateStatusText(const QString &text) const;
+    /// Customer wording for a vehicle STATUSTEXT, or an empty string when no entry matches.
+    /// waypointNumber turns the mission sequence after the prefix into the waypoint number ({wp});
+    /// a text whose sequence is no waypoint (0) counts as untranslated.
+    QString translateStatusText(const QString &text, const std::function<int(int)> &waypointNumber = {}) const;
 
     /// Chinese description of a VCU fault code, empty when the code is not in the table
     Q_INVOKABLE QString faultText(int code) const;

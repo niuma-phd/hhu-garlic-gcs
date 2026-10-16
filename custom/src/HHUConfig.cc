@@ -82,7 +82,7 @@ const HHUConfig::Entry *HHUConfig::_match(const QList<Entry> &entries, const QSt
     return nullptr;
 }
 
-QString HHUConfig::translateStatusText(const QString &text) const
+QString HHUConfig::translateStatusText(const QString &text, const std::function<int(int)> &waypointNumber) const
 {
     const Entry *e = _match(_statusText, text);
     if (!e) {
@@ -110,6 +110,17 @@ QString HHUConfig::translateStatusText(const QString &text) const
             fault += QStringLiteral(" ") + faultText(code);
         }
         result.replace(QStringLiteral("{fault}"), fault);
+    }
+    if (result.contains(QStringLiteral("{wp}"))) {
+        // "Mission: 3 WP" / "Reached waypoint #3 dist 0m": mission sequence 3 -> waypoint number
+        // (the route speed command is mission item 1, issue #6 D12)
+        bool ok = false;
+        const int seq = rest.section(QLatin1Char(' '), 0, 0).remove(QLatin1Char('#')).toInt(&ok);
+        const int number = (ok && waypointNumber) ? waypointNumber(seq) : 0;
+        if (number <= 0) {
+            return QString();
+        }
+        result.replace(QStringLiteral("{wp}"), QString::number(number));
     }
     result.replace(QStringLiteral("{first}"), rest.section(QLatin1Char(' '), 0, 0));
     result.replace(QStringLiteral("{rest}"), rest);

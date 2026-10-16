@@ -110,6 +110,8 @@ private:
     void _installTranslations();
     /// Replaces a STATUSTEXT by its hhu_config.json translation; false when the message was consumed
     bool _translateStatusText(Vehicle *vehicle, const mavlink_message_t &message);
+    /// Waypoint number (1, 2, 3 …) of a mission sequence on the vehicle, 0 when it is no waypoint
+    static int _waypointNumber(Vehicle *vehicle, int seq);
 
     CustomOptions *_options = nullptr;
     QTranslator _hhuTranslator;

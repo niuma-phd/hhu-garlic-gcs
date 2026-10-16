@@ -25,6 +25,10 @@
 #include "ParameterManager.h"
 #include "Fact.h"
 #include "AudioOutput.h"
+#include "MissionCommandTree.h"
+#include "MissionCommandUIInfo.h"
+#include "MissionItem.h"
+#include "MissionManager.h"
 
 #include <QtCore/QApplicationStatic>
 #include <QtCore/QElapsedTimer>
@@ -325,7 +329,7 @@ bool CustomPlugin::_translateStatusText(Vehicle *vehicle, const mavlink_message_
     const QString text = QString::fromUtf8(statusText.text, static_cast<int>(strnlen(statusText.text, sizeof(statusText.text))));
     // Only texts with a hhu_config.json translation reach the message list (bell, issue #6); the
     // technical rest (firmware version, IMU / EKF / GPS details, chunked texts) goes to the log only
-    const QString translated = (statusText.id == 0) ? _hhuConfig->translateStatusText(text) : QString();
+    const QString translated = (statusText.id == 0) ? _hhuConfig->translateStatusText(text, [vehicle](int seq) { return _waypointNumber(vehicle, seq); }) : QString();
     if (translated.isEmpty()) {
         // plain qInfo: QGC turns info off for its own categories, the app log keeps the default category
         qInfo().noquote() << "HHU STATUSTEXT (log only)" << statusText.severity << text;
@@ -361,6 +365,26 @@ bool CustomPlugin::_translateStatusText(Vehicle *vehicle, const mavlink_message_
     }
     qCDebug(CustomLog) << "STATUSTEXT" << text << "->" << translated;
     return false;
+}
+
+int CustomPlugin::_waypointNumber(Vehicle *vehicle, int seq)
+{
+    // Same rule as HHUState.waypointNumber on the map: waypoints are the items the route line goes
+    // through, counted 1, 2, 3 … in the mission on the vehicle (sequence 0 is home)
+    int number = 0;
+    for (const MissionItem *item : vehicle->missionManager()->missionItems()) {
+        if (item->sequenceNumber() < 1) {
+            continue;
+        }
+        const MissionCommandUIInfo *uiInfo = MissionCommandTree::instance()->getUIInfo(vehicle, QGCMAVLink::VehicleClassGeneric, item->command());
+        if (uiInfo && uiInfo->specifiesCoordinate() && !uiInfo->isStandaloneCoordinate()) {
+            number++;
+            if (item->sequenceNumber() == seq) {
+                return number;
+            }
+        }
+    }
+    return 0;
 }
 
 void CustomPlugin::_loadFonts()

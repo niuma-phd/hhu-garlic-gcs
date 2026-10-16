@@ -100,28 +100,21 @@ Item {
 
     // ---- Route on the vehicle ------------------------------------------------------------
 
-    /// { first, last, count } of the waypoints (sequence numbers)
+    /// { seqs, last, count } of the waypoints: seqs[n - 1] is the mission sequence of waypoint n
     function _routeInfo() {
-        let info = { first: 0, last: 0, count: 0 }
-        const items = _missionController.visualItems
-        for (let i = 1; i < items.count; i++) {
-            const item = items.get(i)
-            if (item.specifiesCoordinate && !item.isStandaloneCoordinate) {
-                if (info.first === 0) info.first = item.sequenceNumber
-                info.last = item.sequenceNumber
-                info.count++
-            }
-        }
-        return info
+        const seqs = HHUState.waypointSeqs(_missionController)
+        return { seqs: seqs, last: seqs.length > 0 ? seqs[seqs.length - 1] : 0, count: seqs.length }
     }
 
     // ---- Actions -------------------------------------------------------------------------
 
     function _openStart() {
         const route = _routeInfo()
-        startDialog.openStart(route.count, route.first, route.last,
-                              hhuWork.resumeWaypoint(_vehicle),
-                              function(seq) { root._startWork(seq, route) })
+        // The dialog shows waypoint numbers; the vehicle gets the mission sequence of that waypoint
+        const resumeSeq = hhuWork.resumeWaypoint(_vehicle)
+        startDialog.openStart(route.count,
+                              resumeSeq > 0 ? HHUState.waypointNumber(_missionController, resumeSeq) : 0,
+                              function(number) { root._startWork(route.seqs[number - 1], route) })
     }
 
     function _startWork(seq, route) {

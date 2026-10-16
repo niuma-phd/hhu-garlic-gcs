@@ -4,41 +4,39 @@ import QtQuick.Layouts
 /// 开始作业 with 断点续作 (设计稿 4i): "车周围没有人" reminder, start point as two big choices
 /// (接着上次 is preselected when there is a resume point, else 从头开始), 选其他航点 for any waypoint,
 /// slide to start.
-/// openStart(waypointCount, firstSeq, lastSeq, resumeSeq, callback(seq))
+/// Works in waypoint numbers 1 … waypointCount as shown on the map (HHUState.waypointNumber), the
+/// caller turns the chosen number into the mission sequence for the vehicle.
+/// openStart(waypointCount, resumeNumber, callback(number)) - resumeNumber 0 = no resume point
 HHUDialog {
     id: root
 
-    property int    firstSeq:   1
-    property int    lastSeq:    1
-    property int    resumeSeq:  0
-    property int    waypoints:  0
-    property int    choice:     0   ///< 0 first, 1 resume, 2 chosen
-    property int    chosenSeq:  1
-    property var    _callback:  null
+    property int    resumeNumber:   0
+    property int    waypoints:      0
+    property int    choice:         0   ///< 0 first, 1 resume, 2 chosen
+    property int    chosenNumber:   1
+    property var    _callback:      null
 
-    readonly property bool _resumeValid: resumeSeq > firstSeq && resumeSeq <= lastSeq
+    readonly property bool _resumeValid: resumeNumber > 1 && resumeNumber <= waypoints
 
     title:          qsTr("Start work")
     subtitle:       qsTr("%1 waypoints").arg(waypoints)
     dialogWidth:    560
 
-    function openStart(waypointCount, first, last, resume, callback) {
-        waypoints   = waypointCount
-        firstSeq    = first
-        lastSeq     = last
-        resumeSeq   = resume
-        choice      = _resumeValid ? 1 : 0
-        chosenSeq   = _resumeValid ? resume : first
+    function openStart(waypointCount, resume, callback) {
+        waypoints       = waypointCount
+        resumeNumber    = resume
+        choice          = _resumeValid ? 1 : 0
+        chosenNumber    = _resumeValid ? resume : 1
         _callback   = callback
         slide.reset()
         open()
     }
 
-    function _selectedSeq() {
+    function _selectedNumber() {
         switch (choice) {
-        case 1:  return resumeSeq
-        case 2:  return chosenSeq
-        default: return firstSeq
+        case 1:  return resumeNumber
+        case 2:  return chosenNumber
+        default: return 1
         }
     }
 
@@ -95,14 +93,14 @@ HHUDialog {
 
         Choice {
             label:      qsTr("Continue last run")
-            detail:     root._resumeValid ? qsTr("From waypoint %1").arg(root.resumeSeq) : qsTr("No record")
+            detail:     root._resumeValid ? qsTr("From waypoint %1").arg(root.resumeNumber) : qsTr("No record")
             selected:   root.choice === 1
             available:  root._resumeValid
             onPicked:   root.choice = 1
         }
         Choice {
             label:      qsTr("From the beginning")
-            detail:     qsTr("From waypoint %1").arg(root.firstSeq)
+            detail:     qsTr("From waypoint %1").arg(1)
             selected:   root.choice === 0
             onPicked:   root.choice = 0
         }
@@ -129,10 +127,10 @@ HHUDialog {
 
         HHUStepper {
             visible:    root.choice === 2
-            value:      root.chosenSeq
-            from:       root.firstSeq
-            to:         Math.max(root.firstSeq, root.lastSeq)
-            onEdited:   (v) => root.chosenSeq = v
+            value:      root.chosenNumber
+            from:       1
+            to:         Math.max(1, root.waypoints)
+            onEdited:   (v) => root.chosenNumber = v
         }
         Item { Layout.fillWidth: true }
     }
@@ -153,10 +151,10 @@ HHUDialog {
             color:              HHUStyle.green
             onAccepted: {
                 const cb = root._callback
-                const seq = root._selectedSeq()
+                const number = root._selectedNumber()
                 root.close()
                 if (cb) {
-                    cb(seq)
+                    cb(number)
                 }
             }
         }

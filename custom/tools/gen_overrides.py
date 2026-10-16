@@ -191,6 +191,28 @@ OVERRIDES = {
                 color:      HHUStyle.divider
 """),
     ],
+    # Map waypoint labels (规划 and 作业) count waypoints 1, 2, 3 … instead of the mission sequence
+    # (a route speed is mission item 1, so the first waypoint would read "2" - issue #6 D12)
+    "FlightMap/MapItems/MissionItemIndicator.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""            index:              missionItem.abbreviation.charAt(0) > 'A' && missionItem.abbreviation.charAt(0) < 'z' ? -1 : missionItem.sequenceNumber
+""", """            index:              missionItem.abbreviation.charAt(0) > 'A' && missionItem.abbreviation.charAt(0) < 'z' ? -1 : _hhuNumber
+"""),
+        replace_once("""            property bool _isCurrentItem:   missionItem ? missionItem.isCurrentItem || missionItem.hasCurrentChildItem : false
+""", """            property bool _isCurrentItem:   missionItem ? missionItem.isCurrentItem || missionItem.hasCurrentChildItem : false
+            // HHU: waypoint number; the planned home (sequence 0) keeps index 0, shown as its letter
+            property int  _hhuNumber:       missionItem.sequenceNumber === 0 || !missionItem.masterController ? missionItem.sequenceNumber
+                                                : HHUState.waypointNumber(missionItem.masterController.missionController, missionItem.sequenceNumber)
+"""),
+    ],
+    # Clicking a waypoint on the 作业 map: the confirmation names the waypoint number, the command
+    # (_actionData) stays the mission sequence
+    "FlyView/GuidedActionsController.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""             property string setWaypointMessage:                qsTr("Adjust current waypoint to %1").arg(_actionData)
+""", """             property string setWaypointMessage:                qsTr("Adjust current waypoint to %1").arg(HHUState.waypointNumber(missionController, _actionData) || _actionData)
+"""),
+    ],
     # Waypoint numbers (设计稿 3): white with blue number; current (作业) green; selected (规划) blue + yellow ring
     "PlanView/MissionItemIndexLabel.qml": [
         add_import("HHU.Controls"),

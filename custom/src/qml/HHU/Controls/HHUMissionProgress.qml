@@ -18,8 +18,7 @@ HHUCard {
     HHUStatus { id: status }
 
     readonly property var   _vehicle:       status.vehicle
-    readonly property int   _total:         missionController ? Math.max(0, missionController.visualItems.count - 1) : 0
-    readonly property int   _current:       _vehicle ? _vehicle.missionItemIndex.rawValue : 0
+    readonly property int   _current:       _vehicle ? _vehicle.missionItemIndex.rawValue : 0   ///< mission sequence
     readonly property real  _speed:         _vehicle ? _vehicle.groundSpeed.rawValue : 0
 
     /// Route geometry of the vehicle's mission: waypoints by sequence number, total length
@@ -39,6 +38,13 @@ HHUCard {
             }
         }
         return { points: points, length: length }
+    }
+
+    /// Waypoint the vehicle drives to, numbered 1, 2, 3 … as on the map (the vehicle's current
+    /// mission sequence counts the route speed command too, issue #6 D12)
+    readonly property int   _currentNumber: {
+        const index = _route.points.findIndex(p => p.seq >= _current)
+        return index < 0 ? _route.points.length : index + 1
     }
 
     /// Remaining = vehicle → current target + the legs after it (整条航线 when not started)
@@ -163,7 +169,7 @@ HHUCard {
                 if (status.routeDone) return qsTr("All %1 waypoints driven").arg(root._route.points.length)
                 if (root._goto) return root._speed.toFixed(1) + " m/s"
                 if (!root._started) return qsTr("%1 waypoints").arg(root._route.points.length) + " · " + root._fmtDist(root._route.length)
-                return qsTr("Waypoint %1/%2").arg(Math.min(root._current, root._total)).arg(root._total) + " · " + root._fmtDist(root._remainDist) + speed
+                return qsTr("Waypoint %1/%2").arg(root._currentNumber).arg(root._route.points.length) + " · " + root._fmtDist(root._remainDist) + speed
             }
         }
     }
