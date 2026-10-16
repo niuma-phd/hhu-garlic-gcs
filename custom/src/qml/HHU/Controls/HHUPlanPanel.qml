@@ -76,6 +76,24 @@ HHUCard {
                                          })
     }
 
+    /// Waypoint selected on the map (tapping a waypoint selects it, a new waypoint is selected too):
+    /// { index: visual item index, number: waypoint number }, null when none
+    readonly property var _selected: {
+        const item = _mission.currentPlanViewItem
+        const index = _mission.currentPlanViewVIIndex
+        if (!item || index <= 0 || !item.specifiesCoordinate || item.isStandaloneCoordinate) {
+            return null
+        }
+        return { index: index, number: HHUState.waypointNumber(_mission, item.sequenceNumber) }
+    }
+
+    /// Deletes the selected waypoint; the ones after it move up one number
+    function _deleteSelected() {
+        if (_selected) {
+            _mission.removeVisualItem(_selected.index)
+        }
+    }
+
     function _undoRoute() {
         if (_waypoints > 0) {
             _mission.removeVisualItem(_mission.visualItems.count - 1)
@@ -234,10 +252,22 @@ HHUCard {
                         enabled:            !!status.vehicle && status.vehicle.coordinate.isValid
                         onClicked:          root._addWaypointAtVehicle(text)
                     }
+                    // delete any one waypoint: tap it on the map, then this button (issue #6)
+                    HHUButton {
+                        Layout.fillWidth:   true
+                        text:               root._selected ? qsTr("Delete waypoint %1").arg(root._selected.number)
+                                                           : qsTr("Tap a waypoint to delete it")
+                        icon:               "trash"
+                        kind:               "plain"
+                        size:               16
+                        h:                  56 * HHUStyle.s
+                        enabled:            !!root._selected
+                        onClicked:          root._deleteSelected()
+                    }
                     RowLayout {
                         Layout.fillWidth:   true
                         spacing:            8 * HHUStyle.s
-                        HHUButton { Layout.fillWidth: true; text: qsTr("Undo"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._undoRoute() }
+                        HHUButton { Layout.fillWidth: true; text: qsTr("Undo last"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._undoRoute() }
                         HHUButton { Layout.fillWidth: true; text: qsTr("Clear"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._clearRoute() }
                     }
                     RowLayout {
