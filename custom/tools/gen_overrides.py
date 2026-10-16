@@ -190,6 +190,13 @@ OVERRIDES = {
 """, """                height:     1
                 color:      HHUStyle.divider
 """),
+        # group subtitle (离线地图 “下载地图瓦片，供无网络时使用”) in the normal text size (Cowork S2)
+        replace_once("""            text:               headingDescription
+            wrapMode:           Text.WordWrap
+            font.pointSize:     ScreenTools.smallFontPointSize
+""", """            text:               headingDescription
+            wrapMode:           Text.WordWrap
+"""),
     ],
     # Map waypoint labels (规划 and 作业) count waypoints 1, 2, 3 … instead of the mission sequence
     # (a route speed is mission item 1, so the first waypoint would read "2" - issue #6 D12)
@@ -510,18 +517,11 @@ OVERRIDES = {
 """, """        text:   tileSet.downloadStatus + (_tileCount > 0 ? " " + qsTr("(%1 tiles)").arg(_tileCount) : "")
 """),
     ],
-    # Slider end values (alarm volume 0 / 100) in the normal text size, no ".0" on whole ranges
+    # No small slider end values (alarm volume): the number field beside the slider shows the value
     "QmlControls/QGCSlider.qml": [
-        replace_once("""        text: control.from.toFixed(1)
-        font.pointSize: ScreenTools.smallFontPointSize
-""", """        text: control.from.toFixed(control.to <= 1 ? 1 : 0)
-        font.pointSize: ScreenTools.defaultFontPointSize
-"""),
-        replace_once("""        text: control.to.toFixed(1)
-        font.pointSize: ScreenTools.smallFontPointSize
-""", """        text: control.to.toFixed(control.to <= 1 ? 1 : 0)
-        font.pointSize: ScreenTools.defaultFontPointSize
-"""),
+        replace_n("""        visible: control.showBoundaryValues
+""", """        visible: false  // HHU: the value is in the number field next to it; ends were covered by the knob
+""", 2),
     ],
     # 航线页: waypoints only (需求说明 §6). The pattern button comes back as 地块覆盖 (Fields2Cover).
     "PlanView/PlanView.qml": [

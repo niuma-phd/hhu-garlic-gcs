@@ -210,7 +210,8 @@ HHUCard {
 
             StackLayout {
                 id:             stepStack
-                width:          stepFlick.width
+                // room for the scroll bar, so it does not cover the buttons' right edge (Cowork S7)
+                width:          stepFlick.width - (stepFlick.contentHeight > stepFlick.height + 1 ? 14 * HHUStyle.s : 0)
                 height:         Math.max(implicitHeight, stepFlick.height)
                 currentIndex:       root.step
 

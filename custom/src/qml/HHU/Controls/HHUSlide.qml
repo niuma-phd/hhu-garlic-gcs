@@ -1,6 +1,8 @@
 import QtQuick
 
 /// Slide to confirm (设计稿 2e): 84×56 knob in a 64 px track. Releasing before the right end springs back.
+/// Only a real drag over a track of usable length confirms: a tap never does, also when a squeezed
+/// layout leaves the knob already at the end.
 Item {
     id: root
 
@@ -69,8 +71,12 @@ Item {
             drag.axis:          Drag.XAxis
             drag.minimumX:      root._pad
             drag.maximumX:      root._maxX
+            property bool _dragged: false
+            onPressed:  _dragged = false
+            onPositionChanged: if (drag.active) _dragged = true
             onReleased: {
-                if (knob.x >= root._maxX - 2) {
+                const usable = root._maxX - root._pad >= knob.width
+                if (_dragged && usable && knob.x >= root._maxX - 2) {
                     knob.x = root._maxX
                     root.accepted()
                 } else {

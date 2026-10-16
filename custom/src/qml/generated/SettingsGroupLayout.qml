@@ -54,7 +54,6 @@ ColumnLayout {
             Layout.fillWidth:   true
             text:               headingDescription
             wrapMode:           Text.WordWrap
-            font.pointSize:     ScreenTools.smallFontPointSize
             visible:            headingDescription !== ""
         }
     }

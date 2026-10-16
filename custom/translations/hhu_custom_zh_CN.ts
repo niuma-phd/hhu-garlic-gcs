@@ -1377,7 +1377,7 @@
     </message>
     <message>
       <source>Copernicus elevation</source>
-      <translation>哥白尼高程（Copernicus）</translation>
+      <translation>哥白尼高程</translation>
     </message>
     <message>
       <source>Default tile set</source>

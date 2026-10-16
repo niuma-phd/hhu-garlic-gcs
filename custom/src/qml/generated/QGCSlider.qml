@@ -67,10 +67,10 @@ Slider {
         anchors.left: parent.left
         anchors.leftMargin: control.leftPadding
         anchors.bottom: parent.bottom
-        text: control.from.toFixed(control.to <= 1 ? 1 : 0)
-        font.pointSize: ScreenTools.defaultFontPointSize
+        text: control.from.toFixed(1)
+        font.pointSize: ScreenTools.smallFontPointSize
         color: qgcPal.buttonText
-        visible: control.showBoundaryValues
+        visible: false  // HHU: the value is in the number field next to it; ends were covered by the knob
     }
 
     QGCLabel {
@@ -78,9 +78,9 @@ Slider {
         anchors.right: parent.right
         anchors.rightMargin: control.rightPadding
         anchors.bottom: parent.bottom
-        text: control.to.toFixed(control.to <= 1 ? 1 : 0)
-        font.pointSize: ScreenTools.defaultFontPointSize
+        text: control.to.toFixed(1)
+        font.pointSize: ScreenTools.smallFontPointSize
         color: qgcPal.buttonText
-        visible: control.showBoundaryValues
+        visible: false  // HHU: the value is in the number field next to it; ends were covered by the knob
     }
 }
