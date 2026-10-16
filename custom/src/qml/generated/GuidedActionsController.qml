@@ -8,6 +8,7 @@ import QtQuick.Layouts
 
 import QGroundControl
 import HHU.Controls
+import QGroundControl.FlyView
 import QGroundControl.Controls
 import QGroundControl.FlightMap
 import QGroundControl.Logging

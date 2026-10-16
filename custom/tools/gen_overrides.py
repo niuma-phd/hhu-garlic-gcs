@@ -206,8 +206,10 @@ OVERRIDES = {
 """),
     ],
     # Clicking a waypoint on the 作业 map: the confirmation names the waypoint number, the command
-    # (_actionData) stays the mission sequence
+    # (_actionData) stays the mission sequence. Served from /Custom, so the module's own types
+    # (CustomGuidedActionsController) need the module import.
     "FlyView/GuidedActionsController.qml": [
+        add_import("QGroundControl.FlyView"),
         add_import("HHU.Controls"),
         replace_once("""             property string setWaypointMessage:                qsTr("Adjust current waypoint to %1").arg(_actionData)
 """, """             property string setWaypointMessage:                qsTr("Adjust current waypoint to %1").arg(HHUState.waypointNumber(missionController, _actionData) || _actionData)
