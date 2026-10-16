@@ -174,7 +174,7 @@ SettingsGroupLayout {
 
                 Loader {
                     id:     linkSettingsLoader
-                    source: editingConfig && editingConfig.settingsURL ? editingConfig.settingsURL : ""
+                    source: editingConfig && editingConfig.settingsURL ? "qrc:/qml/QGroundControl/AppSettings/" + editingConfig.settingsURL : ""
                     asynchronous: true
 
                     property var subEditConfig:         editingConfig

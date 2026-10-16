@@ -51,8 +51,10 @@ Rectangle {
     Component.onCompleted: _show(0)
 
     // This need to block click event leakage to underlying map.
+    // All buttons: a right click went through to the 作业 map and opened 开到这里
     DeadMouseArea {
-        anchors.fill: parent
+        anchors.fill:       parent
+        acceptedButtons:    Qt.AllButtons
     }
 
     Rectangle {

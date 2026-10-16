@@ -755,6 +755,12 @@ OVERRIDES = {
     "AppSettings/LinkConfigurationManager.qml": [
         add_import("QGroundControl.AppSettings"),
         add_import("HHU.Controls"),
+        # Link parameter pages (SerialSettings.qml …) are named relative to the upstream file; this
+        # override lives under qrc:/Custom, where they do not exist, so the add / edit dialog showed
+        # only the type and no parameters
+        replace_once("""                    source: editingConfig && editingConfig.settingsURL ? editingConfig.settingsURL : ""
+""", """                    source: editingConfig && editingConfig.settingsURL ? "qrc:/qml/QGroundControl/AppSettings/" + editingConfig.settingsURL : ""
+"""),
         # One vehicle at a time (issue #6): ask before dropping the connection in use
         # edit / delete icons as tall as the buttons next to them (they looked small, Cowork R4)
         replace_n("""                height:                 ScreenTools.minTouchPixels
