@@ -27,7 +27,7 @@ SettingsGroupLayout {
                 text:               object.name
             }
             QGCColoredImage {
-                height:                 ScreenTools.minTouchPixels
+                height:                 Math.max(ScreenTools.minTouchPixels, ScreenTools.implicitButtonHeight)
                 width:                  height
                 sourceSize.height:      height
                 fillMode:               Image.PreserveAspectFit
@@ -51,7 +51,7 @@ SettingsGroupLayout {
                 }
             }
             QGCColoredImage {
-                height:                 ScreenTools.minTouchPixels
+                height:                 Math.max(ScreenTools.minTouchPixels, ScreenTools.implicitButtonHeight)
                 width:                  height
                 sourceSize.height:      height
                 fillMode:               Image.PreserveAspectFit

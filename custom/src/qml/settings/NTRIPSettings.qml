@@ -161,7 +161,7 @@ SettingsPage {
             // typed, or picked from the list fetched from the caster (QGCComboBox cannot be edited)
             QGCTextField {
                 id:                     mountEdit
-                Layout.preferredWidth:  ScreenTools.defaultFontPixelWidth * 14
+                Layout.preferredWidth:  ScreenTools.defaultFontPixelWidth * 22   // RTCM33GRCEJpro fits
             }
             QGCComboBox {
                 visible:                hhuNtrip.mountpoints.length > 0

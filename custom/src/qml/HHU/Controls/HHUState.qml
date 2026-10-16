@@ -82,4 +82,30 @@ QtObject {
             }
         }
     }
+
+    // ---- Map names shown to the customer (issue #6) ------------------------------------------
+    // QGC lists map providers / types / elevation sources and tile sets by their internal English
+    // names, which are also the saved setting values: only the shown text is translated.
+
+    function mapNameText(name) {
+        switch (name) {
+        case "TianDiTu":            return qsTr("TianDiTu")
+        case "Bing":                return qsTr("Bing")
+        case "Google":              return qsTr("Google")
+        case "Esri":                return qsTr("Esri")
+        case "Satellite":           return qsTr("Satellite")
+        case "Road":                return qsTr("Road map")
+        case "Street":              return qsTr("Street map")
+        case "Street Map":          return qsTr("Street map")
+        case "Hybrid":              return qsTr("Hybrid")
+        case "Terrain":             return qsTr("Terrain")
+        case "Copernicus":          return qsTr("Copernicus elevation")
+        case "Default Tile Set":    return qsTr("Default tile set")
+        default:                    return name
+        }
+    }
+
+    function mapNameList(names) {
+        return names.map(n => mapNameText(n))
+    }
 }

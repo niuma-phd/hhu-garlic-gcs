@@ -439,6 +439,90 @@ OVERRIDES = {
             window.minimumHeight = Math.min(450, Screen.height)  // HHU
 """),
     ],
+    # Map settings in Chinese (issue #6): the lists keep the internal names (they are the saved
+    # values), the combo boxes show HHUState.mapNameText()
+    "AppSettings/MapProviderSettings.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""        label: qsTr("Provider")
+        model: _mapEngineManager.mapProviderList
+
+        onActivated: (index) => {
+            _mapProviderFact.rawValue = comboBox.textAt(index)
+            _mapTypeFact.rawValue = _mapEngineManager.mapTypeList(comboBox.textAt(index))[0]
+        }
+
+        Component.onCompleted: {
+            var index = comboBox.find(_mapProviderFact.rawValue)
+""", """        label: qsTr("Provider")
+        model: HHUState.mapNameList(_names)
+
+        readonly property var _names: _mapEngineManager.mapProviderList
+
+        onActivated: (index) => {
+            _mapProviderFact.rawValue = _names[index]
+            _mapTypeFact.rawValue = _mapEngineManager.mapTypeList(_names[index])[0]
+        }
+
+        Component.onCompleted: {
+            var index = _names.indexOf(_mapProviderFact.rawValue)
+"""),
+        replace_once("""        label: qsTr("Type")
+        model: _mapEngineManager.mapTypeList(_mapProviderFact.rawValue)
+
+        onActivated: (index) => { _mapTypeFact.rawValue = comboBox.textAt(index) }
+
+        Component.onCompleted: {
+            var index = comboBox.find(_mapTypeFact.rawValue)
+""", """        label: qsTr("Type")
+        model: HHUState.mapNameList(_names)
+
+        readonly property var _names: _mapEngineManager.mapTypeList(_mapProviderFact.rawValue)
+
+        onActivated: (index) => { _mapTypeFact.rawValue = _names[index] }
+
+        Component.onCompleted: {
+            var index = _names.indexOf(_mapTypeFact.rawValue)
+"""),
+        replace_once("""        label: qsTr("Elevation Provider")
+        model: _mapEngineManager.elevationProviderList
+
+        onActivated: (index) => { _elevationProviderFact.rawValue = comboBox.textAt(index) }
+
+        Component.onCompleted: {
+            var index = comboBox.find(_elevationProviderFact.rawValue)
+""", """        label: qsTr("Elevation Provider")
+        model: HHUState.mapNameList(_names)
+
+        readonly property var _names: _mapEngineManager.elevationProviderList
+
+        onActivated: (index) => { _elevationProviderFact.rawValue = _names[index] }
+
+        Component.onCompleted: {
+            var index = _names.indexOf(_elevationProviderFact.rawValue)
+"""),
+    ],
+    "AppSettings/OfflineMapInfo.qml": [
+        add_import("HHU.Controls"),
+        replace_once("""        text:               tileSet.name
+""", """        text:               HHUState.mapNameText(tileSet.name)
+"""),
+        replace_once("""        text:   tileSet.downloadStatus + (_tileCount > 0 ? " (" + _tileCount + " tiles)" : "")
+""", """        text:   tileSet.downloadStatus + (_tileCount > 0 ? " " + qsTr("(%1 tiles)").arg(_tileCount) : "")
+"""),
+    ],
+    # Slider end values (alarm volume 0 / 100) in the normal text size, no ".0" on whole ranges
+    "QmlControls/QGCSlider.qml": [
+        replace_once("""        text: control.from.toFixed(1)
+        font.pointSize: ScreenTools.smallFontPointSize
+""", """        text: control.from.toFixed(control.to <= 1 ? 1 : 0)
+        font.pointSize: ScreenTools.defaultFontPointSize
+"""),
+        replace_once("""        text: control.to.toFixed(1)
+        font.pointSize: ScreenTools.smallFontPointSize
+""", """        text: control.to.toFixed(control.to <= 1 ? 1 : 0)
+        font.pointSize: ScreenTools.defaultFontPointSize
+"""),
+    ],
     # 航线页: waypoints only (需求说明 §6). The pattern button comes back as 地块覆盖 (Fields2Cover).
     "PlanView/PlanView.qml": [
         add_import("QGroundControl.PlanView"),
@@ -672,6 +756,10 @@ OVERRIDES = {
         add_import("QGroundControl.AppSettings"),
         add_import("HHU.Controls"),
         # One vehicle at a time (issue #6): ask before dropping the connection in use
+        # edit / delete icons as tall as the buttons next to them (they looked small, Cowork R4)
+        replace_n("""                height:                 ScreenTools.minTouchPixels
+""", """                height:                 Math.max(ScreenTools.minTouchPixels, ScreenTools.implicitButtonHeight)
+""", 2),
         replace_once("""                    onClicked:  QGroundControl.showMessageDialog(
                                     _root,
                                     qsTr("Delete Link"),

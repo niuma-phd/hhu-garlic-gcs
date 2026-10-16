@@ -415,6 +415,261 @@
     </message>
   </context>
   <context>
+    <name>GuidedActionsController</name>
+    <message>
+      <source>Abort the landing sequence</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Adjust current waypoint to %1</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Airspeed</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Alt (rel)</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Arm</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Arm (MV)</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Arm selected vehicles.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Arm the vehicle.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change Airspeed</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change Altitude</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change Heading</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change Loiter Radius</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change Max Ground Speed</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change the altitude of the vehicle up or down</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change the equivalent airspeed setpoint</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change the forward flight loiter radius</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Change the maximum horizontal cruise speed</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Continue Mission</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Continue the mission from the current waypoint</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Disarm</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Disarm (MV)</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Disarm selected vehicles.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Disarm the vehicle</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>EMERGENCY STOP</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Force Arm</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Go To Location</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Height (rel)</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Internal error: unknown actionCode</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Land</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Land Abort</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Land the vehicle at the current position</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Make the specified location a Region Of Interest</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Make the specified location the estimator origin</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Move the vehicle to the specified location</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Orbit</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Orbit the vehicle around the specified location</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Pause</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Pause (MV)</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Pause at current position</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Pause selected vehicles at their current position</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>ROI</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Resume FAILED</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Return</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Return to the launch position of the vehicle</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set Estimator Origin</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set Flight Mode</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set Home</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set Waypoint</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set the vehicle flight mode to %1</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set the vehicle heading towards the specified location</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Set vehicle home as the specified location. This will affect Return to Home position</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Smart RTL</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Speed</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Start Mission</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Start Mission (MV)</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Takeoff</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Takeoff and hold position</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Takeoff and start the current mission</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Takeoff and start the current mission for selected vehicles</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Upload of resume mission failed. Confirm to retry upload</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>WARNING: THIS WILL STOP ALL MOTORS. IF VEHICLE IS CURRENTLY IN THE AIR IT WILL CRASH.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>WARNING: This will force arming of the vehicle bypassing any safety checks.</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>_activeVehicle(%1) _vehicleArmed(%2) guidedModeSupported(%3) _vehicleFlying(%4) _vehicleWasFlying(%5) _vehicleInRTLMode(%6) pauseVehicleSupported(%7) _vehiclePaused(%8) _flightMode(%9) _visualItemsCount(%10) roiSupported(%11) orbitSupported(%12) _missionActive(%13) _hideROI(%14) _hideOrbit(%15)</source>
+      <translation type="unfinished" />
+    </message>
+  </context>
+  <context>
     <name>HHU4GLink</name>
     <message>
       <source>Another ground station controls this vehicle, read only</source>
@@ -1115,6 +1370,53 @@
     </message>
   </context>
   <context>
+    <name>HHUState</name>
+    <message>
+      <source>Bing</source>
+      <translation>必应</translation>
+    </message>
+    <message>
+      <source>Copernicus elevation</source>
+      <translation>哥白尼高程（Copernicus）</translation>
+    </message>
+    <message>
+      <source>Default tile set</source>
+      <translation>默认瓦片集</translation>
+    </message>
+    <message>
+      <source>Esri</source>
+      <translation>Esri</translation>
+    </message>
+    <message>
+      <source>Google</source>
+      <translation>谷歌</translation>
+    </message>
+    <message>
+      <source>Hybrid</source>
+      <translation>混合</translation>
+    </message>
+    <message>
+      <source>Road map</source>
+      <translation>矢量地图</translation>
+    </message>
+    <message>
+      <source>Satellite</source>
+      <translation>卫星影像</translation>
+    </message>
+    <message>
+      <source>Street map</source>
+      <translation>街道地图</translation>
+    </message>
+    <message>
+      <source>Terrain</source>
+      <translation>地形</translation>
+    </message>
+    <message>
+      <source>TianDiTu</source>
+      <translation>天地图</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUStatus</name>
     <message>
       <source>Bluetooth</source>
@@ -1673,6 +1975,21 @@ Next time you can continue where it stopped.</source>
     </message>
   </context>
   <context>
+    <name>MapProviderSettings</name>
+    <message>
+      <source>Elevation Provider</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Provider</source>
+      <translation type="unfinished" />
+    </message>
+    <message>
+      <source>Type</source>
+      <translation type="unfinished" />
+    </message>
+  </context>
+  <context>
     <name>MissionDefaultsEditor</name>
     <message>
       <source>Alt Frame</source>
@@ -1859,6 +2176,17 @@ Next time you can continue where it stopped.</source>
     <message>
       <source>User name</source>
       <translation>用户名</translation>
+    </message>
+  </context>
+  <context>
+    <name>OfflineMapInfo</name>
+    <message>
+      <source>(%1 tiles)</source>
+      <translation>（%1 张瓦片）</translation>
+    </message>
+    <message>
+      <source>Edit</source>
+      <translation type="unfinished" />
     </message>
   </context>
   <context>

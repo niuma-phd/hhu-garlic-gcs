@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtPositioning
@@ -200,6 +201,12 @@ HHUCard {
             contentHeight:      stepStack.height
             boundsBehavior:     Flickable.StopAtBounds
             interactive:        contentHeight > height
+
+            // visible while there is more below, so the operator knows the panel scrolls
+            ScrollBar.vertical: ScrollBar {
+                policy:     stepFlick.contentHeight > stepFlick.height + 1 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+                width:      8 * HHUStyle.s
+            }
 
             StackLayout {
                 id:             stepStack

@@ -236,7 +236,9 @@ Rectangle {
                 anchors.fill:   parent
                 hoverEnabled:   true
                 cursorShape:    Qt.PointingHandCursor
-                onClicked:      messages.toggleAt(bellButton)
+                // on press: a quick tap (touch, or press and release within a few ms) on the right
+                // end of the bar did not always give clicked (issue #6 Cowork R2)
+                onPressed:      messages.toggleAt(bellButton)
             }
         }
 
@@ -260,7 +262,7 @@ Rectangle {
                 anchors.fill:   parent
                 hoverEnabled:   true
                 cursorShape:    Qt.PointingHandCursor
-                onClicked:      mainWindow.showSettingsTool()
+                onPressed:      mainWindow.showSettingsTool()   // on press, see the bell
             }
         }
     }

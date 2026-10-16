@@ -268,7 +268,7 @@ SettingsPage {
             }
 
             QGCLabel { text: qsTr("Name"); font.pixelSize: HHUStyle.bodyFontSize }
-            QGCTextField { id: nameEdit; font.pixelSize: HHUStyle.bodyFontSize; Layout.preferredWidth: ScreenTools.defaultFontPixelWidth * 30; placeholderText: qsTr("4G + vehicle number") }
+            QGCTextField { id: nameEdit; font.pixelSize: HHUStyle.bodyFontSize; Layout.fillWidth: true; Layout.minimumWidth: ScreenTools.defaultFontPixelWidth * 30; placeholderText: qsTr("4G + vehicle number") }
 
             QGCLabel { text: qsTr("Vehicle number"); font.pixelSize: HHUStyle.bodyFontSize }
             QGCTextField { id: vehicleEdit; font.pixelSize: HHUStyle.bodyFontSize; Layout.fillWidth: true }
