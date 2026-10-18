@@ -30,6 +30,14 @@ MapQuickItem {
             showGimbalYaw:      !isNaN(missionItem.missionGimbalYaw)
             highlightSelected:  true
             onClicked:          _item.clicked()
+            onHhuPressAndHold:  HHUState.requestWaypointMenu(_item.missionItem)
+
+            MouseArea {
+                anchors.fill:       parent
+                enabled:            HHUState.planPage
+                acceptedButtons:    Qt.RightButton
+                onPressed:          HHUState.requestWaypointMenu(_item.missionItem)
+            }
             opacity:            _item.opacity
 
             property bool _isCurrentItem:   missionItem ? missionItem.isCurrentItem || missionItem.hasCurrentChildItem : false

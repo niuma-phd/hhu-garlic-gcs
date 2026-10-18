@@ -268,6 +268,8 @@ Item {
             objectName: "planView_map"
             anchors.fill: parent
             mapName: "MissionEditor"
+            Keys.onEscapePressed: hhuPlanPanel.escapePressed()
+            Keys.onDeletePressed: hhuPlanPanel.deletePressed()
             allowGCSLocationCenter: true
             allowVehicleLocationCenter: true
             planView: true
@@ -327,7 +329,7 @@ Item {
                         if (!_missionController.homePositionSet) {
                             _missionController.setHomePosition(coordinate)  // HHU: no planned home UI
                         }
-                        insertSimpleItemAfterCurrent(coordinate)
+                        hhuPlanPanel.mapClicked(coordinate)  // HHU: appends at the end, closes the delete card
                     }
                     break
                 case _layerRally:
@@ -375,7 +377,7 @@ Item {
                 anchorPoint.x: sourceItem.width / 2
                 anchorPoint.y: sourceItem.height / 2
                 z: QGroundControl.zOrderWaypointLines + 1
-                visible: _editingLayer == _layerMission
+                visible: false  // HHU: HHUPlanPanel shows a + on every segment
 
                 sourceItem: SplitIndicator {
                     onClicked: _missionController.insertSimpleMissionItem(splitSegmentItem.coordinate,

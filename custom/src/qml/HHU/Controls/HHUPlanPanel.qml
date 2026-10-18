@@ -2,14 +2,17 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
+import QtLocation
 import QtPositioning
 
 import QGroundControl
 import QGroundControl.Controls
+import QGroundControl.FlightMap
 
 /// 规划 page: white panel on the left with two steps
 ///   ① 排航线 (waypoints, one speed for the route)  ② 检查上传
-/// The map keeps QGC's editing (drag points); a map click adds a waypoint in step ①.
+/// The map keeps QGC's dragging; in step ① a map click adds a waypoint at the end, the + on a
+/// segment inserts one there, right click / long press on a waypoint asks to delete it.
 /// Routes are opened/saved as .plan files from the toolbar; the rover no longer uses a
 /// geofence (issue #4), so there is no boundary step and no field management.
 HHUCard {
@@ -43,8 +46,17 @@ HHUCard {
         step = newStep
     }
 
-    onStepChanged: _applyStep()
-    Component.onCompleted: _applyStep()
+    onStepChanged: {
+        stepFlick.contentY = 0     // each step starts at its top (检查通过 / 已上传 is at the top)
+        _closeDeleteCard()
+        _applyStep()
+    }
+    onVisibleChanged: if (!visible) _closeDeleteCard()
+    Component.onCompleted: {
+        editorMap.addMapItemView(splitView)
+        editorMap.addMapItem(deleteCard)
+        _applyStep()
+    }
 
     function _applyStep() {
         planView._addWaypointOnClick = step === 0
@@ -61,7 +73,165 @@ HHUCard {
             // home = where the vehicle is (route time / distance estimates start there)
             _mission.setHomePosition(status.vehicle && status.vehicle.coordinate.isValid ? status.vehicle.coordinate : coordinate)
         }
-        _mission.insertSimpleMissionItem(coordinate, _mission.visualItems.count, true)
+        _mission.insertSimpleMissionItem(coordinate, _mission.visualItems.count, false)
+        _clearSelection()
+    }
+
+    /// Map click in step ① (PlanView): closes an open delete card, else adds a waypoint at the end
+    function mapClicked(coordinate) {
+        if (deleteCard.visible) {
+            _closeDeleteCard()
+            return
+        }
+        _addWaypoint(coordinate)
+    }
+
+    /// A tapped waypoint is selected only to show it and to drag it; adding, inserting, deleting
+    /// and Esc select nothing (the planned home is QGC's "nothing selected")
+    function _clearSelection() {
+        _mission.setCurrentPlanViewSeqNum(0, true)
+    }
+
+    function escapePressed() {
+        _closeDeleteCard()
+        _clearSelection()
+    }
+
+    /// Delete key: the same card for the selected waypoint
+    function deletePressed() {
+        const item = _mission.currentPlanViewItem
+        if (step === 0 && item) {
+            HHUState.requestWaypointMenu(item)
+        }
+    }
+
+    // ---- Insert / delete on the map ------------------------------------------------------------
+
+    /// + in the middle of every segment between two waypoints: { coordinate, index } with index
+    /// the visual item index the new waypoint gets
+    readonly property var _splits: {
+        const items = _mission.visualItems
+        let out = []
+        let prev = null
+        for (let i = 1; i < items.count; i++) {
+            const item = items.get(i)
+            if (!item.specifiesCoordinate || item.isStandaloneCoordinate) {
+                continue
+            }
+            if (prev) {
+                const c1 = prev.coordinate
+                const c2 = item.coordinate
+                out.push({ coordinate: c1.atDistanceAndAzimuth(c1.distanceTo(c2) / 2, c1.azimuthTo(c2)), index: i })
+            }
+            prev = item
+        }
+        return out
+    }
+
+    function _insertAt(index, coordinate) {
+        _mission.insertSimpleMissionItem(coordinate, index, false)
+        _clearSelection()
+    }
+
+    property var _deleteItem: null     ///< waypoint the delete card is open for
+
+    Connections {
+        target: HHUState
+        function onWaypointMenuRequested(missionItem) {
+            if (root.visible && root.step === 0) {
+                root._deleteItem = missionItem
+                deleteCard.visible = true
+            }
+        }
+    }
+
+    function _closeDeleteCard() {
+        deleteCard.visible = false
+        _deleteItem = null
+    }
+
+    function _deleteWaypoint() {
+        const items = _mission.visualItems
+        for (let i = 1; i < items.count; i++) {
+            if (items.get(i) === _deleteItem) {
+                _mission.removeVisualItem(i)
+                break
+            }
+        }
+        _closeDeleteCard()
+        _clearSelection()
+    }
+
+    // the card belongs to the map position it was opened at: moving the map closes it
+    Connections {
+        target: root.editorMap
+        function onCenterChanged()    { if (deleteCard.visible) root._closeDeleteCard() }
+        function onZoomLevelChanged() { if (deleteCard.visible) root._closeDeleteCard() }
+    }
+    Connections {
+        target: _mission.visualItems
+        function onCountChanged() { if (deleteCard.visible) root._closeDeleteCard() }
+    }
+
+    MapItemView {
+        id:     splitView
+        model:  root.visible && root.step === 0 ? root._splits : []
+        delegate: MapQuickItem {
+            coordinate:     modelData.coordinate
+            anchorPoint.x:  sourceItem.width / 2
+            anchorPoint.y:  sourceItem.height / 2
+            z:              QGroundControl.zOrderWaypointLines + 1
+            sourceItem: SplitIndicator {
+                onClicked: root._insertAt(modelData.index, modelData.coordinate)
+            }
+        }
+    }
+
+    // 第 N 点 · 取消 / 删除 at the waypoint (same look as 开到这里 on the 作业 map)
+    MapQuickItem {
+        id:             deleteCard
+        visible:        false
+        coordinate:     root._deleteItem ? root._deleteItem.coordinate : QtPositioning.coordinate()
+        anchorPoint.x:  sourceItem.width / 2
+        anchorPoint.y:  sourceItem.height + 24 * HHUStyle.s
+        z:              QGroundControl.zOrderMapItems + 4
+
+        sourceItem: HHUCard {
+            width:  260 * HHUStyle.s
+            height: deleteColumn.implicitHeight + 32 * HHUStyle.s
+
+            Column {
+                id:         deleteColumn
+                x:          16 * HHUStyle.s
+                y:          16 * HHUStyle.s
+                width:      parent.width - 32 * HHUStyle.s
+                spacing:    4 * HHUStyle.s
+
+                HHUText {
+                    text:   root._deleteItem ? qsTr("Waypoint %1").arg(HHUState.waypointNumber(root._mission, root._deleteItem.sequenceNumber)) : ""
+                    size:   18
+                    bold:   true
+                }
+                Item { width: 1; height: 8 * HHUStyle.s }
+                Row {
+                    spacing: 10 * HHUStyle.s
+                    HHUButton {
+                        width:      (deleteColumn.width - 10 * HHUStyle.s) / 2
+                        text:       qsTr("Cancel")
+                        kind:       "plain"
+                        size:       16
+                        onClicked:  root._closeDeleteCard()
+                    }
+                    HHUButton {
+                        width:      (deleteColumn.width - 10 * HHUStyle.s) / 2
+                        text:       qsTr("Delete")
+                        kind:       "red"
+                        size:       16
+                        onClicked:  root._deleteWaypoint()
+                    }
+                }
+            }
+        }
     }
 
     /// 清空 asks first; the cleared route goes back to the default speed (the vehicle's WP_SPEED)
@@ -70,30 +240,6 @@ HHUCard {
                                          qsTr("Clear %1 waypoints?").arg(_waypoints),
                                          qsTr("Clear"),
                                          function() { root.planMasterController.removeAll() })
-    }
-
-    /// Waypoint selected on the map (tapping a waypoint selects it, a new waypoint is selected too):
-    /// { index: visual item index, number: waypoint number }, null when none
-    readonly property var _selected: {
-        const item = _mission.currentPlanViewItem
-        const index = _mission.currentPlanViewVIIndex
-        if (!item || index <= 0 || !item.specifiesCoordinate || item.isStandaloneCoordinate) {
-            return null
-        }
-        return { index: index, number: HHUState.waypointNumber(_mission, item.sequenceNumber) }
-    }
-
-    /// Deletes the selected waypoint; the ones after it move up one number
-    function _deleteSelected() {
-        if (_selected) {
-            _mission.removeVisualItem(_selected.index)
-        }
-    }
-
-    function _undoRoute() {
-        if (_waypoints > 0) {
-            _mission.removeVisualItem(_mission.visualItems.count - 1)
-        }
     }
 
     /// Waypoint at the vehicle's position; without RTK fixed the user is warned first
@@ -251,33 +397,37 @@ HHUCard {
                         HHUText { text: String(root._waypoints); number: true; size: 30; anchors.bottom: parent.bottom }
                         HHUText { text: qsTr("waypoints"); size: 15; color: HHUStyle.text3; anchors.bottom: parent.bottom; bottomPadding: 4 }
                     }
-                    HHUButton {
-                        Layout.fillWidth:   true
-                        text:               qsTr("Add a waypoint at the vehicle")
-                        icon:               "pin"
-                        kind:               "outline"
-                        size:               16
-                        h:                  56 * HHUStyle.s
-                        enabled:            !!status.vehicle && status.vehicle.coordinate.isValid
-                        onClicked:          root._addWaypointAtVehicle(text)
+                    HHUText {
+                        visible:    root._waypoints === 0
+                        text:       qsTr("Tap the map to add waypoints")
+                        size:       15
+                        color:      HHUStyle.text3
                     }
-                    // delete any one waypoint: tap it on the map, then this button (issue #6)
-                    HHUButton {
-                        Layout.fillWidth:   true
-                        text:               root._selected ? qsTr("Delete waypoint %1").arg(root._selected.number)
-                                                           : qsTr("Tap a waypoint to delete it")
-                        icon:               "trash"
-                        kind:               "plain"
-                        size:               16
-                        h:                  56 * HHUStyle.s
-                        enabled:            !!root._selected
-                        onClicked:          root._deleteSelected()
-                    }
+                    // delete: right click / long press a waypoint on the map (card there)
                     RowLayout {
                         Layout.fillWidth:   true
                         spacing:            8 * HHUStyle.s
-                        HHUButton { Layout.fillWidth: true; text: qsTr("Undo last"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._undoRoute() }
-                        HHUButton { Layout.fillWidth: true; text: qsTr("Clear"); kind: "plain"; size: 16; enabled: root._waypoints > 0; onClicked: root._clearRoute() }
+                        HHUButton {
+                            Layout.fillWidth:       true
+                            Layout.preferredWidth:  2
+                            text:                   qsTr("Add a waypoint at the vehicle")
+                            icon:                   "pin"
+                            kind:                   "outline"
+                            size:                   16
+                            h:                      56 * HHUStyle.s
+                            enabled:                !!status.vehicle && status.vehicle.coordinate.isValid
+                            onClicked:              root._addWaypointAtVehicle(text)
+                        }
+                        HHUButton {
+                            Layout.fillWidth:       true
+                            Layout.preferredWidth:  1
+                            text:                   qsTr("Clear")
+                            kind:                   "plain"
+                            size:                   16
+                            h:                      56 * HHUStyle.s
+                            enabled:                root._waypoints > 0
+                            onClicked:              root._clearRoute()
+                        }
                     }
                     RowLayout {
                         Layout.fillWidth:   true
@@ -431,7 +581,7 @@ HHUCard {
         HHUText {
             id:                 hintText
             anchors.centerIn:   parent
-            text:               qsTr("Tap the map to add a waypoint · drag to change")
+            text:               qsTr("Tap the map to add a waypoint · drag to change · right click / long press to delete")
             size:               15
             bold:               true
             color:              "white"

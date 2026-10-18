@@ -11,6 +11,16 @@ QtObject {
     property var  gotoTarget:   null
     property real gotoStartDist: 0
 
+    /// 规划 page: a waypoint was right clicked / long pressed (HHUPlanPanel shows the delete card)
+    signal waypointMenuRequested(var missionItem)
+    function requestWaypointMenu(missionItem) {
+        // waypoints only: not the planned home (sequence 0) or other items
+        if (planPage && missionItem && missionItem.sequenceNumber > 0
+                && missionItem.specifiesCoordinate && !missionItem.isStandaloneCoordinate) {
+            waypointMenuRequested(missionItem)
+        }
+    }
+
     // ---- 航点序号 ↔ 任务序号 (issue #6 D12) ------------------------------------------------------
     // The customer counts waypoints 1, 2, 3 … in route order. The vehicle counts mission items: a
     // speed set for the route puts DO_CHANGE_SPEED at sequence 1, so the first waypoint is item 2.

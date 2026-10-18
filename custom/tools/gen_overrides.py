@@ -212,6 +212,40 @@ OVERRIDES = {
             property int  _hhuNumber:       missionItem.sequenceNumber === 0 || !missionItem.masterController ? missionItem.sequenceNumber
                                                 : HHUState.waypointNumber(missionItem.masterController.missionController, missionItem.sequenceNumber)
 """),
+        # 规划 page: right click (or long press, see MissionItemIndexLabel) a waypoint → delete card
+        replace_once("""            onClicked:          _item.clicked()
+""", """            onClicked:          _item.clicked()
+            onHhuPressAndHold:  HHUState.requestWaypointMenu(_item.missionItem)
+
+            MouseArea {
+                anchors.fill:       parent
+                enabled:            HHUState.planPage
+                acceptedButtons:    Qt.RightButton
+                onPressed:          HHUState.requestWaypointMenu(_item.missionItem)
+            }
+"""),
+    ],
+    # The selected waypoint (drag handle on top of it): long press → delete card, a drag does not
+    "FlightMap/MapItems/MissionItemIndicatorDrag.qml": [
+        replace_once("""import QGroundControl.Controls
+""", """import QGroundControl.Controls
+import HHU.Controls
+"""),
+        replace_once("""        onClicked: {
+            focus = true
+            itemDragger.clicked()
+        }
+""", """        onClicked: {
+            focus = true
+            itemDragger.clicked()
+        }
+        pressAndHoldInterval: 600
+        onPressAndHold: {
+            if (itemIndicator && itemIndicator.missionItem) {
+                HHUState.requestWaypointMenu(itemIndicator.missionItem)
+            }
+        }
+"""),
     ],
     # Clicking a waypoint on the 作业 map: the confirmation names the waypoint number, the command
     # (_actionData) stays the mission sequence. Served from /Custom, so the module's own types
@@ -226,6 +260,21 @@ OVERRIDES = {
     # Waypoint numbers (设计稿 3): white with blue number; current (作业) green; selected (规划) blue + yellow ring
     "PlanView/MissionItemIndexLabel.qml": [
         add_import("HHU.Controls"),
+        replace_once("""    signal clicked(point position)
+""", """    signal clicked(point position)
+    signal hhuPressAndHold  // HHU: 规划 page long press → delete card
+"""),
+        replace_once("""        onClicked: (mouse) => {
+            focus = true
+            parent.clicked(Qt.point(mouse.x, mouse.y))
+        }
+""", """        onClicked: (mouse) => {
+            focus = true
+            parent.clicked(Qt.point(mouse.x, mouse.y))
+        }
+        pressAndHoldInterval: 600
+        onPressAndHold: parent.hhuPressAndHold()
+"""),
         replace_once("""    property string _index:             index === 0 || index === -1 ? label.charAt(0) : (showSequenceNumbers ? index : "")
 """, """    property string _index:             index === 0 || index === -1 ? label.charAt(0) : (showSequenceNumbers ? index : "")
 
@@ -617,10 +666,27 @@ OVERRIDES = {
                         enabled: _missionController.flyThroughCommandsAllowed || !_missionController.homePositionSet
 """),
         replace_once("""                    } else if (_addWaypointOnClick) {
+                        insertSimpleItemAfterCurrent(coordinate)
 """, """                    } else if (_addWaypointOnClick) {
                         if (!_missionController.homePositionSet) {
                             _missionController.setHomePosition(coordinate)  // HHU: no planned home UI
                         }
+                        hhuPlanPanel.mapClicked(coordinate)  // HHU: appends at the end, closes the delete card
+"""),
+        # Every segment gets its own + (HHUPlanPanel), not only the one before the selected point
+        replace_once("""                z: QGroundControl.zOrderWaypointLines + 1
+                visible: _editingLayer == _layerMission
+
+                sourceItem: SplitIndicator {
+""", """                z: QGroundControl.zOrderWaypointLines + 1
+                visible: false  // HHU: HHUPlanPanel shows a + on every segment
+
+                sourceItem: SplitIndicator {
+"""),
+        replace_once("""            mapName: "MissionEditor"
+""", """            mapName: "MissionEditor"
+            Keys.onEscapePressed: hhuPlanPanel.escapePressed()
+            Keys.onDeletePressed: hhuPlanPanel.deletePressed()
 """),
         # Waypoints where the vehicle cannot make the turn are ringed red (上传前检查)
         replace_once("""        PlanViewRightPanel {

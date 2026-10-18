@@ -13,6 +13,7 @@ Canvas {
     height: _height
 
     signal clicked(point position)
+    signal hhuPressAndHold  // HHU: 规划 page long press → delete card
 
     property string label                           ///< Label to show to the side of the index indicator
     property int    index:                  0       ///< Index to show in the indicator, 0 will show single char label instead, -1 first char of label in indicator full label to the side
@@ -158,5 +159,7 @@ Canvas {
             focus = true
             parent.clicked(Qt.point(mouse.x, mouse.y))
         }
+        pressAndHoldInterval: 600
+        onPressAndHold: parent.hhuPressAndHold()
     }
 }

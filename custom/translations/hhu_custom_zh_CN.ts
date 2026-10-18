@@ -1163,6 +1163,10 @@
       <translation>上一步</translation>
     </message>
     <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
       <source>Check passed</source>
       <translation>检查通过</translation>
     </message>
@@ -1179,8 +1183,8 @@
       <translation>清空航线</translation>
     </message>
     <message>
-      <source>Delete waypoint %1</source>
-      <translation>删除第 %1 点</translation>
+      <source>Delete</source>
+      <translation>删除</translation>
     </message>
     <message>
       <source>Fix</source>
@@ -1211,20 +1215,16 @@
       <translation>速度</translation>
     </message>
     <message>
-      <source>Tap a waypoint to delete it</source>
-      <translation>点地图上的航点可删除</translation>
+      <source>Tap the map to add a waypoint · drag to change · right click / long press to delete</source>
+      <translation>点地图加航点 · 拖动修改 · 右键/长按删除</translation>
     </message>
     <message>
-      <source>Tap the map to add a waypoint · drag to change</source>
-      <translation>点地图加航点 · 拖动修改</translation>
+      <source>Tap the map to add waypoints</source>
+      <translation>在地图上点击添加航点</translation>
     </message>
     <message>
       <source>Tight turns, waypoint count and connection are all fine.</source>
       <translation>急转弯、航点数量和连接状态均正常。</translation>
-    </message>
-    <message>
-      <source>Undo last</source>
-      <translation>撤销上一点</translation>
     </message>
     <message>
       <source>Upload</source>
@@ -1241,6 +1241,10 @@
     <message>
       <source>Uploading…</source>
       <translation>正在上传…</translation>
+    </message>
+    <message>
+      <source>Waypoint %1</source>
+      <translation>第 %1 点</translation>
     </message>
     <message>
       <source>waypoints</source>
