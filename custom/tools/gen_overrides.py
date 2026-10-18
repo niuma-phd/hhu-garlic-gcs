@@ -668,10 +668,8 @@ import HHU.Controls
         replace_once("""                    } else if (_addWaypointOnClick) {
                         insertSimpleItemAfterCurrent(coordinate)
 """, """                    } else if (_addWaypointOnClick) {
-                        if (!_missionController.homePositionSet) {
-                            _missionController.setHomePosition(coordinate)  // HHU: no planned home UI
-                        }
-                        hhuPlanPanel.mapClicked(coordinate)  // HHU: appends at the end, closes the delete card
+                        // HHU: appends at the end (planned home = the vehicle), closes the delete card
+                        hhuPlanPanel.mapClicked(coordinate)
 """),
         # Every segment gets its own + (HHUPlanPanel), not only the one before the selected point
         replace_once("""                z: QGroundControl.zOrderWaypointLines + 1

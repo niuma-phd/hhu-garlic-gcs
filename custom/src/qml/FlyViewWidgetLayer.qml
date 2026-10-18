@@ -102,7 +102,7 @@ Item {
                     width:  60 * HHUStyle.s
                     height: 60 * HHUStyle.s
                     radius: 9 * HHUStyle.s
-                    color:  toolMouse.containsMouse ? HHUStyle.grey2 : "transparent"
+                    color:  toolMouse.pressed ? HHUStyle.grey2 : "transparent"
 
                     Column {
                         anchors.centerIn:   parent
@@ -122,7 +122,8 @@ Item {
                     MouseArea {
                         id:             toolMouse
                         anchors.fill:   parent
-                        hoverEnabled:   true
+                        // no hover: an item above took the hover, so containsMouse was false on release and
+                        // the click never came (找车 did nothing, Cowork H1)
                         cursorShape:    Qt.PointingHandCursor
                         onClicked: {
                             if (!_activeVehicle) {

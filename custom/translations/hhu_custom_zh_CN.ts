@@ -1215,8 +1215,8 @@
       <translation>速度</translation>
     </message>
     <message>
-      <source>Tap the map to add a waypoint · drag to change · right click / long press to delete</source>
-      <translation>点地图加航点 · 拖动修改 · 右键/长按删除</translation>
+      <source>Tap the map to add a waypoint · select, then drag · right click / long press to delete</source>
+      <translation>点地图加航点 · 选中后拖动 · 右键/长按删除</translation>
     </message>
     <message>
       <source>Tap the map to add waypoints</source>

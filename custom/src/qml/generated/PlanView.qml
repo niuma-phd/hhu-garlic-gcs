@@ -326,10 +326,8 @@ Item {
                             insertROIAfterCurrent(coordinate)
                         }
                     } else if (_addWaypointOnClick) {
-                        if (!_missionController.homePositionSet) {
-                            _missionController.setHomePosition(coordinate)  // HHU: no planned home UI
-                        }
-                        hhuPlanPanel.mapClicked(coordinate)  // HHU: appends at the end, closes the delete card
+                        // HHU: appends at the end (planned home = the vehicle), closes the delete card
+                        hhuPlanPanel.mapClicked(coordinate)
                     }
                     break
                 case _layerRally:
