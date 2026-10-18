@@ -53,19 +53,24 @@ QtObject {
     // two vehicles. So a new connection first asks to disconnect the one in use
     // (mainWindow.hhuConnectExclusive).
 
-    /// Names of the connections in use (4G and radio / LAN links)
+    /// Names of the connections in use (4G and radio / LAN links). A 4G connection that never reached
+    /// the vehicle (vehicle offline, retrying) is not in use: a new connection just stops it (disconnectAll).
     function connectionsInUse() {
         let names = []
-        if (hhu4G.active) {
-            const c = hhu4G.configs[hhu4G.activeIndex]
-            names.push(c ? c.name : "4G")
-        }
+        let bridgeUp = false    // the 4G bridge link, made once the vehicle was reached
         const configs = QGroundControl.linkManager.linkConfigurations
         for (let i = 0; i < configs.count; i++) {
             const config = configs.get(i)
             if (!config.link) continue
-            if (hhu4G.active && config.dynamic && config.name.startsWith("4G ")) continue   // the 4G bridge
+            if (hhu4G.active && config.dynamic && config.name.startsWith("4G ")) {
+                bridgeUp = true
+                continue
+            }
             names.push(config.name)
+        }
+        if (hhu4G.active && (hhu4G.state === "online" || bridgeUp)) {
+            const c = hhu4G.configs[hhu4G.activeIndex]
+            names.unshift(c ? c.name : "4G")
         }
         return names
     }

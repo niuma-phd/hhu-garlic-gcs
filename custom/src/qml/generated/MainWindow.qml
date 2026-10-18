@@ -201,6 +201,7 @@ ApplicationWindow {
     function hhuConnectExclusive(owner, name, connectFunction) {
         const inUse = HHUState.connectionsInUse()
         if (inUse.length === 0) {
+            HHUState.disconnectAll()    // stops a 4G connection still waiting for the vehicle
             connectFunction()
             return
         }
