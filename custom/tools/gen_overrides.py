@@ -225,6 +225,13 @@ OVERRIDES = {
             }
 """),
     ],
+    # 作业 map: tapping a waypoint does nothing (QGC offered 设置航点 / 将当前航点调整为 N, which jumps
+    # the route; not wanted for the customer)
+    "FlightMap/MapItems/PlanMapItems.qml": [
+        replace_once("""            onClicked:  _guidedController.confirmAction(_guidedController.actionSetWaypoint, Math.max(object.sequenceNumber, 1))
+""", """            // HHU: no 设置航点 on the 作业 map
+"""),
+    ],
     # The selected waypoint (drag handle on top of it): long press → delete card, a drag does not
     "FlightMap/MapItems/MissionItemIndicatorDrag.qml": [
         replace_once("""import QGroundControl.Controls

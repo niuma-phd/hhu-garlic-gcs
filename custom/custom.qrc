@@ -36,6 +36,7 @@
         <file alias="QGroundControl/PlanView/MissionItemIndexLabel.qml">src/qml/generated/MissionItemIndexLabel.qml</file>
         <file alias="QGroundControl/FlightMap/MapItems/MissionItemIndicator.qml">src/qml/generated/MissionItemIndicator.qml</file>
         <file alias="QGroundControl/FlightMap/MapItems/MissionItemIndicatorDrag.qml">src/qml/generated/MissionItemIndicatorDrag.qml</file>
+        <file alias="QGroundControl/FlightMap/MapItems/PlanMapItems.qml">src/qml/generated/PlanMapItems.qml</file>
         <file alias="QGroundControl/FlyView/GuidedActionsController.qml">src/qml/generated/GuidedActionsController.qml</file>
         <file alias="QGroundControl/FlightMap/MapItems/VehicleMapItem.qml">src/qml/VehicleMapItem.qml</file>
         <file alias="QGroundControl/FlightMap/MapItems/MissionLineView.qml">src/qml/MissionLineView.qml</file>
