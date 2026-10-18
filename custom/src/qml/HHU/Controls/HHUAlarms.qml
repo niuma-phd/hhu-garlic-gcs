@@ -62,7 +62,8 @@ Item {
             list.push({ id: "readOnly", level: 0, title: qsTr("View only"), text: qsTr("Another ground station controls this vehicle.") })
         }
         if (status.routeDone) {
-            list.push({ id: "done", level: 0, title: qsTr("Work done"), text: qsTr("The whole route is driven. Return to start or stop and lock the vehicle.") })
+            list.push({ id: "done", level: 0, title: qsTr("Work done"), text: hhuConfig.featureReturnHome ? qsTr("The whole route is driven. Return to start or stop and lock the vehicle.")
+                                                                                         : qsTr("The whole route is driven. Stop and lock the vehicle.") })
         }
         if (_restoredShown && status.connected) {
             list.push({ id: "restored", level: 0, title: qsTr("Link restored"), text: qsTr("Lost for %1. Vehicle: %2.").arg(_fmtDuration(hhuLink.lastOutageSec)).arg(status.modeText) })

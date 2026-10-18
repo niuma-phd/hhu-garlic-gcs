@@ -993,6 +993,10 @@
       <translation>整条航线已走完。可以返回起点，或停车上锁。</translation>
     </message>
     <message>
+      <source>The whole route is driven. Stop and lock the vehicle.</source>
+      <translation>整条航线已走完。请停车上锁。</translation>
+    </message>
+    <message>
       <source>View only</source>
       <translation>只能查看</translation>
     </message>
@@ -1431,6 +1435,18 @@
       <translation>蓝牙</translation>
     </message>
     <message>
+      <source>Chassis communication lost, check the CAN cable and the VCU</source>
+      <translation>底盘通信中断，请检查 CAN 线和 VCU</translation>
+    </message>
+    <message>
+      <source>Chassis fault: %1</source>
+      <translation>底盘故障：%1</translation>
+    </message>
+    <message>
+      <source>Chassis not ready, see the message list</source>
+      <translation>底盘未就绪，看消息列表</translation>
+    </message>
+    <message>
       <source>Done</source>
       <translation>已完成</translation>
     </message>
@@ -1485,6 +1501,14 @@
     <message>
       <source>Standby</source>
       <translation>待机</translation>
+    </message>
+    <message>
+      <source>Switch to unmanned mode with the remote control</source>
+      <translation>请用遥控器切换到无人模式</translation>
+    </message>
+    <message>
+      <source>Wait for a good position, about 1-3 minutes</source>
+      <translation>等定位变好，约 1–3 分钟</translation>
     </message>
     <message>
       <source>Working</source>
@@ -1722,18 +1746,6 @@
       <translation>暂时不能开始</translation>
     </message>
     <message>
-      <source>Chassis communication lost, check the CAN cable and the VCU</source>
-      <translation>底盘通信中断，请检查 CAN 线和 VCU</translation>
-    </message>
-    <message>
-      <source>Chassis fault: %1</source>
-      <translation>底盘故障：%1</translation>
-    </message>
-    <message>
-      <source>Chassis not ready, see the message list</source>
-      <translation>底盘未就绪，看消息列表</translation>
-    </message>
-    <message>
       <source>Close</source>
       <translation>关闭</translation>
     </message>
@@ -1806,10 +1818,6 @@
       <translation>停车上锁？</translation>
     </message>
     <message>
-      <source>Switch to unmanned mode with the remote control</source>
-      <translation>请用遥控器切换到无人模式</translation>
-    </message>
-    <message>
       <source>The vehicle did not respond to "%1".</source>
       <translation>车没响应“%1”。</translation>
     </message>
@@ -1822,10 +1830,6 @@ Next time you can continue where it stopped.</source>
     <message>
       <source>The vehicle stops working and drives back along its path to the start point.</source>
       <translation>车会停止作业，沿走过的路开回起点。</translation>
-    </message>
-    <message>
-      <source>Wait for a good position, about 1-3 minutes</source>
-      <translation>等定位变好，约 1–3 分钟</translation>
     </message>
   </context>
   <context>

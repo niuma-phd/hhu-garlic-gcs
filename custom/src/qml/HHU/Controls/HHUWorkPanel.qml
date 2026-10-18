@@ -36,19 +36,15 @@ Item {
     /// Most important first (issue #6): 底盘通信中断 > 未授权 / 故障 > 无航线 > 定位. With the chassis
     /// link down nothing about 授权 is known, so 切无人 is not suggested then.
     readonly property var _startBlocked: {
-        let list = []
-        if (status.chassisLinkLost) {
-            list.push({ t: qsTr("Chassis communication lost, check the CAN cable and the VCU"), btn: "", page: "" })
-        } else if (status.vcuValid) {
-            if (_vcuFault)                  list.push({ t: qsTr("Chassis fault: %1").arg(status.faultText), btn: "", page: "" })
-            if (!status.vcuAuthorized)      list.push({ t: qsTr("Switch to unmanned mode with the remote control"), btn: "", page: "" })
-            else if (!hhuVcu.ok && !_vcuFault) list.push({ t: qsTr("Chassis not ready, see the message list"), btn: "", page: "" })
+        let list = status.driveBlockers().map(t => ({ t: t, btn: "", page: "" }))
+        if (!_missionAvailable) {
+            // before the position note, which is always the last one
+            list.splice(status.rtkFixed ? list.length : list.length - 1, 0,
+                        { t: qsTr("No route on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
         }
-        if (!_missionAvailable)     list.push({ t: qsTr("No route on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
-        if (!status.rtkFixed)       list.push({ t: qsTr("Wait for a good position, about 1-3 minutes"), btn: "", page: "" })
         return list
     }
-    readonly property bool  _vcuFault:  status.vcuValid && hhuVcu.fault !== 0
+    readonly property bool  _vcuFault:  status.vcuFault
 
     HHUStatus { id: status }
 
@@ -323,8 +319,9 @@ Item {
                 onClicked:  root._pause()
             }
 
+            // 返回起点: off this phase, hhu_config.json features.returnHome turns it on
             HHUButton {
-                visible:    status.canControl && (status.inAuto || root._paused) && status.armed
+                visible:    hhuConfig.featureReturnHome && status.canControl && (status.inAuto || root._paused) && status.armed
                 text:       qsTr("Return to start")
                 icon:       "return"
                 kind:       "outline"

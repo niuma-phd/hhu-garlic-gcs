@@ -100,6 +100,17 @@ void HHUSettings::setVehicleMaxSpeed(double value)
     }
 }
 
+void HHUSettings::setVehicleWpSpeed(double value)
+{
+    if (!std::isfinite(value) || value < 0) {
+        value = 0;
+    }
+    if (value != _vehicleWpSpeed) {
+        _vehicleWpSpeed = value;
+        emit changed();
+    }
+}
+
 void HHUSettings::setLastTurnRadius(double value)
 {
     if (std::isfinite(value) && value > 0 && value != _lastTurnRadius) {

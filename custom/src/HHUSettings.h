@@ -22,8 +22,10 @@ class HHUSettings : public QObject
     Q_PROPERTY(bool   mapLabels         READ mapLabels         WRITE setMapLabels         NOTIFY changed)
     /// Last TURN_RADIUS read from a vehicle, so the turn check also works while planning offline (NaN if never read)
     Q_PROPERTY(double lastTurnRadius    READ lastTurnRadius    WRITE setLastTurnRadius    NOTIFY changed)
-    /// Highest route speed of the connected vehicle: the lower of WP_SPEED / VCU_V_MAX (0 = not known)
+    /// Highest route speed of the connected vehicle: the lower of SPEED_MAX / VCU_V_MAX (0 = not known)
     Q_PROPERTY(double vehicleMaxSpeed   READ vehicleMaxSpeed                              NOTIFY changed)
+    /// Default route speed of the connected vehicle: its WP_SPEED (0 = not known)
+    Q_PROPERTY(double vehicleWpSpeed    READ vehicleWpSpeed                               NOTIFY changed)
 
 public:
     explicit HHUSettings(QObject *parent = nullptr);
@@ -37,6 +39,7 @@ public:
     bool   mapLabels()         const { return _mapLabels; }
     double lastTurnRadius()    const { return _lastTurnRadius; }
     double vehicleMaxSpeed()   const { return _vehicleMaxSpeed; }
+    double vehicleWpSpeed()    const { return _vehicleWpSpeed; }
 
     void setCommandTimeoutSec(int value);
     void setLinkLostSec(int value);
@@ -46,6 +49,7 @@ public:
     void setMapLabels(bool value);
     void setLastTurnRadius(double value);
     void setVehicleMaxSpeed(double value);
+    void setVehicleWpSpeed(double value);
 
 signals:
     void changed();
@@ -61,4 +65,5 @@ private:
     bool   _mapLabels         = true;
     double _lastTurnRadius    = qQNaN();
     double _vehicleMaxSpeed   = 0;    ///< not saved: belongs to the vehicle connected now
+    double _vehicleWpSpeed    = 0;    ///< not saved: belongs to the vehicle connected now
 };

@@ -53,6 +53,23 @@ QtObject {
     /// or the VCU_* values stopped coming altogether
     readonly property bool  chassisLinkLost: !!vehicle && hhuVcu.seen && (!hhuVcu.valid || hhuVcu.mode === 0)
 
+    readonly property bool  vcuFault:       vcuValid && hhuVcu.fault !== 0
+
+    /// Why the vehicle cannot be driven now (开始作业 / 开到这里), most important first; [] when it can.
+    /// Chassis link lost > chassis fault / not authorized / not ready > position
+    function driveBlockers() {
+        let list = []
+        if (chassisLinkLost) {
+            list.push(qsTr("Chassis communication lost, check the CAN cable and the VCU"))
+        } else if (vcuValid) {
+            if (vcuFault)                   list.push(qsTr("Chassis fault: %1").arg(faultText))
+            if (!vcuAuthorized)             list.push(qsTr("Switch to unmanned mode with the remote control"))
+            else if (!hhuVcu.ok && !vcuFault) list.push(qsTr("Chassis not ready, see the message list"))
+        }
+        if (!rtkFixed)                      list.push(qsTr("Wait for a good position, about 1-3 minutes"))
+        return list
+    }
+
     /// "0x1A 电机过流" style text for the current VCU fault ("" when there is no fault)
     readonly property string faultText: {
         if (!vcuValid || hhuVcu.fault === 0) return ""

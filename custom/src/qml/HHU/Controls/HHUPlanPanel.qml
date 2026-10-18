@@ -64,16 +64,12 @@ HHUCard {
         _mission.insertSimpleMissionItem(coordinate, _mission.visualItems.count, true)
     }
 
-    /// 清空 asks first and keeps the speed (removeAll recreates the route settings without it, issue #6)
+    /// 清空 asks first; the cleared route goes back to the default speed (the vehicle's WP_SPEED)
     function _clearRoute() {
         mainWindow.hhuConfirm(root, qsTr("Clear the route"),
                                          qsTr("Clear %1 waypoints?").arg(_waypoints),
                                          qsTr("Clear"),
-                                         function() {
-                                             const speed = root._speed
-                                             root.planMasterController.removeAll()
-                                             root._setSpeed(speed)
-                                         })
+                                         function() { root.planMasterController.removeAll() })
     }
 
     /// Waypoint selected on the map (tapping a waypoint selects it, a new waypoint is selected too):
@@ -114,12 +110,16 @@ HHUCard {
 
     readonly property var _speedSection: _mission.visualItems.count > 0 ? _mission.visualItems.get(0).speedSection : null
 
-    /// Highest route speed: the vehicle's WP_SPEED / VCU_V_MAX (the lower one), 1.5 m/s when they cannot be read
-    readonly property real _maxSpeed: hhuSettings.vehicleMaxSpeed > 0 ? Math.floor(hhuSettings.vehicleMaxSpeed * 10 + 1e-6) / 10 : 1.5
-    /// Route speed; a route without its own speed shows the last speed set here (never above _maxSpeed)
+    /// Highest route speed: the vehicle's SPEED_MAX / VCU_V_MAX (the lower one), 1.3 m/s when they cannot be read;
+    /// rounded down to the 0.05 step (1.38 -> 1.35)
+    readonly property real _maxSpeed: Math.floor((hhuSettings.vehicleMaxSpeed > 0 ? hhuSettings.vehicleMaxSpeed : 1.3) * 20 + 1e-6) / 20
+    /// Route speed; a route without its own speed shows the vehicle's WP_SPEED, else the last speed set here
+    /// (0.55 m/s at first), never above _maxSpeed
     readonly property real _speed: _speedSection && _speedSection.specifyFlightSpeed
                                    ? _speedSection.flightSpeed.rawValue
-                                   : Math.min(QGroundControl.settingsManager.appSettings.offlineEditingCruiseSpeed.rawValue, _maxSpeed)
+                                   : Math.min(hhuSettings.vehicleWpSpeed > 0 ? hhuSettings.vehicleWpSpeed
+                                                                             : QGroundControl.settingsManager.appSettings.offlineEditingCruiseSpeed.rawValue,
+                                              _maxSpeed)
 
     function _setSpeed(v) {
         if (!_speedSection) return
@@ -279,8 +279,8 @@ HHUCard {
                             from:       0.1
                             to:         root._maxSpeed
                             editable:   true
-                            step:       0.1
-                            decimals:   1
+                            step:       0.05
+                            decimals:   2
                             unit:       "m/s"
                             onEdited:   (v) => root._setSpeed(v)
                         }

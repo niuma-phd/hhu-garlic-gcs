@@ -186,11 +186,12 @@ void CustomPlugin::adjustSettingMetaData(const QString &settingsGroup, FactMetaD
             // Only 浏览器端 keys can download tiles (QGC sends a map.tianditu.gov.cn Referer)
             metaData.setShortDescription(tr("Must be a TianDiTu key of type \"Browser\". A \"Server\" key cannot download map images."));
         } else if (name == AppSettings::offlineEditingCruiseSpeedName) {
-            // Only used for route time estimates; typical seeding speed, rover range
+            // Route time estimates and the last route speed set (规划 page default without a vehicle);
+            // seeding speed 2 km/h
             metaData.setRawMin(0.1);
             metaData.setRawUserMin(0.2);
             metaData.setRawUserMax(5.0);
-            metaData.setRawDefaultValue(1.0);
+            metaData.setRawDefaultValue(0.55);
         } else if (name == AppSettings::defaultMissionItemAltitudeName) {
             // Rover: waypoints are written with altitude 0 (需求说明 §6)
             metaData.setRawDefaultValue(0.0);
@@ -436,24 +437,28 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
         // TURN_RADIUS for the route check (急弯标红), kept for offline planning
         (void) connect(MultiVehicleManager::instance(), &MultiVehicleManager::activeVehicleChanged, this, [this](Vehicle *vehicle) {
             _hhuSettings->setVehicleMaxSpeed(0);
+            _hhuSettings->setVehicleWpSpeed(0);
             if (!vehicle) {
                 return;
             }
             ParameterManager *params = vehicle->parameterManager();
-            // Route speed limit for the 规划 page (issue #6): the lower of WP_SPEED / VCU_V_MAX
-            auto readMaxSpeed = [this, params]() {
+            // Route speed on the 规划 page: limit = the lower of SPEED_MAX / VCU_V_MAX, default = WP_SPEED
+            auto readSpeeds = [this, params]() {
+                auto read = [params](const QString &name) {
+                    return params->parameterExists(ParameterManager::defaultComponentId, name)
+                               ? params->getParameter(ParameterManager::defaultComponentId, name)->rawValue().toDouble() : 0.0;
+                };
                 double max = 0;
-                for (const QString &name : { QStringLiteral("WP_SPEED"), QStringLiteral("VCU_V_MAX") }) {
-                    if (params->parameterExists(ParameterManager::defaultComponentId, name)) {
-                        const double v = params->getParameter(ParameterManager::defaultComponentId, name)->rawValue().toDouble();
-                        if (v > 0) {
-                            max = (max > 0) ? qMin(max, v) : v;
-                        }
+                for (const QString &name : { QStringLiteral("SPEED_MAX"), QStringLiteral("VCU_V_MAX") }) {
+                    const double v = read(name);
+                    if (v > 0) {
+                        max = (max > 0) ? qMin(max, v) : v;
                     }
                 }
                 _hhuSettings->setVehicleMaxSpeed(max);
+                _hhuSettings->setVehicleWpSpeed(read(QStringLiteral("WP_SPEED")));
             };
-            auto readParams = [this, params, readMaxSpeed]() {
+            auto readParams = [this, params, readSpeeds]() {
                 if (!params->parametersReady()) {
                     return;
                 }
@@ -465,12 +470,12 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
                         _hhuSettings->setLastTurnRadius(value.toDouble());
                     });
                 }
-                readMaxSpeed();
-                for (const QString &name : { QStringLiteral("WP_SPEED"), QStringLiteral("VCU_V_MAX") }) {
+                readSpeeds();
+                for (const QString &name : { QStringLiteral("WP_SPEED"), QStringLiteral("SPEED_MAX"), QStringLiteral("VCU_V_MAX") }) {
                     if (params->parameterExists(ParameterManager::defaultComponentId, name)) {
                         Fact *fact = params->getParameter(ParameterManager::defaultComponentId, name);
                         (void) disconnect(fact, &Fact::rawValueChanged, this, nullptr);
-                        (void) connect(fact, &Fact::rawValueChanged, this, readMaxSpeed);
+                        (void) connect(fact, &Fact::rawValueChanged, this, readSpeeds);
                     }
                 }
             };

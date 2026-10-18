@@ -19,12 +19,15 @@ class HHUConfig : public QObject
     Q_PROPERTY(QString source READ source CONSTANT)
     /// Compile date of the HHU plugin, yyyy-MM-dd (关于 page)
     Q_PROPERTY(QString buildDate READ buildDate CONSTANT)
+    /// features.returnHome: 返回起点 on the work panel (not used this phase, off by default)
+    Q_PROPERTY(bool featureReturnHome READ featureReturnHome CONSTANT)
 
 public:
     explicit HHUConfig(QObject *parent = nullptr);
 
     QString source() const { return _source; }
     static QString buildDate();
+    bool featureReturnHome() const { return _featureReturnHome; }
 
     /// Customer wording for a vehicle STATUSTEXT, or an empty string when no entry matches.
     /// waypointNumber turns the mission sequence after the prefix into the waypoint number ({wp});
@@ -55,4 +58,5 @@ private:
     QHash<int, QString> _faults;
     QVariantList    _ntripProviders;
     QString         _serverBaseUrl;
+    bool            _featureReturnHome = false;
 };

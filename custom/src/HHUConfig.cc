@@ -52,6 +52,7 @@ bool HHUConfig::_load(const QString &path)
     }
     _ntripProviders = root.value(QStringLiteral("ntripProviders")).toArray().toVariantList();
     _serverBaseUrl = root.value(QStringLiteral("server")).toObject().value(QStringLiteral("baseUrl")).toString().trimmed();
+    _featureReturnHome = root.value(QStringLiteral("features")).toObject().value(QStringLiteral("returnHome")).toBool(false);
     _source = path;
     qCDebug(HHUConfigLog) << "loaded" << path << _statusText.count() << "statustext" << _preArm.count() << "prearm" << _faults.count() << "faults";
     return true;

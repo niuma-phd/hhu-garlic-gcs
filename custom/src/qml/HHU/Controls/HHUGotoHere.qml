@@ -8,7 +8,8 @@ import QGroundControl.Controls
 
 /// 开到指定点 (需求说明 V1.0 §3.2, 设计稿 2e / 4h): long press or right click on the 作业 map → a small card
 /// at the point "开到这里？ 离车 XX m" with 取消 / 开过去; the vehicle switches to GUIDED, drives to the
-/// point (flag) and stops there. Not available while the link is lost or view only.
+/// point (flag) and stops there. Not available while the link is lost or view only, or when the chassis
+/// or the position does not allow driving (same checks as 开始作业, HHUStatus.driveBlockers).
 /// 暂停 stops it at any time (work panel).
 Item {
     id: root
@@ -30,6 +31,9 @@ Item {
             reason = qsTr("Link lost")
         } else if (status.readOnly) {
             reason = qsTr("Read-only connection")
+        } else {
+            // same checks as 开始作业 (without the route): nothing is sent when the vehicle cannot drive
+            reason = status.driveBlockers().join("\n")
         }
         if (reason !== "") {
             QGroundControl.showMessageDialog(root, qsTr("Drive here"), reason, Dialog.Ok)

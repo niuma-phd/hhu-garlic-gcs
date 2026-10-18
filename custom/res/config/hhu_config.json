@@ -7,7 +7,8 @@
         "preArm：PreArm / Arm 原因的翻译，同样按前缀匹配。",
         "faultCodes：VCU 故障码（十六进制或十进制写法均可）对应的中文说明，由底盘厂提供。",
         "ntripProviders：RTK 差分页的服务商预设（选中后自动填地址和端口）。以下地址为常见公开值，甲方须向服务商核实后修改。",
-        "server：4G 服务器之外的 HTTPS 服务（检查更新、日志上传）的地址，留空时用 4G 连接配置中的服务器地址（https://地址）。"
+        "server：4G 服务器之外的 HTTPS 服务（检查更新、日志上传）的地址，留空时用 4G 连接配置中的服务器地址（https://地址）。",
+        "features：功能开关。returnHome = 作业面板的“返回起点”按钮，本期不用，默认 false 隐藏，改为 true 后重启显示。"
     ],
     "statusText": [
         {
@@ -61,6 +62,10 @@
         {
             "prefix": "VCU: no scripting CAN",
             "text": "车辆 CAN 配置错误，请联系售后"
+        },
+        {
+            "prefix": "VCU: error",
+            "text": "车端脚本异常，请联系售后：{rest}"
         },
         {
             "prefix": "VCU:",
@@ -325,5 +330,8 @@
     ],
     "server": {
         "baseUrl": ""
+    },
+    "features": {
+        "returnHome": false
     }
 }

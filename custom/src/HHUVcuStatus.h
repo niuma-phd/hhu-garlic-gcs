@@ -14,7 +14,7 @@ class HHUVcuStatus : public QObject
     Q_PROPERTY(bool   valid READ valid NOTIFY changed)   ///< a VCU_* value arrived within the last 3 s
     Q_PROPERTY(bool   seen  READ seen  NOTIFY changed)   ///< VCU data arrived at least once from the current vehicle
     Q_PROPERTY(bool   ok    READ ok    NOTIFY changed)
-    Q_PROPERTY(int    mode  READ mode  NOTIFY changed)   ///< 0 手动, 1 遥控, 2 自动
+    Q_PROPERTY(int    mode  READ mode  NOTIFY changed)   ///< 0 未知（NavSta 无效）, 1 遥控 / 切换中, 2 无人
     Q_PROPERTY(int    fault READ fault NOTIFY changed)
 
 public:
