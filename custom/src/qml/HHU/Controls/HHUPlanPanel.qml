@@ -138,22 +138,31 @@ HHUCard {
         function onDirtyForUploadChanged() {
             if (root.planMasterController.dirtyForUpload) {
                 root._uploaded = false
+            } else {
+                root._checkUploadDone()
             }
         }
         function onSyncInProgressChanged() {
             if (!root.planMasterController.syncInProgress && root._uploading) {
-                root._uploading = false
-                root._uploaded = !root.planMasterController.dirtyForUpload
-                if (root._uploaded) {
-                    // A new route on the vehicle invalidates the resume point (断点续作)
-                    hhuWork.clearResume(QGroundControl.multiVehicleManager.activeVehicle)
-                }
+                // dirtyForUpload is cleared after the mission sync ends (after the rally point leg),
+                // so wait for it; a failed upload keeps it set and the timer gives up
+                uploadStartTimer.restart()
+                root._checkUploadDone()
             }
         }
     }
     property bool _uploading: false
 
-    // an upload the vehicle refused never starts syncing
+    function _checkUploadDone() {
+        if (_uploading && !planMasterController.syncInProgress && !planMasterController.dirtyForUpload) {
+            _uploading = false
+            _uploaded = true
+            // A new route on the vehicle invalidates the resume point (断点续作)
+            hhuWork.clearResume(QGroundControl.multiVehicleManager.activeVehicle)
+        }
+    }
+
+    // an upload the vehicle refused never starts syncing, a failed one never clears dirtyForUpload
     Timer {
         id:         uploadStartTimer
         interval:   2000
@@ -273,6 +282,7 @@ HHUCard {
                     RowLayout {
                         Layout.fillWidth:   true
                         Layout.topMargin:   8 * HHUStyle.s
+                        Layout.bottomMargin: 28 * HHUStyle.s   // room for the stepper's out-of-range note below it
                         HHUText { Layout.fillWidth: true; text: qsTr("Speed"); size: 16; bold: true }
                         HHUStepper {
                             value:      root._speed

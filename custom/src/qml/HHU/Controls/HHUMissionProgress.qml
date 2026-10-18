@@ -75,7 +75,10 @@ HHUCard {
         const v = QGroundControl.settingsManager.appSettings.offlineEditingCruiseSpeed.rawValue
         return v > 0 ? _route.length / v : NaN
     }
-    readonly property real _fraction: status.routeDone ? 1 : _goto ? (HHUState.gotoStartDist > 0 ? Math.max(0, 1 - _gotoLeft / HHUState.gotoStartDist) : 0)
+    /// 开到这里 reached: the rover stops within its waypoint radius (WP_RADIUS), not exactly on the point
+    readonly property bool _gotoArrived: _goto && _gotoLeft < 3 && _speed < 0.05
+    readonly property real _fraction: status.routeDone || _gotoArrived ? 1
+                                            : _goto ? (HHUState.gotoStartDist > 0 ? Math.max(0, 1 - _gotoLeft / HHUState.gotoStartDist) : 0)
                                             : (_started ? _progress : 0)
     /// seconds left: from the current speed while moving, else estimated
     readonly property real _secondsLeft: {
@@ -131,7 +134,7 @@ HHUCard {
                 }
                 HHUText {
                     id:     leftValue
-                    text:   root._goto ? root._gotoLeft.toFixed(0) : (isNaN(root._secondsLeft) ? "--" : String(Math.max(1, Math.round(root._secondsLeft / 60))))
+                    text:   root._goto ? (root._gotoArrived ? "0" : root._gotoLeft.toFixed(0)) : (isNaN(root._secondsLeft) ? "--" : String(Math.max(1, Math.round(root._secondsLeft / 60))))
                     number: true
                     size:   24
                 }
