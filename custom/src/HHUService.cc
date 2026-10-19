@@ -104,7 +104,7 @@ QString HHUService::baseUrl() const
 QNetworkReply *HHUService::_send(const QString &method, const QString &path, const QByteArray &body, const QString &contentType)
 {
     QNetworkRequest request(QUrl(baseUrl() + path));
-    request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("HHU-GCS/%1").arg(appVersion()));
+    request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("GCS/%1").arg(appVersion()));
     request.setTransferTimeout(30000);
     applyServerCa(request, _link4G->caFile());
     const QVariantMap cred = _link4G->credentials();
@@ -202,11 +202,11 @@ void HHUService::downloadAndInstall()
     }
     _installerPath = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).filePath(QFileInfo(QUrl(url).path()).fileName());
     if (QFileInfo(_installerPath).fileName().isEmpty()) {
-        _installerPath = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).filePath(QStringLiteral("HHU-GCS-setup.exe"));
+        _installerPath = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)).filePath(QStringLiteral("GCS-setup.exe"));
     }
     _setUpdate(QStringLiteral("downloading"), tr("Downloading the update…"));
     QNetworkRequest request{ QUrl(url).isRelative() ? QUrl(baseUrl() + url) : QUrl(url) };
-    request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("HHU-GCS/%1").arg(appVersion()));
+    request.setHeader(QNetworkRequest::UserAgentHeader, QStringLiteral("GCS/%1").arg(appVersion()));
     applyServerCa(request, _link4G->caFile());
     QNetworkReply *reply = _nam->get(request);
     _reply = reply;
@@ -268,7 +268,7 @@ void HHUService::_pruneOldLogs()
         }
     }
     // Old packed zips
-    QDirIterator zips(QStandardPaths::writableLocation(QStandardPaths::TempLocation), { QStringLiteral("HHU-GCS-logs-*.zip") }, QDir::Files);
+    QDirIterator zips(QStandardPaths::writableLocation(QStandardPaths::TempLocation), { QStringLiteral("GCS-logs-*.zip") }, QDir::Files);
     while (zips.hasNext()) {
         const QFileInfo fi(zips.next());
         if (fi.lastModified() < limit && fi.absoluteFilePath() != _zipPath) {
@@ -292,7 +292,7 @@ void HHUService::packLogs(const QDateTime &from, const QDateTime &to)
     _ticket.clear();
 
     _zipPath = QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation))
-                   .filePath(QStringLiteral("HHU-GCS-logs-%1.zip").arg(QDateTime::currentDateTime().toString(QStringLiteral("yyyyMMdd-HHmmss"))));
+                   .filePath(QStringLiteral("GCS-logs-%1.zip").arg(QDateTime::currentDateTime().toString(QStringLiteral("yyyyMMdd-HHmmss"))));
     QZipWriter zip(_zipPath);
     zip.setCompressionPolicy(QZipWriter::AlwaysCompress);
     _zipFiles = 0;
@@ -313,7 +313,7 @@ void HHUService::packLogs(const QDateTime &from, const QDateTime &to)
         }
     }
     // Configuration tables and version help after-sales
-    zip.addFile(QStringLiteral("info.txt"), QStringLiteral("HHU-GCS %1\nQGC %2\nrange %3 .. %4\nconfig %5\n")
+    zip.addFile(QStringLiteral("info.txt"), QStringLiteral("GCS %1\nQGC %2\nrange %3 .. %4\nconfig %5\n")
                     .arg(appVersion(), QCoreApplication::applicationVersion(), from.toString(Qt::ISODate), to.toString(Qt::ISODate), _config->source())
                     .toUtf8());
     zip.close();

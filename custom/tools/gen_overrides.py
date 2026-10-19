@@ -99,7 +99,7 @@ OVERRIDES = {
         if (true) {  // HHU: never shown, see the bell list
 """),
         # QGC app messages (issue #6): the "Configuration tasks remain" dialog is dropped (no vehicle setup
-        # pages here); "HHU-GCS" (QGC_APP_NAME, kept for the settings path) is shown as 无人车地面站
+        # pages here); "GCS" (QGC_APP_NAME) is shown as 无人车地面站
         replace_once("""    function _showMessageDialogWorker(owner, dialogTitle, dialogText, buttons = Dialog.Ok, acceptFunction = null, closeFunction = null, bypassNavigationCheck = false) {
         let dialog = simpleMessageDialogComponent.createObject(owner, { title: dialogTitle, text: dialogText, buttons: buttons, acceptFunction: acceptFunction, closeFunction: closeFunction, bypassNavigationCheck: bypassNavigationCheck })
 """, """    function _showMessageDialogWorker(owner, dialogTitle, dialogText, buttons = Dialog.Ok, acceptFunction = null, closeFunction = null, bypassNavigationCheck = false, extraProperties = null) {

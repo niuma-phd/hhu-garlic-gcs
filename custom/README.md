@@ -1,4 +1,4 @@
-# 无人车地面站（HHU-GCS）
+# 无人车地面站（GCS）
 
 基于 [QGroundControl](https://github.com/mavlink/qgroundcontrol) **v5.1.4** 的定制版地面站，用于前辊摆动转向（等效前轮转向）的无人驾驶大蒜播种车（飞控 ArduPilot Rover 4.7.2，底盘 VCU 经 CAN 由 Lua 脚本桥接）。需求见《地面站开发需求说明 V1.0》。
 
@@ -51,7 +51,7 @@ cmake --build build --config Release
 cmake --install build --config Release   :: 生成 NSIS 安装包（需安装 NSIS）
 ```
 
-QGC 发现 `custom/` 目录会自动启用定制版（程序名 HHU-GCS）。
+QGC 发现 `custom/` 目录会自动启用定制版（程序名 GCS，界面显示名“无人车地面站”）。
 
 CI：`.github/workflows/hhu-windows.yml`，推送 `hhu` 分支时编译并上传安装包；推送 `hhu-v*` tag（如 `hhu-v1.0.0`，与 `custom/CMakeLists.txt` 的 `HHU_APP_VERSION` 一致）时发布 Release。`v*` tag 是 QGC 自己的版本，`cmake/modules/Git.cmake` 取版本号时排除 `hhu-*`。
 

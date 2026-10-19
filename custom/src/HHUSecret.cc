@@ -18,7 +18,7 @@ QString protect(const QString &plain)
 #ifdef Q_OS_WIN
     DATA_BLOB in{ static_cast<DWORD>(data.size()), reinterpret_cast<BYTE *>(const_cast<char *>(data.data())) };
     DATA_BLOB out{};
-    if (CryptProtectData(&in, L"HHU-GCS", nullptr, nullptr, nullptr, CRYPTPROTECT_UI_FORBIDDEN, &out)) {
+    if (CryptProtectData(&in, L"GCS", nullptr, nullptr, nullptr, CRYPTPROTECT_UI_FORBIDDEN, &out)) {
         const QByteArray enc(reinterpret_cast<const char *>(out.pbData), static_cast<int>(out.cbData));
         LocalFree(out.pbData);
         return QStringLiteral("dpapi:") + QString::fromLatin1(enc.toBase64());

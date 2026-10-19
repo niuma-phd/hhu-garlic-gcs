@@ -144,7 +144,7 @@ void HHUNtrip::_request(const QString &host, int port, const QString &user, cons
         "GET " + path.toUtf8() + " HTTP/1.1\r\n"
         "Host: " + host.toUtf8() + "\r\n"
         "Ntrip-Version: Ntrip/2.0\r\n"
-        "User-Agent: NTRIP HHU-GCS\r\n"
+        "User-Agent: NTRIP GCS\r\n"
         "Authorization: Basic " + (user + QLatin1Char(':') + password).toUtf8().toBase64() + "\r\n"
         "Connection: close\r\n\r\n";
 

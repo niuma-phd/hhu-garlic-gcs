@@ -88,7 +88,7 @@ jobs:
           $exe = Get-ChildItem -Path "${{ runner.temp }}\build" -Filter "*installer*.exe" | Select-Object -First 1
           if (-not $exe) { Write-Error "Installer .exe not found"; exit 1 }
           $version = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}".Substring(4) } else { "dev-$("${{ github.sha }}".Substring(0,7))" }
-          $name = "HHU-GCS-$version-Windows-x64-setup.exe"
+          $name = "GCS-$version-Windows-x64-setup.exe"
           Copy-Item $exe.FullName (Join-Path "${{ runner.temp }}" $name)
           "name=$name" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "path=$(Join-Path "${{ runner.temp }}" $name)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
@@ -99,8 +99,8 @@ jobs:
         run: |
           $dir = "${{ runner.temp }}\hhu-install-test"
           Start-Process -FilePath "${{ steps.installer.outputs.path }}" -ArgumentList "/S", "/D=$dir" -Wait -NoNewWindow
-          $bin = Get-ChildItem -Path $dir -Recurse -Filter "HHU-GCS.exe" | Select-Object -First 1
-          if (-not $bin) { Get-ChildItem -Path $dir -Recurse | Select-Object -First 50 FullName; Write-Error "HHU-GCS.exe not installed"; exit 1 }
+          $bin = Get-ChildItem -Path $dir -Recurse -Filter "GCS.exe" | Select-Object -First 1
+          if (-not $bin) { Get-ChildItem -Path $dir -Recurse | Select-Object -First 50 FullName; Write-Error "GCS.exe not installed"; exit 1 }
           $cfg = Join-Path $bin.DirectoryName "config\hhu_config.json"
           if (-not (Test-Path $cfg)) { Write-Error "config\hhu_config.json missing next to the executable"; exit 1 }
           Write-Host "Installed: $($bin.FullName)"
@@ -130,7 +130,7 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: HHU-GCS ${{ github.ref_name }}
+          name: GCS ${{ github.ref_name }}
           files: dist/*.exe
           generate_release_notes: true
           body: |

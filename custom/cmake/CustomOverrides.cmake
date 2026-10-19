@@ -5,7 +5,7 @@
 # ----------------------------------------------------------------------------
 # Application Branding
 # ----------------------------------------------------------------------------
-set(QGC_APP_NAME "HHU-GCS" CACHE STRING "App Name" FORCE)
+set(QGC_APP_NAME "GCS" CACHE STRING "App Name" FORCE)
 set(QGC_APP_DESCRIPTION "无人车地面站" CACHE STRING "Application description" FORCE)
 set(QGC_ORG_NAME "HHU" CACHE STRING "Organization name" FORCE)
 set(QGC_ORG_DOMAIN "hhu.edu.cn" CACHE STRING "Organization domain" FORCE)

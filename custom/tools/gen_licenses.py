@@ -21,7 +21,7 @@ CUSTOM = pathlib.Path(__file__).resolve().parent.parent
 ROOT = CUSTOM.parent
 OUT = CUSTOM / "deploy" / "licenses"
 
-# Qt repositories whose libraries / plugins windeployqt puts next to HHU-GCS.exe
+# Qt repositories whose libraries / plugins windeployqt puts next to GCS.exe
 # (Qt6Core..Qt6Xml, Quick / Controls / Dialogs, Location, Positioning, Multimedia, SerialPort,
 # Sensors, TextToSpeech, ShaderTools, Quick3D, Lottie, VirtualKeyboard, Graphs, Bluetooth, StateMachine)
 QT_REPOS = [

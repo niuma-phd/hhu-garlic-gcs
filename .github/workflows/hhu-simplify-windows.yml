@@ -87,7 +87,7 @@ jobs:
           $cm = Get-Content "custom/CMakeLists.txt" -Raw
           $appver = if ($cm -match 'HHU_APP_VERSION "([^"]+)"') { $Matches[1] } else { "0.0.0" }
           $version = "simplify-v$appver-b${{ github.run_number }}"
-          $name = "HHU-GCS-$version-Windows-x64-setup.exe"
+          $name = "GCS-$version-Windows-x64-setup.exe"
           Copy-Item $exe.FullName (Join-Path "${{ runner.temp }}" $name)
           "name=$name" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
           "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
@@ -99,8 +99,8 @@ jobs:
         run: |
           $dir = "${{ runner.temp }}\hhu-install-test"
           Start-Process -FilePath "${{ steps.installer.outputs.path }}" -ArgumentList "/S", "/D=$dir" -Wait -NoNewWindow
-          $bin = Get-ChildItem -Path $dir -Recurse -Filter "HHU-GCS.exe" | Select-Object -First 1
-          if (-not $bin) { Get-ChildItem -Path $dir -Recurse | Select-Object -First 50 FullName; Write-Error "HHU-GCS.exe not installed"; exit 1 }
+          $bin = Get-ChildItem -Path $dir -Recurse -Filter "GCS.exe" | Select-Object -First 1
+          if (-not $bin) { Get-ChildItem -Path $dir -Recurse | Select-Object -First 50 FullName; Write-Error "GCS.exe not installed"; exit 1 }
           $cfg = Join-Path $bin.DirectoryName "config\hhu_config.json"
           if (-not (Test-Path $cfg)) { Write-Error "config\hhu_config.json missing next to the executable"; exit 1 }
           $lic = Join-Path $dir "licenses\README.txt"
@@ -167,7 +167,7 @@ jobs:
             **v1.2.1 改动**（issue #6，界面清理）
             - “暂时不能开始”按优先级给原因：底盘通信中断时提示检查 CAN 线和 VCU，不再提示切无人
             - 去掉地图中间的启动前检查灰框和顶部黄色横幅；铃铛只显示有中文翻译的车端提示，其余只写日志
-            - 不再弹出英文的 “Configuration tasks remain” 对话框，弹窗标题不再显示 HHU-GCS
+            - 不再弹出英文的 “Configuration tasks remain” 对话框，弹窗标题不再显示 GCS
             - 参数下载不再盖住顶栏，改为“正在同步 xx%”和顶栏下方细进度条
             - 全部文字统一为卡片正文字号并跟随“字号”设置；确认框统一为“取消 / 动作”按钮，退出框为“退出 / 取消”
             - 新增 4G 连接缺项时明确提示；同时只连一台车，连接新车前先问是否断开当前连接
