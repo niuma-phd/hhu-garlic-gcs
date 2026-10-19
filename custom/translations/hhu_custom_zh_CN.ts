@@ -826,6 +826,10 @@
       <translation>（日志较大，建议连接 WiFi 后上传）</translation>
     </message>
     <message>
+      <source>Alarms and checks</source>
+      <translation>告警与检查</translation>
+    </message>
+    <message>
       <source>Command timeout</source>
       <translation>指令超时时间</translation>
     </message>
@@ -844,6 +848,14 @@
     <message>
       <source>Link lost after</source>
       <translation>连接中断判定时间</translation>
+    </message>
+    <message>
+      <source>Low battery alarm below</source>
+      <translation>低电量告警阈值</translation>
+    </message>
+    <message>
+      <source>Only applies when the chassis reports its battery.</source>
+      <translation>底盘上报电量时才生效。</translation>
     </message>
     <message>
       <source>Pack logs</source>
@@ -906,10 +918,6 @@
       <translation>继续上传</translation>
     </message>
     <message>
-      <source>Upload check</source>
-      <translation>上传检查</translation>
-    </message>
-    <message>
       <source>Uploading continues in the background and resumes where it stopped. Give the ticket number to after-sales. Logs are kept for 7 days.</source>
       <translation>上传在后台进行，中断后可从断点继续。上传成功后把单号报给售后即可。日志保留 7 天。</translation>
     </message>
@@ -939,6 +947,10 @@
     <message>
       <source>Another ground station controls this vehicle.</source>
       <translation>另一台地面站正在控制这辆车。</translation>
+    </message>
+    <message>
+      <source>Battery low %1%, please come back to charge</source>
+      <translation>电量低 %1%，请回来充电</translation>
     </message>
     <message>
       <source>Chassis fault %1</source>
@@ -1621,8 +1633,20 @@
       <translation>%1 毫秒</translation>
     </message>
     <message>
+      <source>%1 V</source>
+      <translation>%1 V</translation>
+    </message>
+    <message>
+      <source>Alarm below</source>
+      <translation>低于此值告警</translation>
+    </message>
+    <message>
       <source>Another ground station controls the vehicle</source>
       <translation>另一台地面站正在控制</translation>
+    </message>
+    <message>
+      <source>Battery</source>
+      <translation>电量</translation>
     </message>
     <message>
       <source>Connection</source>
@@ -1637,6 +1661,10 @@
       <translation>控制</translation>
     </message>
     <message>
+      <source>Data from the chassis VCU</source>
+      <translation>数据来自底盘 VCU</translation>
+    </message>
+    <message>
       <source>Delay</source>
       <translation>延迟</translation>
     </message>
@@ -1647,6 +1675,10 @@
     <message>
       <source>HDOP</source>
       <translation>精度因子</translation>
+    </message>
+    <message>
+      <source>No battery data</source>
+      <translation>暂无电量数据</translation>
     </message>
     <message>
       <source>No data for %1 s</source>
@@ -1691,6 +1723,10 @@
     <message>
       <source>State</source>
       <translation>状态</translation>
+    </message>
+    <message>
+      <source>Voltage</source>
+      <translation>电压</translation>
     </message>
   </context>
   <context>
