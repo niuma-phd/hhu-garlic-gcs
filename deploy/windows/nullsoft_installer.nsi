@@ -62,7 +62,7 @@ SetCompressor /SOLID /FINAL lzma
 !ifdef LICENSE_FILE
     !define MUI_PAGE_HEADER_TEXT "开源许可声明"
     !define MUI_PAGE_HEADER_SUBTEXT "安装前请阅读本软件使用的开源软件及其许可证。"
-    !define MUI_LICENSEPAGE_TEXT_TOP "按 Page Down 查看其余内容。许可证原文随软件安装在安装目录的 licenses 文件夹中。"
+    !define MUI_LICENSEPAGE_TEXT_TOP "许可证原文会安装到安装目录的 licenses 文件夹。"
     !define MUI_LICENSEPAGE_TEXT_BOTTOM "点击“我接受”继续安装。"
     !insertmacro MUI_PAGE_LICENSE "${LICENSE_FILE}"
 !endif
