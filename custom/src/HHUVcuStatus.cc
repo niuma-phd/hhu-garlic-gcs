@@ -35,8 +35,22 @@ void HHUVcuStatus::handleMessage(const mavlink_message_t &message)
         _mode = static_cast<int>(std::lround(value));
     } else if (name == QStringLiteral("VCU_FAULT")) {
         _fault = static_cast<int>(std::lround(value));
+    } else if (name == QStringLiteral("VCU_SOC")) {
+        if (std::isfinite(value) && value >= 0 && value <= 100) {
+            _lastSocRx.restart();
+            _soc = value;
+            _batteryValid = true;
+            emit batteryChanged();
+        } else if (_batteryValid) {
+            _clearBattery();
+        }
+        return;
+    } else if (name == QStringLiteral("VCU_BATV")) {
+        _batV = value;
+        emit batteryChanged();
+        return;
     } else {
-        return; // other VCU_* (battery: always 0 without HealthSta, speed, command echo): not shown, viewed in Mission Planner
+        return; // VCU_V / VCU_W / VCU_CMD_*: engineer data, viewed in Mission Planner
     }
 
     _lastRx.restart();
@@ -51,6 +65,18 @@ void HHUVcuStatus::_checkTimeout()
         _valid = false;
         emit changed();
     }
+    if (_batteryValid && _lastSocRx.elapsed() > kTimeoutMs) {
+        _clearBattery();
+    }
+}
+
+void HHUVcuStatus::_clearBattery()
+{
+    _batteryValid = false;
+    _soc = qQNaN();
+    _batV = qQNaN();
+    _lastSocRx.invalidate();
+    emit batteryChanged();
 }
 
 void HHUVcuStatus::reset()
@@ -61,4 +87,5 @@ void HHUVcuStatus::reset()
     _mode = 0;
     _fault = 0;
     emit changed();
+    _clearBattery();
 }
