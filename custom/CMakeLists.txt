@@ -54,6 +54,10 @@ file(COPY ${HHU_FONT_FILES} DESTINATION ${CMAKE_BINARY_DIR}/Release/fonts)
 file(COPY ${HHU_FONT_FILES} DESTINATION ${CMAKE_BINARY_DIR}/Debug/fonts)
 install(FILES ${HHU_FONT_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR}/fonts)
 
+# Open source notices (README.txt is also the installer's license page): <install dir>/licenses.
+# Regenerate with custom/tools/gen_licenses.py after updating Qt or the CPM dependencies.
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/deploy/licenses/ DESTINATION licenses)
+
 # ============================================================================
 # Custom Plugin Sources
 # ============================================================================

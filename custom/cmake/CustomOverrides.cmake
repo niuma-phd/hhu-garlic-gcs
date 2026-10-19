@@ -24,6 +24,11 @@ endif()
 if(EXISTS "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/windows/installheader.bmp")
     set(QGC_WINDOWS_INSTALL_HEADER_PATH "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/windows/installheader.bmp" CACHE FILEPATH "Windows installer header image" FORCE)
 endif()
+# Installer license page (开源许可声明) before choosing the install dir; the texts are installed to
+# <install dir>/licenses by custom/CMakeLists.txt (regenerate with custom/tools/gen_licenses.py)
+if(EXISTS "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/licenses/README.txt")
+    set(QGC_WINDOWS_LICENSE_PATH "${CMAKE_SOURCE_DIR}/${QGC_CUSTOM_DIR}/deploy/licenses/README.txt" CACHE FILEPATH "Windows installer license page text" FORCE)
+endif()
 
 # ----------------------------------------------------------------------------
 # Feature Set Customization

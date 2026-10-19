@@ -103,6 +103,8 @@ jobs:
           if (-not $bin) { Get-ChildItem -Path $dir -Recurse | Select-Object -First 50 FullName; Write-Error "HHU-GCS.exe not installed"; exit 1 }
           $cfg = Join-Path $bin.DirectoryName "config\hhu_config.json"
           if (-not (Test-Path $cfg)) { Write-Error "config\hhu_config.json missing next to the executable"; exit 1 }
+          $lic = Join-Path $dir "licenses\README.txt"
+          if (-not (Test-Path $lic)) { Write-Error "licenses\README.txt missing in the install dir"; exit 1 }
           Write-Host "Installed: $($bin.FullName)"
 
       - name: Upload installer artifact
