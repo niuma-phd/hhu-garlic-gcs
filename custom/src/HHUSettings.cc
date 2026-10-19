@@ -16,6 +16,7 @@ HHUSettings::HHUSettings(QObject *parent)
     settings.beginGroup(kGroup);
     _commandTimeoutSec = std::clamp(settings.value("commandTimeoutSec", _commandTimeoutSec).toInt(), 2, 30);
     _linkLostSec       = std::clamp(settings.value("linkLostSec", _linkLostSec).toInt(), 2, 30);
+    _batteryDisplay    = std::clamp(settings.value("batteryDisplay", _batteryDisplay).toInt(), 0, 1);
     _lowBatteryPct     = std::clamp(settings.value("lowBatteryPct", _lowBatteryPct).toInt(), 5, 60);
     _maxWaypoints      = std::clamp(settings.value("maxWaypoints", _maxWaypoints).toInt(), 10, 10000);
     _fontSize          = std::clamp(settings.value("fontSize", _fontSize).toInt(), 0, 2);
@@ -53,6 +54,15 @@ void HHUSettings::setLinkLostSec(int value)
     if (value != _linkLostSec) {
         _linkLostSec = value;
         _save("linkLostSec", value);
+    }
+}
+
+void HHUSettings::setBatteryDisplay(int value)
+{
+    value = std::clamp(value, 0, 1);
+    if (value != _batteryDisplay) {
+        _batteryDisplay = value;
+        _save("batteryDisplay", value);
     }
 }
 

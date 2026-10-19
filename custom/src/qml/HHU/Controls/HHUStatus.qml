@@ -53,9 +53,12 @@ QtObject {
     // Chassis battery (VCU_SOC / VCU_BATV), sent only while the VCU reports HealthSta. No fallback to
     // vehicle.batteries: the autopilot has its own 12 V supply, its battery says nothing about the chassis.
     readonly property bool  batteryValid:   !!vehicle && hhuVcu.batteryValid
-    readonly property real  batteryPct:     batteryValid ? hhuVcu.soc : NaN
-    readonly property real  batteryVolts:   batteryValid && hhuVcu.batVValid ? hhuVcu.batV : NaN
-    readonly property bool  batteryLow:     batteryValid && batteryPct < hhuSettings.lowBatteryPct
+    /// Battery item, details and low battery alarm: data present and 电量显示 = 自动 (售后设置 can turn it off
+    /// when the VCU's battery data is not trustworthy). VCU fault 0x06 电量低 is not affected.
+    readonly property bool  batteryShown:   batteryValid && hhuSettings.batteryDisplay === 0
+    readonly property real  batteryPct:     batteryShown ? hhuVcu.soc : NaN
+    readonly property real  batteryVolts:   batteryShown && hhuVcu.batVValid ? hhuVcu.batV : NaN
+    readonly property bool  batteryLow:     batteryShown && batteryPct < hhuSettings.lowBatteryPct
     /// Nav ↔ VCU CAN link down: vcu_can.lua reports VCU_MODE 0 when NavSta is lost ("VCU: NavSta lost"),
     /// or the VCU_* values stopped coming altogether
     readonly property bool  chassisLinkLost: !!vehicle && hhuVcu.seen && (!hhuVcu.valid || hhuVcu.mode === 0)

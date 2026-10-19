@@ -8,9 +8,9 @@ import HHU.Controls
 import QGroundControl.Controls
 import QGroundControl.AppSettings
 
-// 高级 (需求说明 V1.0 §3.4): 指令超时时间、连接中断判定时间, plus the low battery alarm
-// threshold (only used while the chassis reports its battery), the waypoint limit of the upload
-// check and 上传日志给售后 (§3.8).
+// 高级 (需求说明 V1.0 §3.4): 指令超时时间、连接中断判定时间, plus 电量显示 (自动 / 关闭) and the low
+// battery alarm threshold (only used while the chassis reports its battery), the waypoint limit of
+// the upload check and 上传日志给售后 (§3.8).
 SettingsPage {
     objectName: "settingsPage_HHUAdvanced"
 
@@ -69,6 +69,21 @@ SettingsPage {
 
         LabelledComboBox {
             Layout.fillWidth:   true
+            label:              qsTr("Battery display")
+            model:              [ qsTr("Auto"), qsTr("Off") ]
+            currentIndex:       hhuSettings.batteryDisplay
+            onActivated:        (index) => hhuSettings.batteryDisplay = index
+        }
+        QGCLabel {
+            Layout.fillWidth:   true
+            text:               qsTr("Auto: shown when the chassis reports its battery. Off: no battery shown and no low battery alarm.")
+            font.pixelSize:     HHUStyle.bodyFontSize
+            wrapMode:           Text.WordWrap
+        }
+
+        LabelledComboBox {
+            Layout.fillWidth:   true
+            enabled:            hhuSettings.batteryDisplay === 0
             label:              qsTr("Low battery alarm below")
             model:              _batteryChoices.map(p => p + "%")
             currentIndex:       _indexOf(_batteryChoices, hhuSettings.lowBatteryPct)

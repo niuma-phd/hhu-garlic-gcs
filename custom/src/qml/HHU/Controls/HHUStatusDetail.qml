@@ -56,7 +56,7 @@ Popup {
     }
     /// The battery data may stop while the card is open (the item then hides): say so instead of old values
     readonly property var _battRows: {
-        if (!status.batteryValid) {
+        if (!status.batteryShown) {
             return [ { k: qsTr("State"), v: qsTr("No battery data") } ]
         }
         return [ { k: qsTr("Battery"),     v: status.batteryPct.toFixed(0) + "%" },

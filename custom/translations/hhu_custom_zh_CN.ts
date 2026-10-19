@@ -830,6 +830,18 @@
       <translation>告警与检查</translation>
     </message>
     <message>
+      <source>Auto</source>
+      <translation>自动</translation>
+    </message>
+    <message>
+      <source>Auto: shown when the chassis reports its battery. Off: no battery shown and no low battery alarm.</source>
+      <translation>自动：底盘上报电量时显示。关闭：不显示电量，也不提示电量低。</translation>
+    </message>
+    <message>
+      <source>Battery display</source>
+      <translation>电量显示</translation>
+    </message>
+    <message>
       <source>Command timeout</source>
       <translation>指令超时时间</translation>
     </message>
@@ -852,6 +864,10 @@
     <message>
       <source>Low battery alarm below</source>
       <translation>低电量告警阈值</translation>
+    </message>
+    <message>
+      <source>Off</source>
+      <translation>关闭</translation>
     </message>
     <message>
       <source>Only applies when the chassis reports its battery.</source>

@@ -60,7 +60,7 @@ Item {
         if (status.connected && status.inAuto && !status.rtkFixed) {
             list.push({ id: "rtk", level: 1, title: qsTr("Position poor while working"), text: qsTr("The vehicle may leave the route. Watch it or pause.") })
         }
-        // batteryLow is false as soon as the battery data stops, so the alarm clears with it
+        // batteryLow is false as soon as the battery data stops or 电量显示 is set to 关闭, so the alarm clears with it
         if (status.connected && status.batteryLow) {
             list.push({ id: "battery", level: 1, title: qsTr("Battery low %1%, please come back to charge").arg(status.batteryPct.toFixed(0)), text: "" })
         }

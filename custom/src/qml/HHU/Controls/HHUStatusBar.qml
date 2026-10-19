@@ -170,10 +170,10 @@ Rectangle {
             text:       root._pos.t
             onClicked:  detail.openPosition(posItem)
         }
-        // Hidden (and taking no space in the row) while the chassis sends no battery data
+        // Hidden (and taking no space in the row) while the chassis sends no battery data or 电量显示 is 关闭
         HHUStatusItem {
             id:         battItem
-            visible:    root._statusShown && status.batteryValid
+            visible:    root._statusShown && status.batteryShown
             battery:    true
             batteryPct: status.batteryPct
             batteryLow: status.batteryLow
