@@ -8,12 +8,14 @@ import HHU.Controls
 import QGroundControl.Controls
 import QGroundControl.AppSettings
 
-// 高级 (需求说明 V1.0 §3.4): 指令超时时间、连接中断判定时间, the waypoint limit
-// of the upload check and 上传日志给售后 (§3.8).
+// 高级 (需求说明 V1.0 §3.4): 指令超时时间、连接中断判定时间, plus the low battery alarm
+// threshold (only used while the chassis reports its battery), the waypoint limit of the upload
+// check and 上传日志给售后 (§3.8).
 SettingsPage {
     objectName: "settingsPage_HHUAdvanced"
 
     readonly property var _secondsChoices:  [ 3, 5, 8, 10, 15, 20 ]
+    readonly property var _batteryChoices:  [ 10, 15, 20, 25, 30, 40 ]
 
     function _secondsModel() {
         return _secondsChoices.map(s => qsTr("%1 s").arg(s))
@@ -63,7 +65,21 @@ SettingsPage {
 
     SettingsGroupLayout {
         Layout.fillWidth:   true
-        heading:            qsTr("Upload check")
+        heading:            qsTr("Alarms and checks")
+
+        LabelledComboBox {
+            Layout.fillWidth:   true
+            label:              qsTr("Low battery alarm below")
+            model:              _batteryChoices.map(p => p + "%")
+            currentIndex:       _indexOf(_batteryChoices, hhuSettings.lowBatteryPct)
+            onActivated:        (index) => hhuSettings.lowBatteryPct = _batteryChoices[index]
+        }
+        QGCLabel {
+            Layout.fillWidth:   true
+            text:               qsTr("Only applies when the chassis reports its battery.")
+            font.pixelSize:     HHUStyle.bodyFontSize
+            wrapMode:           Text.WordWrap
+        }
 
         RowLayout {
             Layout.fillWidth:   true
