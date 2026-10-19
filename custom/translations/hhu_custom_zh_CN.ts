@@ -779,24 +779,12 @@
       <translation>下载并安装</translation>
     </message>
     <message>
-      <source>Fonts: this software uses HarmonyOS Sans Fonts (© Huawei Device Co., Ltd., HarmonyOS Sans Fonts License Agreement) and Barlow (SIL Open Font License 1.1).</source>
-      <translation>字体：本软件使用 HarmonyOS Sans 字体（© 华为终端有限公司，HarmonyOS Sans 字体许可协议）和 Barlow 字体（SIL Open Font License 1.1）。</translation>
-    </message>
-    <message>
       <source>Message tables</source>
       <translation>车端提示翻译表</translation>
     </message>
     <message>
-      <source>Open source notices</source>
-      <translation>开源许可声明</translation>
-    </message>
-    <message>
       <source>Software update</source>
       <translation>软件更新</translation>
-    </message>
-    <message>
-      <source>This software is based on QGroundControl (&lt;a href="https://github.com/mavlink/qgroundcontrol"&gt;github.com/mavlink/qgroundcontrol&lt;/a&gt;), licensed under the Apache License 2.0 and the GNU General Public License v3. It uses the Qt framework (&lt;a href="https://www.qt.io"&gt;qt.io&lt;/a&gt;) under the GNU LGPL v3, MAVLink (MIT License) and map data from TianDiTu (&lt;a href="https://www.tianditu.gov.cn"&gt;tianditu.gov.cn&lt;/a&gt;). The source code of the open source parts is available on request.</source>
-      <translation>本软件基于开源地面站 QGroundControl（&lt;a href="https://github.com/mavlink/qgroundcontrol"&gt;github.com/mavlink/qgroundcontrol&lt;/a&gt;）开发，其许可证为 Apache License 2.0 和 GNU General Public License v3。本软件使用 Qt 框架（&lt;a href="https://www.qt.io"&gt;qt.io&lt;/a&gt;，GNU LGPL v3）、MAVLink（MIT 许可证），地图数据来自天地图（&lt;a href="https://www.tianditu.gov.cn"&gt;tianditu.gov.cn&lt;/a&gt;）。开源部分的源代码可应要求提供。</translation>
     </message>
     <message>
       <source>Unmanned Vehicle Ground Station</source>

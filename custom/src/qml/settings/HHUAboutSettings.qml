@@ -7,8 +7,8 @@ import QGroundControl.Controls
 import QGroundControl.AppSettings
 import HHU.Controls
 
-// 关于 (需求说明 V1.0 §3.4): version, build date, 检查更新 (§3.8), open source notices,
-// location of the editable tables.
+// 关于 (需求说明 V1.0 §3.4): version, build date, 检查更新 (§3.8), location of the editable tables.
+// The open source notices are shown by the installer and kept in <install dir>\licenses (not in the UI).
 SettingsPage {
     objectName: "settingsPage_HHUAbout"
 
@@ -87,32 +87,6 @@ SettingsPage {
             text:       qsTr("Download and install")
             primary:    true
             onClicked:  hhuService.downloadAndInstall()
-        }
-    }
-
-    SettingsGroupLayout {
-        Layout.fillWidth:   true
-        heading:            qsTr("Open source notices")
-
-        QGCLabel {
-            Layout.fillWidth:       true
-            Layout.maximumWidth:    ScreenTools.defaultFontPixelWidth * 70
-            wrapMode:               Text.WordWrap
-            textFormat:             Text.RichText
-            onLinkActivated:        (link) => Qt.openUrlExternally(link)
-            text: qsTr("This software is based on QGroundControl (<a href=\"https://github.com/mavlink/qgroundcontrol\">github.com/mavlink/qgroundcontrol</a>), "
-                       + "licensed under the Apache License 2.0 and the GNU General Public License v3. "
-                       + "It uses the Qt framework (<a href=\"https://www.qt.io\">qt.io</a>) under the GNU LGPL v3, "
-                       + "MAVLink (MIT License) and map data from TianDiTu (<a href=\"https://www.tianditu.gov.cn\">tianditu.gov.cn</a>). "
-                       + "The source code of the open source parts is available on request.")
-        }
-
-        // Required by the HarmonyOS Sans Fonts License (fonts/HarmonyOS_Sans_LICENSE.txt)
-        QGCLabel {
-            Layout.fillWidth:       true
-            Layout.maximumWidth:    ScreenTools.defaultFontPixelWidth * 70
-            wrapMode:               Text.WordWrap
-            text: qsTr("Fonts: this software uses HarmonyOS Sans Fonts (© Huawei Device Co., Ltd., HarmonyOS Sans Fonts License Agreement) and Barlow (SIL Open Font License 1.1).")
         }
     }
 
