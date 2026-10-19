@@ -6,7 +6,8 @@ import QGroundControl.Controls
 import QGroundControl.Toolbar
 
 /// Top bar of the 作业 / 规划 / 设置 pages (设计稿 5.1): 作业 / 规划 switch, connection and position
-/// as color dot + short word (tap for details), vehicle state tag, messages, settings.
+/// as color dot + short word, battery (only while the chassis reports it) (tap for details),
+/// vehicle state tag, messages, settings.
 /// `page`: "work" | "plan" | "settings" (no tab highlighted, no status items).
 /// Children are placed in the free space in the middle (e.g. the slide-to-confirm of the 作业 page).
 Rectangle {
@@ -154,7 +155,7 @@ Rectangle {
             }
         }
 
-        // ---- 连接 / 定位 ----------------------------------------------------------
+        // ---- 连接 / 定位 / 电量 ----------------------------------------------------------
         HHUStatusItem {
             id:         connItem
             visible:    root._statusShown
@@ -168,6 +169,15 @@ Rectangle {
             dotColor:   root._pos.c
             text:       root._pos.t
             onClicked:  detail.openPosition(posItem)
+        }
+        // Hidden (and taking no space in the row) while the chassis sends no battery data
+        HHUStatusItem {
+            id:         battItem
+            visible:    root._statusShown && status.batteryValid
+            battery:    true
+            batteryPct: status.batteryPct
+            batteryLow: status.batteryLow
+            onClicked:  detail.openBattery(battItem)
         }
         Item {
             id:                 centerSlot

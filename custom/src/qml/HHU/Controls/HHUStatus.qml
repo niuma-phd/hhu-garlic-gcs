@@ -49,6 +49,13 @@ QtObject {
     readonly property bool  vcuValid:       !!vehicle && hhuVcu.valid
     /// OpSource = 2: the remote control handed the chassis over to Nav (Nav ↔ VCU CAN v1.0)
     readonly property bool  vcuAuthorized:  vcuValid && hhuVcu.mode === 2
+
+    // Chassis battery (VCU_SOC / VCU_BATV), sent only while the VCU reports HealthSta. No fallback to
+    // vehicle.batteries: the autopilot has its own 12 V supply, its battery says nothing about the chassis.
+    readonly property bool  batteryValid:   !!vehicle && hhuVcu.batteryValid
+    readonly property real  batteryPct:     batteryValid ? hhuVcu.soc : NaN
+    readonly property real  batteryVolts:   batteryValid && hhuVcu.batVValid ? hhuVcu.batV : NaN
+    readonly property bool  batteryLow:     batteryValid && batteryPct < hhuSettings.lowBatteryPct
     /// Nav ↔ VCU CAN link down: vcu_can.lua reports VCU_MODE 0 when NavSta is lost ("VCU: NavSta lost"),
     /// or the VCU_* values stopped coming altogether
     readonly property bool  chassisLinkLost: !!vehicle && hhuVcu.seen && (!hhuVcu.valid || hhuVcu.mode === 0)

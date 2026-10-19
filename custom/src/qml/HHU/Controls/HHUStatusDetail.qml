@@ -29,6 +29,7 @@ Popup {
 
     function openConnection(item) { _kind = "conn"; title = qsTr("Connection"); action = qsTr("Connection settings"); settingsPage = "Comm Links"; _openUnder(item) }
     function openPosition(item)   { _kind = "pos";  title = qsTr("Position");   action = qsTr("RTK settings");        settingsPage = "NTRIP/RTK";  _openUnder(item) }
+    function openBattery(item)    { _kind = "batt"; title = qsTr("Battery");    action = "";                          settingsPage = "";           _openUnder(item) }
 
     readonly property var _connRows: {
         const v = status.vehicle
@@ -53,7 +54,16 @@ Popup {
                  { k: qsTr("Satellites"), v: String(status.satCount) },
                  { k: qsTr("HDOP"),       v: isNaN(status.hdop) ? "—" : status.hdop.toFixed(1) } ]
     }
-    readonly property var _rows: _kind === "conn" ? _connRows : _posRows
+    /// The battery data may stop while the card is open (the item then hides): say so instead of old values
+    readonly property var _battRows: {
+        if (!status.batteryValid) {
+            return [ { k: qsTr("State"), v: qsTr("No battery data") } ]
+        }
+        return [ { k: qsTr("Battery"),     v: status.batteryPct.toFixed(0) + "%" },
+                 { k: qsTr("Voltage"),     v: isNaN(status.batteryVolts) ? "—" : qsTr("%1 V").arg(status.batteryVolts.toFixed(1)) },
+                 { k: qsTr("Alarm below"), v: hhuSettings.lowBatteryPct + "%" } ]
+    }
+    readonly property var _rows: _kind === "conn" ? _connRows : (_kind === "pos" ? _posRows : _battRows)
 
     background: HHUCard {}
 
@@ -78,6 +88,13 @@ Popup {
                     wrapMode:               Text.WordWrap
                 }
             }
+        }
+
+        HHUText {
+            visible:    root._kind === "batt"
+            text:       qsTr("Data from the chassis VCU")
+            size:       13
+            color:      HHUStyle.text3
         }
 
         HHUButton {
