@@ -9,7 +9,7 @@ import HHU.Controls
 
 /// HHU override of QGroundControl/Controls/AppSettings.qml (设计稿 6a–6d): grey page, white navigation
 /// on the left (通用 / 连接 / 地图 / 差分定位 / 关于), the page on the right. 高级 (after-sales) is
-/// opened from the 关于 page, 工程调参 (hhu_config.json engineeringTuning) from 高级.
+/// opened from the 关于 page, 工程调参 and Lua 脚本 (hhu_config.json engineeringTuning) from 高级.
 /// showSettingsPage() takes the upstream page keys.
 Rectangle {
     id:     settingsView
@@ -25,17 +25,20 @@ Rectangle {
     ]
     readonly property string _advancedUrl: "qrc:/qml/QGroundControl/AppSettings/HHUAdvancedSettings.qml"
     readonly property string _tuningUrl:   "qrc:/qml/QGroundControl/AppSettings/HHUTuningSettings.qml"
+    readonly property string _scriptsUrl:  "qrc:/qml/QGroundControl/AppSettings/HHUScriptsSettings.qml"
 
     property int  _selected: 0
     property bool _advanced: false
     property bool _tuning:   false
+    property bool _scripts:  false
 
     function showSettingsPage(settingsPage) {
-        if (settingsPage === "Advanced" || (settingsPage === "Tuning" && hhuConfig.engineeringTuning)) {
+        if (settingsPage === "Advanced" || ((settingsPage === "Tuning" || settingsPage === "Scripts") && hhuConfig.engineeringTuning)) {
             _selected = _pages.length - 1
             _advanced = true
             _tuning = settingsPage === "Tuning"
-            page.source = _tuning ? _tuningUrl : _advancedUrl
+            _scripts = settingsPage === "Scripts"
+            page.source = _tuning ? _tuningUrl : (_scripts ? _scriptsUrl : _advancedUrl)
             return
         }
         for (let i = 0; i < _pages.length; i++) {
@@ -50,6 +53,7 @@ Rectangle {
         _selected = index
         _advanced = false
         _tuning = false
+        _scripts = false
         page.source = _pages[index].url
     }
 
@@ -123,6 +127,7 @@ Rectangle {
         anchors.leftMargin:     24 * HHUStyle.s
         text:                   settingsView._pages[settingsView._selected].name + (settingsView._advanced ? " › " + qsTr("After-sales settings") : "")
                                 + (settingsView._tuning ? " › " + qsTr("Engineering tuning") : "")
+                                + (settingsView._scripts ? " › " + qsTr("Lua scripts") : "")
         size:                   24
         bold:                   true
     }

@@ -254,4 +254,12 @@ SettingsPage {
         size:               16
         onClicked:          mainWindow.showSettingsTool("Tuning")
     }
+    HHUButton {
+        Layout.alignment:   Qt.AlignLeft
+        visible:            hhuConfig.engineeringTuning
+        text:               qsTr("Lua scripts ›")
+        kind:               "plain"
+        size:               16
+        onClicked:          mainWindow.showSettingsTool("Scripts")
+    }
 }
