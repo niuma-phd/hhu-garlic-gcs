@@ -55,6 +55,7 @@
         <file alias="i18n/hhu_source_zh_CN.qm">res/i18n/hhu_source_zh_CN.qm</file>
         <file alias="i18n/hhu_json_zh_CN.qm">res/i18n/hhu_json_zh_CN.qm</file>
         <file alias="config/hhu_config.json">res/config/hhu_config.json</file>
+        <file alias="config/hhu_tuning_params.json">res/config/hhu_tuning_params.json</file>
         <file alias="config/relay_ca.crt">res/config/relay_ca.crt</file>
         <file alias="sounds/alarm.wav">res/sounds/alarm.wav</file>
         <file alias="icons/arrow.svg">res/icons/ui/arrow.svg</file>
