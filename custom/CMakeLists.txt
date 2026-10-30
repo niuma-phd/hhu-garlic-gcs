@@ -83,6 +83,8 @@ set(CUSTOM_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUService.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUSettings.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUSettings.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUTuning.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUTuning.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUVcuStatus.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUVcuStatus.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUWorkLog.cc

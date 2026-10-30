@@ -13,6 +13,7 @@ class HHUConfig;
 class HHUNtrip;
 class HHUService;
 class HHUWorkLog;
+class HHUTuning;
 class HHULinkMonitor;
 class HHUSettings;
 class HHUVcuStatus;
@@ -121,6 +122,7 @@ private:
     HHULinkMonitor *_linkMonitor = nullptr;
     HHU4GLink *_link4G = nullptr;
     HHUWorkLog *_workLog = nullptr;
+    HHUTuning *_tuning = nullptr;
     HHUNtrip *_ntrip = nullptr;
     HHUService *_service = nullptr;
     QQmlApplicationEngine *_qmlEngine = nullptr;
