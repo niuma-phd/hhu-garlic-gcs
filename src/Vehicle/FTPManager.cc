@@ -426,6 +426,111 @@ void FTPManager::_deleteComplete(const QString& errorMsg)
     emit deleteComplete(deletedPath, errorMsg);
 }
 
+bool FTPManager::renameFile(uint8_t compId, const QString& fromURI, const QString& toPath)
+{
+    qCDebug(FTPManagerLog) << "rename file fromURI:" << fromURI << "toPath:" << toPath << "compId:" << compId;
+
+    if (!_rgStateMachine.isEmpty()) {
+        qCDebug(FTPManagerLog) << "Cannot rename file. Already in another operation";
+        return false;
+    }
+
+    static const StateFunctions_t rgStateMachine[] = {
+        { &FTPManager::_renameFileBegin,            &FTPManager::_renameFileAckOrNak,        &FTPManager::_renameFileTimeout },
+        { &FTPManager::_renameCompleteNoError,      nullptr,                                 nullptr },
+    };
+    for (size_t i=0; i<sizeof(rgStateMachine)/sizeof(rgStateMachine[0]); i++) {
+        _rgStateMachine.append(rgStateMachine[i]);
+    }
+
+    _renameState.reset();
+
+    if (!_parseURI(compId, fromURI, _renameState.fromPathOnVehicle, _ftpCompId)) {
+        qCWarning(FTPManagerLog) << "_parseURI failed";
+        _rgStateMachine.clear();
+        return false;
+    }
+    _renameState.toPathOnVehicle = toPath;
+
+    // Both paths and their terminators have to fit into the request
+    if (_renameState.fromPathOnVehicle.toStdString().size() + _renameState.toPathOnVehicle.toStdString().size() + 2 > sizeof(MavlinkFTP::Request::data)) {
+        qCWarning(FTPManagerLog) << "Cannot rename file. Paths too long";
+        _rgStateMachine.clear();
+        _renameState.reset();
+        return false;
+    }
+
+    _startStateMachine();
+
+    return true;
+}
+
+void FTPManager::_renameFileBegin(void)
+{
+    qCDebug(FTPManagerLog) << "file" << _renameState.fromPathOnVehicle << "->" << _renameState.toPathOnVehicle;
+
+    MavlinkFTP::Request request{};
+    request.hdr.session = 0;
+    request.hdr.opcode  = MavlinkFTP::kCmdRename;
+    request.hdr.offset  = 0;
+
+    // <path1> NUL <path2>
+    const std::string from  = _renameState.fromPathOnVehicle.toStdString();
+    const std::string to    = _renameState.toPathOnVehicle.toStdString();
+    memcpy(&request.data[0], from.c_str(), from.size() + 1);
+    memcpy(&request.data[from.size() + 1], to.c_str(), to.size());
+    request.hdr.size = static_cast<uint8_t>(from.size() + 1 + to.size());
+    _sendRequestExpectAck(&request);
+}
+
+void FTPManager::_renameFileAckOrNak(const MavlinkFTP::Request* ackOrNak)
+{
+    MavlinkFTP::OpCode_t requestOpCode = static_cast<MavlinkFTP::OpCode_t>(ackOrNak->hdr.req_opcode);
+    if (requestOpCode != MavlinkFTP::kCmdRename) {
+        qCDebug(FTPManagerLog) << "_renameFileAckOrNak: Ack disregarding ack for incorrect requestOpCode" << MavlinkFTP::opCodeToString(requestOpCode);
+        return;
+    }
+    if (ackOrNak->hdr.seqNumber != _expectedIncomingSeqNumber) {
+        qCDebug(FTPManagerLog) << "_renameFileAckOrNak: Ack disregarding ack for incorrect sequence actual:expected" << ackOrNak->hdr.seqNumber << _expectedIncomingSeqNumber;
+        return;
+    }
+
+    _ackOrNakTimeoutTimer.stop();
+
+    if (ackOrNak->hdr.opcode == MavlinkFTP::kRspAck) {
+        _advanceStateMachine();
+    } else if (ackOrNak->hdr.opcode == MavlinkFTP::kRspNak) {
+        qCDebug(FTPManagerLog) << "_renameFileAckOrNak: Nak -" << _errorMsgFromNak(ackOrNak);
+        _renameComplete(tr("Rename failed") + ": " + _errorMsgFromNak(ackOrNak));
+    }
+}
+
+void FTPManager::_renameFileTimeout(void)
+{
+    if (++_renameState.retryCount > _maxRetry) {
+        qCDebug(FTPManagerLog) << QString("_renameFileTimeout retries exceeded");
+        _renameComplete(tr("Rename failed"));
+    } else {
+        qCDebug(FTPManagerLog) << QString("_renameFileTimeout: retrying - retryCount(%1)").arg(_renameState.retryCount);
+        _renameFileBegin();
+    }
+}
+
+void FTPManager::_renameComplete(const QString& errorMsg)
+{
+    qCDebug(FTPManagerLog) << QString("_renameComplete: errorMsg(%1)").arg(errorMsg);
+
+    const QString renamedPath = _renameState.fromPathOnVehicle;
+
+    _ackOrNakTimeoutTimer.stop();
+    _rgStateMachine.clear();
+    _currentStateMachineIndex = -1;
+
+    _renameState.reset();
+
+    emit renameComplete(renamedPath, errorMsg);
+}
+
 void FTPManager::_createFileBegin(void)
 {
     qCDebug(FTPManagerLog) << "file" << _uploadState.fullPathOnVehicle;
@@ -963,6 +1068,8 @@ void FTPManager::_listDirectoryAckOrNak(const MavlinkFTP::Request* ackOrNak)
 
         if (_listDirectoryState.opCode == MavlinkFTP::kCmdListDirectoryWithTime) {
             _listDirWithTimeSupport = WithTimeSupport_t::Supported;
+        } else if (_listDirWithTimeSupport == WithTimeSupport_t::Unknown) {
+            _listDirWithTimeSupport = WithTimeSupport_t::Unsupported;
         }
 
         qCDebug(FTPManagerLog) << QString("_listDirectoryAckOrNak: Ack size(%1)").arg(ackOrNak->hdr.size);
@@ -995,13 +1102,16 @@ void FTPManager::_listDirectoryAckOrNak(const MavlinkFTP::Request* ackOrNak)
                 }
                 _advanceStateMachine();
             }
-        } else if (errorCode == MavlinkFTP::kErrUnknownCommand && _listDirectoryState.opCode == MavlinkFTP::kCmdListDirectoryWithTime) {
+        } else if (_listDirectoryState.opCode == MavlinkFTP::kCmdListDirectoryWithTime &&
+                   (errorCode == MavlinkFTP::kErrUnknownCommand || (errorCode == MavlinkFTP::kErrFail && _listDirWithTimeSupport == WithTimeSupport_t::Unknown))) {
             // Server doesn't implement kCmdListDirectoryWithTime. Remember that, fall back to the
             // plain listing and restart from the beginning. The UnknownCommand Nak is a definitive
             // capability statement so we act on it without a strict sequence check; the restart is
             // idempotent (offset and accumulated entries are reset).
+            // ArduPilot (4.7) answers the unknown opcode with a plain Fail: also fall back while the
+            // support is unknown; a plain listing that works then marks it unsupported.
             qCDebug(FTPManagerLog) << "_listDirectoryAckOrNak: kCmdListDirectoryWithTime unsupported, falling back to kCmdListDirectory";
-            _listDirWithTimeSupport             = WithTimeSupport_t::Unsupported;
+            _listDirWithTimeSupport             = errorCode == MavlinkFTP::kErrUnknownCommand ? WithTimeSupport_t::Unsupported : WithTimeSupport_t::Unknown;
             _listDirectoryState.opCode          = MavlinkFTP::kCmdListDirectory;
             _listDirectoryState.expectedOffset  = 0;
             _listDirectoryState.rgDirectoryList.clear();

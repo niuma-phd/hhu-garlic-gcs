@@ -58,6 +58,14 @@ public:
     /// Signals deleteComplete
     bool deleteFile(uint8_t fromCompId, const QString& fromURI);
 
+    /// Renames a file on the vehicle (kCmdRename). The destination must not exist on most file systems.
+    ///     @param compId   Component id of the component. If compId is MAV_COMP_ID_ALL, then MAV_COMP_ID_AUTOPILOT1 is used.
+    ///     @param fromURI  File path to rename. May include mftp:// scheme and optional component id selector.
+    ///     @param toPath   New path of the file on the same component.
+    /// @return true: process has started, false: error
+    /// Signals renameComplete
+    bool renameFile(uint8_t compId, const QString& fromURI, const QString& toPath);
+
     /// Cancel the download operation
     /// This will emit downloadComplete() when done, and if there's currently a download in progress
     void cancelDownload();
@@ -81,6 +89,7 @@ signals:
     void uploadComplete         (const QString& file, const QString& errorMsg);
     void listDirectoryComplete  (const QStringList& dirList, const QString& errorMsg);
     void deleteComplete         (const QString& file, const QString& errorMsg);
+    void renameComplete         (const QString& file, const QString& errorMsg);
 
     /// Signalled during a lengthy command to show progress
     ///     @param value Amount of progress: 0.0 = none, 1.0 = complete
@@ -169,6 +178,18 @@ private:
         }
     };
 
+    struct RenameFileState_t {
+        QString fromPathOnVehicle;
+        QString toPathOnVehicle;
+        int     retryCount = 0;
+
+        void reset() {
+            fromPathOnVehicle.clear();
+            toPathOnVehicle.clear();
+            retryCount = 0;
+        }
+    };
+
     struct UploadState_t {
         uint8_t     sessionId;
         uint32_t    totalBytesSent;
@@ -229,6 +250,11 @@ private:
     void    _deleteFileTimeout          (void);
     void    _deleteCompleteNoError      (void) { _deleteComplete(QString()); }
     void    _deleteComplete             (const QString& errorMsg);
+    void    _renameFileBegin            (void);
+    void    _renameFileAckOrNak         (const MavlinkFTP::Request* ackOrNak);
+    void    _renameFileTimeout          (void);
+    void    _renameCompleteNoError      (void) { _renameComplete(QString()); }
+    void    _renameComplete             (const QString& errorMsg);
 
     void    _createFileBegin            (void);
     void    _createFileAckOrNak         (const MavlinkFTP::Request* ackOrNak);
@@ -254,6 +280,7 @@ private:
     DownloadState_t         _downloadState;
     ListDirectoryState_t    _listDirectoryState;
     DeleteFileState_t       _deleteState;
+    RenameFileState_t       _renameState;
     UploadState_t           _uploadState;
     QTimer                  _ackOrNakTimeoutTimer;
     int                     _currentStateMachineIndex   = -1;
