@@ -16,6 +16,10 @@
       <translation>连接</translation>
     </message>
     <message>
+      <source>Engineering tuning</source>
+      <translation>工程调参</translation>
+    </message>
+    <message>
       <source>General</source>
       <translation>通用</translation>
     </message>
@@ -834,6 +838,10 @@
       <translation>指令超时时间</translation>
     </message>
     <message>
+      <source>Engineering tuning ›</source>
+      <translation>工程调参 ›</translation>
+    </message>
+    <message>
       <source>Last 3 days</source>
       <translation>最近 3 天</translation>
     </message>
@@ -1633,12 +1641,12 @@
   <context>
     <name>HHUStatusDetail</name>
     <message>
-      <source>%1 ms</source>
-      <translation>%1 毫秒</translation>
-    </message>
-    <message>
       <source>%1 V</source>
       <translation>%1 V</translation>
+    </message>
+    <message>
+      <source>%1 ms</source>
+      <translation>%1 毫秒</translation>
     </message>
     <message>
       <source>Alarm below</source>
@@ -1738,6 +1746,168 @@
     <message>
       <source>Allowed %1 – %2 %3, set to %4</source>
       <translation>可输入 %1–%2 %3，已改为 %4</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUTuning</name>
+    <message>
+      <source> (%1 unconfirmed)</source>
+      <translation>（其中未确认 %1 项）</translation>
+    </message>
+    <message>
+      <source>%1 parameters taken from %2</source>
+      <translation>已从 %2 填入 %1 项</translation>
+    </message>
+    <message>
+      <source>%1 succeeded, %2 failed</source>
+      <translation>成功 %1 项，失败 %2 项</translation>
+    </message>
+    <message>
+      <source>, %1 not written</source>
+      <translation>，未写 %1 项</translation>
+    </message>
+    <message>
+      <source>? Unconfirmed</source>
+      <translation>? 未确认</translation>
+    </message>
+    <message>
+      <source>Cannot read %1</source>
+      <translation>无法读取 %1</translation>
+    </message>
+    <message>
+      <source>Cannot write while driving</source>
+      <translation>行驶中不能写</translation>
+    </message>
+    <message>
+      <source>Connection lost: </source>
+      <translation>连接断开：</translation>
+    </message>
+    <message>
+      <source>Not read</source>
+      <translation>未读到</translation>
+    </message>
+    <message>
+      <source>Read-only connection</source>
+      <translation>只读连接，不能写</translation>
+    </message>
+    <message>
+      <source>Snapshot not saved, nothing written: %1</source>
+      <translation>快照保存失败，未写入：%1</translation>
+    </message>
+    <message>
+      <source>Writing</source>
+      <translation>写入中</translation>
+    </message>
+    <message>
+      <source>cannot create %1</source>
+      <translation>无法创建 %1</translation>
+    </message>
+    <message>
+      <source>✓ Written</source>
+      <translation>✓ 已写入</translation>
+    </message>
+    <message>
+      <source>✗ Failed (error %1)</source>
+      <translation>✗ 失败（错误 %1）</translation>
+    </message>
+    <message>
+      <source>✗ Failed (read back %1)</source>
+      <translation>✗ 失败（回读 %1）</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUTuningSettings</name>
+    <message>
+      <source>%1 – %2</source>
+      <translation>%1 – %2</translation>
+    </message>
+    <message>
+      <source>All files (*)</source>
+      <translation>所有文件 (*)</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
+      <source>Current</source>
+      <translation>当前值</translation>
+    </message>
+    <message>
+      <source>Discard changes</source>
+      <translation>放弃修改</translation>
+    </message>
+    <message>
+      <source>Import .param</source>
+      <translation>导入 .param</translation>
+    </message>
+    <message>
+      <source>New value</source>
+      <translation>新值</translation>
+    </message>
+    <message>
+      <source>No snapshots</source>
+      <translation>没有快照</translation>
+    </message>
+    <message>
+      <source>No such parameter</source>
+      <translation>无此参数</translation>
+    </message>
+    <message>
+      <source>Not connected</source>
+      <translation>未连接</translation>
+    </message>
+    <message>
+      <source>Parameter</source>
+      <translation>参数</translation>
+    </message>
+    <message>
+      <source>Parameter files (*.param *.params *.txt)</source>
+      <translation>参数文件 (*.param *.params *.txt)</translation>
+    </message>
+    <message>
+      <source>Read</source>
+      <translation>读取</translation>
+    </message>
+    <message>
+      <source>Reading…</source>
+      <translation>读取中…</translation>
+    </message>
+    <message>
+      <source>Reboot</source>
+      <translation>重启</translation>
+    </message>
+    <message>
+      <source>Reboot autopilot</source>
+      <translation>重启飞控</translation>
+    </message>
+    <message>
+      <source>Reboot the autopilot of %1 now?</source>
+      <translation>现在重启 %1 的飞控？</translation>
+    </message>
+    <message>
+      <source>Restore snapshot</source>
+      <translation>恢复快照</translation>
+    </message>
+    <message>
+      <source>Some parameters take effect after the autopilot reboots</source>
+      <translation>有参数需重启飞控生效</translation>
+    </message>
+    <message>
+      <source>Status</source>
+      <translation>状态</translation>
+    </message>
+    <message>
+      <source>To write</source>
+      <translation>待写入</translation>
+    </message>
+    <message>
+      <source>Write (%1)</source>
+      <translation>写入（%1 项）</translation>
+    </message>
+    <message>
+      <source>Writing…</source>
+      <translation>写入中…</translation>
     </message>
   </context>
   <context>
