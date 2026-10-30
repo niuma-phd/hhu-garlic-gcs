@@ -21,6 +21,8 @@ class HHUConfig : public QObject
     Q_PROPERTY(QString buildDate READ buildDate CONSTANT)
     /// features.returnHome: 返回起点 on the work panel (not used this phase, off by default)
     Q_PROPERTY(bool featureReturnHome READ featureReturnHome CONSTANT)
+    /// engineeringTuning: 工程调参 page under 售后设置, for our own engineers only (off in customer builds)
+    Q_PROPERTY(bool engineeringTuning READ engineeringTuning CONSTANT)
 
 public:
     explicit HHUConfig(QObject *parent = nullptr);
@@ -28,6 +30,7 @@ public:
     QString source() const { return _source; }
     static QString buildDate();
     bool featureReturnHome() const { return _featureReturnHome; }
+    bool engineeringTuning() const { return _engineeringTuning; }
 
     /// Customer wording for a vehicle STATUSTEXT, or an empty string when no entry matches.
     /// waypointNumber turns the mission sequence after the prefix into the waypoint number ({wp});
@@ -59,4 +62,5 @@ private:
     QVariantList    _ntripProviders;
     QString         _serverBaseUrl;
     bool            _featureReturnHome = false;
+    bool            _engineeringTuning = false;
 };

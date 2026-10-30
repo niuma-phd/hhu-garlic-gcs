@@ -333,5 +333,6 @@
     },
     "features": {
         "returnHome": false
-    }
+    },
+    "engineeringTuning": false
 }
