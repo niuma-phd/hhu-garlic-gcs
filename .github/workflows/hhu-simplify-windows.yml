@@ -145,6 +145,9 @@ jobs:
           body: |
             无人车地面站 **简化版** Windows 安装包（预发布，滚动更新，基于 QGroundControl v5.1.4）。
 
+            **v1.2.6 改动**
+            - 新增内部使用的工程调参页（config/hhu_config.json 的 engineeringTuning，默认关闭，客户安装包不显示）
+
             **v1.2.5 改动**（软件改名）
             - 软件名由 HHU-GCS 改为 GCS：程序 GCS.exe，安装目录 C:\Program Files\GCS，设置保存在 %APPDATA%\HHU\GCS.ini，安装包名 GCS-…-setup.exe；界面显示名仍是“无人车地面站”
             - 安装位置和设置目录都换了新名字：装过 HHU-GCS 的电脑上，新版装成另一个程序，旧版需要在“设置 → 应用”里手动卸载，设置需要重新填写
