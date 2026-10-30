@@ -54,7 +54,7 @@ Item {
         radius:         height / 2
         color:          "white"
 
-        Behavior on x { enabled: !drag.drag.active; NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
+        Behavior on x { enabled: !dragArea.drag.active; NumberAnimation { duration: 180; easing.type: Easing.OutCubic } }
 
         HHUIcon {
             anchors.centerIn:   parent
@@ -64,7 +64,7 @@ Item {
         }
 
         MouseArea {
-            id:                 drag
+            id:                 dragArea
             anchors.fill:       parent
             cursorShape:        Qt.PointingHandCursor
             drag.target:        knob
@@ -73,7 +73,8 @@ Item {
             drag.maximumX:      root._maxX
             property bool _dragged: false
             onPressed:  _dragged = false
-            onPositionChanged: if (drag.active) _dragged = true
+            // dragArea.drag: inside the handlers a bare `drag` is not the drag group
+            onPositionChanged: if (dragArea.drag.active) _dragged = true
             onReleased: {
                 const usable = root._maxX - root._pad >= knob.width
                 if (_dragged && usable && knob.x >= root._maxX - 2) {
