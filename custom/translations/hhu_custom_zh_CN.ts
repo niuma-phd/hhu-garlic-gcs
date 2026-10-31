@@ -749,6 +749,412 @@
     </message>
   </context>
   <context>
+    <name>HHUABPanel</name>
+    <message>
+      <source>AB length</source>
+      <translation>AB 长度</translation>
+    </message>
+    <message>
+      <source>Bearing</source>
+      <translation>方向角</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
+      <source>Cannot start</source>
+      <translation>不能开始</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Discard</source>
+      <translation>放弃</translation>
+    </message>
+    <message>
+      <source>Discard the unsaved changes?</source>
+      <translation>放弃未保存的修改？</translation>
+    </message>
+    <message>
+      <source>Done</source>
+      <translation>完成</translation>
+    </message>
+    <message>
+      <source>Done %1/%2</source>
+      <translation>完成 %1/%2</translation>
+    </message>
+    <message>
+      <source>Field name</source>
+      <translation>地块名称</translation>
+    </message>
+    <message>
+      <source>Invalid name</source>
+      <translation>名称不可用</translation>
+    </message>
+    <message>
+      <source>Left</source>
+      <translation>向左</translation>
+    </message>
+    <message>
+      <source>Lines</source>
+      <translation>条数</translation>
+    </message>
+    <message>
+      <source>Name already used</source>
+      <translation>名称已存在</translation>
+    </message>
+    <message>
+      <source>New</source>
+      <translation>新建</translation>
+    </message>
+    <message>
+      <source>New field</source>
+      <translation>新建地块</translation>
+    </message>
+    <message>
+      <source>No saved fields</source>
+      <translation>没有已保存的地块</translation>
+    </message>
+    <message>
+      <source>No vehicle position</source>
+      <translation>没有车辆位置</translation>
+    </message>
+    <message>
+      <source>Not driven</source>
+      <translation>未走</translation>
+    </message>
+    <message>
+      <source>Open</source>
+      <translation>打开</translation>
+    </message>
+    <message>
+      <source>Open failed</source>
+      <translation>打开失败</translation>
+    </message>
+    <message>
+      <source>Open field</source>
+      <translation>打开地块</translation>
+    </message>
+    <message>
+      <source>Point not recorded</source>
+      <translation>未记下该点</translation>
+    </message>
+    <message>
+      <source>RTK fixed lost</source>
+      <translation>RTK 固定解丢失</translation>
+    </message>
+    <message>
+      <source>Record</source>
+      <translation>重记</translation>
+    </message>
+    <message>
+      <source>Record A</source>
+      <translation>记A</translation>
+    </message>
+    <message>
+      <source>Record A again?</source>
+      <translation>重新记 A 点？</translation>
+    </message>
+    <message>
+      <source>Record B</source>
+      <translation>记B</translation>
+    </message>
+    <message>
+      <source>Record B again?</source>
+      <translation>重新记 B 点？</translation>
+    </message>
+    <message>
+      <source>Recording…</source>
+      <translation>记录中…</translation>
+    </message>
+    <message>
+      <source>Restore</source>
+      <translation>恢复</translation>
+    </message>
+    <message>
+      <source>Right</source>
+      <translation>向右</translation>
+    </message>
+    <message>
+      <source>Row width</source>
+      <translation>垄宽</translation>
+    </message>
+    <message>
+      <source>Save</source>
+      <translation>保存</translation>
+    </message>
+    <message>
+      <source>Save as</source>
+      <translation>另存</translation>
+    </message>
+    <message>
+      <source>Save failed</source>
+      <translation>保存失败</translation>
+    </message>
+    <message>
+      <source>Save field</source>
+      <translation>保存地块</translation>
+    </message>
+    <message>
+      <source>Side</source>
+      <translation>方向</translation>
+    </message>
+    <message>
+      <source>Skip</source>
+      <translation>跳过</translation>
+    </message>
+    <message>
+      <source>Skipped</source>
+      <translation>跳过</translation>
+    </message>
+    <message>
+      <source>Start AB work</source>
+      <translation>开始AB作业</translation>
+    </message>
+    <message>
+      <source>Start here</source>
+      <translation>从这条开始</translation>
+    </message>
+    <message>
+      <source>Unsaved field</source>
+      <translation>未保存的地块</translation>
+    </message>
+    <message>
+      <source>Work link is off on the vehicle (VCU_WORK_EN=0)</source>
+      <translation>车端未打开作业联动（VCU_WORK_EN=0）</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUABWork</name>
+    <message>
+      <source>AB line</source>
+      <translation>AB 线</translation>
+    </message>
+    <message>
+      <source>Aligning</source>
+      <translation>对准中</translation>
+    </message>
+    <message>
+      <source>Alignment out of limits</source>
+      <translation>对准不合格</translation>
+    </message>
+    <message>
+      <source>Back</source>
+      <translation>返回</translation>
+    </message>
+    <message>
+      <source>Cannot start</source>
+      <translation>不能开始</translation>
+    </message>
+    <message>
+      <source>Choose a line</source>
+      <translation>选择一条</translation>
+    </message>
+    <message>
+      <source>Choose another line</source>
+      <translation>选其他条</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Cross-track</source>
+      <translation>横向偏差</translation>
+    </message>
+    <message>
+      <source>Cross-track %1, heading %2</source>
+      <translation>横向偏差 %1，航向偏差 %2</translation>
+    </message>
+    <message>
+      <source>Done</source>
+      <translation>完成</translation>
+    </message>
+    <message>
+      <source>Drive line %1 again?</source>
+      <translation>重走第 %1 条？</translation>
+    </message>
+    <message>
+      <source>Drive this line again</source>
+      <translation>重走本条</translation>
+    </message>
+    <message>
+      <source>End</source>
+      <translation>结束</translation>
+    </message>
+    <message>
+      <source>End line</source>
+      <translation>结束本条</translation>
+    </message>
+    <message>
+      <source>End line %1?</source>
+      <translation>结束第 %1 条？</translation>
+    </message>
+    <message>
+      <source>Heading</source>
+      <translation>航向偏差</translation>
+    </message>
+    <message>
+      <source>L</source>
+      <translation>左</translation>
+    </message>
+    <message>
+      <source>Lift</source>
+      <translation>作业杆</translation>
+    </message>
+    <message>
+      <source>Lift did not reach its position in %1 s</source>
+      <translation>作业杆 %1 秒内未到位</translation>
+    </message>
+    <message>
+      <source>Lift fault</source>
+      <translation>作业杆故障</translation>
+    </message>
+    <message>
+      <source>Lift fault (WorkFb 4)</source>
+      <translation>作业杆升降超时故障（WorkFb=4）</translation>
+    </message>
+    <message>
+      <source>Lift moving while working, the vehicle stopped</source>
+      <translation>作业中作业杆升降，车辆已停车</translation>
+    </message>
+    <message>
+      <source>Line %1 / %2</source>
+      <translation>第 %1 条 / 共 %2 条</translation>
+    </message>
+    <message>
+      <source>Line %1 done (done %2/%3)</source>
+      <translation>第 %1 条完成（已完成 %2/%3）</translation>
+    </message>
+    <message>
+      <source>Line cannot be started now</source>
+      <translation>现在不能开始</translation>
+    </message>
+    <message>
+      <source>Line done</source>
+      <translation>本条完成</translation>
+    </message>
+    <message>
+      <source>Line ended</source>
+      <translation>本条已结束</translation>
+    </message>
+    <message>
+      <source>Line stopped</source>
+      <translation>本条已停止</translation>
+    </message>
+    <message>
+      <source>Lowering</source>
+      <translation>放杆中</translation>
+    </message>
+    <message>
+      <source>Lowering failed</source>
+      <translation>放杆故障</translation>
+    </message>
+    <message>
+      <source>Mark line %1 as done?</source>
+      <translation>第 %1 条标为完成？</translation>
+    </message>
+    <message>
+      <source>Next line</source>
+      <translation>下一条</translation>
+    </message>
+    <message>
+      <source>Next line (%1)</source>
+      <translation>下一条（第 %1 条）</translation>
+    </message>
+    <message>
+      <source>No</source>
+      <translation>否</translation>
+    </message>
+    <message>
+      <source>Not driven</source>
+      <translation>未走</translation>
+    </message>
+    <message>
+      <source>Paused</source>
+      <translation>已暂停</translation>
+    </message>
+    <message>
+      <source>R</source>
+      <translation>右</translation>
+    </message>
+    <message>
+      <source>Raising</source>
+      <translation>收杆中</translation>
+    </message>
+    <message>
+      <source>Raising failed</source>
+      <translation>收杆故障</translation>
+    </message>
+    <message>
+      <source>Retry lowering</source>
+      <translation>重试放杆</translation>
+    </message>
+    <message>
+      <source>Retry raising</source>
+      <translation>重试收杆</translation>
+    </message>
+    <message>
+      <source>Route upload failed</source>
+      <translation>航线上传失败</translation>
+    </message>
+    <message>
+      <source>Skipped</source>
+      <translation>跳过</translation>
+    </message>
+    <message>
+      <source>Slide to end</source>
+      <translation>滑动结束</translation>
+    </message>
+    <message>
+      <source>Slide to start</source>
+      <translation>滑动开始</translation>
+    </message>
+    <message>
+      <source>Start anyway</source>
+      <translation>仍然开始</translation>
+    </message>
+    <message>
+      <source>Start anyway?</source>
+      <translation>仍然开始？</translation>
+    </message>
+    <message>
+      <source>Start line %1?</source>
+      <translation>开始第 %1 条？</translation>
+    </message>
+    <message>
+      <source>The vehicle did not switch to auto</source>
+      <translation>车辆未切到自动</translation>
+    </message>
+    <message>
+      <source>The vehicle does not report the lift state</source>
+      <translation>车端未上报作业杆状态</translation>
+    </message>
+    <message>
+      <source>The vehicle script does not support the lift link (garlic.15 or later needed)</source>
+      <translation>车端脚本不支持作业杆联动（需 garlic.15 以上）</translation>
+    </message>
+    <message>
+      <source>Vehicle not connected</source>
+      <translation>车辆未连接</translation>
+    </message>
+    <message>
+      <source>Work link is off on the vehicle (VCU_WORK_EN=0)</source>
+      <translation>车端未打开作业联动（VCU_WORK_EN=0）</translation>
+    </message>
+    <message>
+      <source>Working</source>
+      <translation>作业中</translation>
+    </message>
+    <message>
+      <source>Yes</source>
+      <translation>是</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUAboutSettings</name>
     <message>
       <source>After-sales settings ›</source>
@@ -1171,6 +1577,10 @@
       <translation>%1 项要修改</translation>
     </message>
     <message>
+      <source>AB lines</source>
+      <translation>AB线</translation>
+    </message>
+    <message>
       <source>Add a waypoint at the vehicle</source>
       <translation>在车的位置加航点</translation>
     </message>
@@ -1261,6 +1671,10 @@
     <message>
       <source>Waypoint %1</source>
       <translation>第 %1 点</translation>
+    </message>
+    <message>
+      <source>Waypoints</source>
+      <translation>手工航点</translation>
     </message>
     <message>
       <source>waypoints</source>

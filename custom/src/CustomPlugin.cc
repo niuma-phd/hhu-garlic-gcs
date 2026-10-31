@@ -11,6 +11,8 @@
 #include "JsonParsing.h"
 #include "BlankPlanCreator.h"
 #include "HHU4GLink.h"
+#include "HHUABField.h"
+#include "HHUABRun.h"
 #include "HHUConfig.h"
 #include "HHUNtrip.h"
 #include "HHUService.h"
@@ -44,6 +46,7 @@
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlContext>
+#include <QtQml/qqml.h>
 
 QGC_LOGGING_CATEGORY(CustomLog, "Custom.CustomPlugin")
 
@@ -89,6 +92,8 @@ CustomPlugin::CustomPlugin(QObject *parent)
     , _linkMonitor(new HHULinkMonitor(_hhuSettings, this))
     , _link4G(new HHU4GLink(_linkMonitor, this))
     , _workLog(new HHUWorkLog(this))
+    , _abField(new HHUABField(_hhuConfig, this))
+    , _abRun(new HHUABRun(_hhuConfig, _abField, _vcuStatus, _workLog, this))
 {
     _showAdvancedUI = false;
     QGuiApplication::setApplicationDisplayName(QStringLiteral("无人车地面站"));
@@ -308,6 +313,7 @@ bool CustomPlugin::mavlinkMessage(Vehicle *vehicle, LinkInterface *link, const m
     _vcuStatus->handleMessage(message);
     if (message.msgid == MAVLINK_MSG_ID_MISSION_ITEM_REACHED) {
         _workLog->itemReached(vehicle, mavlink_msg_mission_item_reached_get_seq(&message));
+        _abRun->itemReached(vehicle, mavlink_msg_mission_item_reached_get_seq(&message));
     } else if (message.msgid == MAVLINK_MSG_ID_STATUSTEXT) {
         return _translateStatusText(vehicle, message);
     } else if (message.msgid == MAVLINK_MSG_ID_BATTERY_STATUS) {
@@ -420,6 +426,9 @@ QList<PlanCreator *> CustomPlugin::planCreators(PlanMasterController *planMaster
 QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
 {
     _loadFonts();
+    // enums of the AB line run / field for QML (HHUABRun.Aligning, HHUABField.Done …)
+    qmlRegisterUncreatableType<HHUABRun>("HHU.AB", 1, 0, "HHUABRun", QStringLiteral("use hhuABRun"));
+    qmlRegisterUncreatableType<HHUABField>("HHU.AB", 1, 0, "HHUABField", QStringLiteral("use hhuAB"));
     _qmlEngine = QGCCorePlugin::createQmlApplicationEngine(parent);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuVcu"), _vcuStatus);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuSettings"), _hhuSettings);
@@ -427,6 +436,8 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuLink"), _linkMonitor);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhu4G"), _link4G);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuWork"), _workLog);
+    _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuAB"), _abField);
+    _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuABRun"), _abRun);
 
     // These need the settings / network stack, which exist once the QML engine is created
     if (!_ntrip) {
@@ -482,6 +493,8 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
             (void) connect(params, &ParameterManager::parametersReadyChanged, this, readParams);
             readParams();
         });
+        // AB 线: the field used last, with the progress of its lines (needs the save path setting)
+        _abField->restoreLast();
         QTimer::singleShot(0, this, [this]() {
             _link4G->autoStart();
             _ntrip->applyForwarding(!_link4G->active());

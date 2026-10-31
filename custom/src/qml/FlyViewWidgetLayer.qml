@@ -30,14 +30,14 @@ Item {
         id:                     _totalToolInsets
         leftEdgeTopInset:       parentToolInsets.leftEdgeTopInset
         leftEdgeCenterInset:    parentToolInsets.leftEdgeCenterInset
-        leftEdgeBottomInset:    progress.visible ? progress.width + _margin : parentToolInsets.leftEdgeBottomInset
+        leftEdgeBottomInset:    progress.visible ? progress.width + _margin : (abWork.visible ? abWork.width + _margin : parentToolInsets.leftEdgeBottomInset)
         rightEdgeTopInset:      mapTools.width + _margin
         rightEdgeCenterInset:   parentToolInsets.rightEdgeCenterInset
         rightEdgeBottomInset:   workPanel.width + _margin
         topEdgeLeftInset:       mapScale.y + mapScale.height + _margin
         topEdgeCenterInset:     alarms.y + alarms.height + _margin
         topEdgeRightInset:      mapTools.y + mapTools.height + _margin
-        bottomEdgeLeftInset:    progress.visible ? progress.height + _margin * 1.25 : parentToolInsets.bottomEdgeLeftInset
+        bottomEdgeLeftInset:    progress.visible ? progress.height + _margin * 1.25 : (abWork.visible ? abWork.height + _margin * 1.25 : parentToolInsets.bottomEdgeLeftInset)
         bottomEdgeCenterInset:  parentToolInsets.bottomEdgeCenterInset
         bottomEdgeRightInset:   workPanel.height + _margin * 1.25
     }
@@ -61,7 +61,25 @@ Item {
         anchors.bottomMargin: _margin * 1.25
         missionController:  _missionController
         z:                  QGroundControl.zOrderWidgets
-        visible:            _hasRoute && !!_activeVehicle
+        visible:            _hasRoute && !!_activeVehicle && !hhuABRun.active
+    }
+
+    // AB line run: status card (bottom left, in place of the progress card) and its dialogs
+    HHUABWork {
+        id:                 abWork
+        anchors.left:       parent.left
+        anchors.bottom:     parent.bottom
+        anchors.leftMargin: _margin
+        anchors.bottomMargin: _margin * 1.25
+        z:                  QGroundControl.zOrderWidgets
+    }
+
+    // AB lines of the open field on the map (规划 page in AB线 mode), same colors as there
+    HHUABLines {
+        parent:     _root.mapControl
+        map:        _root.mapControl
+        visible:    hhuAB.planMode === 1
+        current:    hhuABRun.active ? hhuABRun.line : -1
     }
 
     // Work buttons (bottom right), only those the current state allows
@@ -72,7 +90,7 @@ Item {
         anchors.rightMargin:    _margin
         anchors.bottomMargin:   _margin * 1.25
         // clear of the progress card on small screens
-        maxWidth:               parent.width - (progress.visible ? progress.width + _margin : 0) - _margin * 2
+        maxWidth:               parent.width - (progress.visible ? progress.width + _margin : (abWork.visible ? abWork.width + _margin : 0)) - _margin * 2
         planMasterController:   _planMasterController
         z:                      QGroundControl.zOrderWidgets
     }

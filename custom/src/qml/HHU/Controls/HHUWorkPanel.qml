@@ -4,6 +4,7 @@ import QtQuick.Layouts
 
 import QGroundControl
 import QGroundControl.Controls
+import HHU.AB
 
 /// Work buttons at the bottom right of the 作业 page (设计稿 2b, 4a–4j). Only the buttons that apply to
 /// the current state are shown, main action first, 停车上锁 set apart by a line:
@@ -14,6 +15,7 @@ import QGroundControl.Controls
 /// paused simply switches back to AUTO. The remote control can take over at any time; GCS 暂停 does not conflict.
 /// A command the vehicle has not carried out in time is reported as 指令未执行 with 重新发送.
 /// 开始作业 offers 断点续作 and starts following the run for it (hhuWork).
+/// While an AB line is driven (hhuABRun) only its own 暂停 / 继续 / 结束本条 and 停车上锁 are shown.
 Item {
     id: root
 
@@ -31,6 +33,10 @@ Item {
     readonly property bool  _missionAvailable:  _missionItems > 0
     readonly property bool  _paused:            status.inPause && status.armed
     readonly property bool  _idle:              !!_vehicle && !status.inAuto && !_paused && !status.inReturn && !status.inGuided
+    /// an AB line is being driven: its parts drive the vehicle, not the 手工航点 buttons
+    readonly property bool  _ab:                hhuABRun.active
+    readonly property int   _abPhase:           hhuABRun.phase
+    readonly property bool  _abDriving:         _ab && (_abPhase === HHUABRun.Aligning || _abPhase === HHUABRun.Working) && !hhuABRun.starting && status.armed
 
     /// Why 开始作业 is not possible ([] when it is): { t, btn, page } - btn opens the place to fix it.
     /// Most important first (issue #6): 底盘通信中断 > 未授权 / 故障 > 无航线 > 定位. With the chassis
@@ -234,7 +240,7 @@ Item {
 
         // 暂时不能开始: reasons with the place to fix them
         HHUCard {
-            visible:                root._idle && status.canControl && root._startBlocked.length > 0
+            visible:                root._idle && !root._ab && status.canControl && root._startBlocked.length > 0
             Layout.alignment:       Qt.AlignRight
             Layout.preferredWidth:  Math.min(root.maxWidth, Math.max(340 * HHUStyle.s, noteColumn.implicitWidth + 28 * HHUStyle.s))
             Layout.preferredHeight: noteColumn.implicitHeight + 24 * HHUStyle.s
@@ -293,7 +299,7 @@ Item {
 
             // 开始 / 继续作业: one entry, the text follows the state
             HHUButton {
-                visible:    status.canControl && (root._idle || root._paused)
+                visible:    status.canControl && (root._idle || root._paused) && !root._ab
                 enabled:    root._paused ? (root._missionAvailable && !root._vcuFault) : root._startBlocked.length === 0
                 text:       root._paused ? qsTr("Continue work") : qsTr("Start work")
                 icon:       "play"
@@ -307,7 +313,7 @@ Item {
             }
 
             HHUButton {
-                visible:    status.canControl && (status.inAuto || status.inReturn || status.inGuided) && status.armed && !status.routeDone
+                visible:    status.canControl && (status.inAuto || status.inReturn || status.inGuided) && status.armed && !status.routeDone && !root._ab
                 text:       qsTr("Pause")
                 icon:       "pause"
                 kind:       "yellow"
@@ -321,7 +327,7 @@ Item {
 
             // 返回起点: off this phase, hhu_config.json features.returnHome turns it on
             HHUButton {
-                visible:    hhuConfig.featureReturnHome && status.canControl && (status.inAuto || root._paused) && status.armed
+                visible:    hhuConfig.featureReturnHome && status.canControl && (status.inAuto || root._paused) && status.armed && !root._ab
                 text:       qsTr("Return to start")
                 icon:       "return"
                 kind:       "outline"
@@ -337,8 +343,21 @@ Item {
                                "return", HHUStyle.blue)
             }
 
+            // AB line: 暂停 / 继续 (the lift stays as it is); 结束本条 is on the AB card (HHUABWork)
+            HHUButton {
+                visible:    status.canControl && root._abDriving
+                text:       status.inAuto ? qsTr("Pause") : qsTr("Continue")
+                icon:       status.inAuto ? "pause" : "play"
+                kind:       status.inAuto ? "yellow" : "green"
+                h:          HHUStyle.btnH
+                size:       HHUStyle.btnFont / HHUStyle.s
+                minWidth:   160
+                shadow:     true
+                whiteRim:   true
+                onClicked:  status.inAuto ? hhuABRun.pause() : hhuABRun.resume()
+            }
             Rectangle {
-                visible:                stopButton.visible && (status.inAuto || root._paused || status.inReturn || status.inGuided)
+                visible:                stopButton.visible && (status.inAuto || root._paused || status.inReturn || status.inGuided || root._ab)
                 Layout.preferredWidth:  2
                 Layout.preferredHeight: 48 * HHUStyle.s
                 Layout.leftMargin:      10 * HHUStyle.s

@@ -9,6 +9,8 @@
 class CustomOptions;
 class CustomPlugin;
 class HHU4GLink;
+class HHUABField;
+class HHUABRun;
 class HHUConfig;
 class HHUNtrip;
 class HHUService;
@@ -121,6 +123,8 @@ private:
     HHULinkMonitor *_linkMonitor = nullptr;
     HHU4GLink *_link4G = nullptr;
     HHUWorkLog *_workLog = nullptr;
+    HHUABField *_abField = nullptr;
+    HHUABRun *_abRun = nullptr;
     HHUNtrip *_ntrip = nullptr;
     HHUService *_service = nullptr;
     QQmlApplicationEngine *_qmlEngine = nullptr;

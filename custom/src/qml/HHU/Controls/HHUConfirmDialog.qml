@@ -26,6 +26,7 @@ HHUDialog {
 
     HHUText {
         Layout.fillWidth:   true
+        visible:            root.message !== ""
         text:               root.message
         size:               18
         lineHeight:         1.3

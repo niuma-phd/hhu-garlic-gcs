@@ -23,6 +23,8 @@ HHUCard {
     property var editorMap
 
     property int step: 0
+    /// 手工航点 (0) / AB线 (1), remembered by hhuAB
+    readonly property bool _abMode: hhuAB.planMode === 1
 
     width:  HHUStyle.planPanelW
     radius: HHUStyle.radiusCard
@@ -52,13 +54,17 @@ HHUCard {
         _applyStep()
     }
     onVisibleChanged: if (!visible) _closeDeleteCard()
+    on_AbModeChanged: {
+        _closeDeleteCard()
+        _applyStep()
+    }
     Component.onCompleted: {
         editorMap.addMapItemView(splitView)
         _applyStep()
     }
 
     function _applyStep() {
-        planView._addWaypointOnClick = step === 0
+        planView._addWaypointOnClick = step === 0 && !_abMode
         planView._editingLayer = planView._layerMission
         if (step === 1) {
             _check = checker.check()
@@ -138,7 +144,7 @@ HHUCard {
     Connections {
         target: HHUState
         function onWaypointMenuRequested(missionItem) {
-            if (root.visible && root.step === 0) {
+            if (root.visible && root.step === 0 && !root._abMode) {
                 root._deleteItem = missionItem
                 root._placeDeleteCard()
                 deleteCard.visible = true
@@ -193,7 +199,7 @@ HHUCard {
 
     MapItemView {
         id:     splitView
-        model:  root.visible && root.step === 0 ? root._splits : []
+        model:  root.visible && root.step === 0 && !root._abMode ? root._splits : []
         delegate: MapQuickItem {
             coordinate:     modelData.coordinate
             anchorPoint.x:  sourceItem.width / 2
@@ -341,6 +347,14 @@ HHUCard {
         planMasterController.sendToVehicle()
     }
 
+    // AB lines of the open field on the map (AB线 mode)
+    HHUABLines {
+        parent:     root.editorMap
+        map:        root.editorMap
+        visible:    root._abMode && root.visible
+        current:    hhuABRun.active ? hhuABRun.line : hhuAB.selected
+    }
+
     // ---- Layout ----------------------------------------------------------------------------------
 
     ColumnLayout {
@@ -348,8 +362,54 @@ HHUCard {
         anchors.margins:    16 * HHUStyle.s
         spacing:            12 * HHUStyle.s
 
+        // 手工航点 / AB线
+        Rectangle {
+            Layout.fillWidth:       true
+            Layout.preferredHeight: modeRow.implicitHeight + 6
+            radius:                 10 * HHUStyle.s
+            color:                  HHUStyle.grey2
+            RowLayout {
+                id:                 modeRow
+                anchors.fill:       parent
+                anchors.margins:    3
+                spacing:            3
+                Repeater {
+                    model: [ qsTr("Waypoints"), qsTr("AB lines") ]
+                    Rectangle {
+                        Layout.fillWidth:       true
+                        Layout.preferredWidth:  1
+                        Layout.preferredHeight: 36 * HHUStyle.s
+                        radius:                 8 * HHUStyle.s
+                        readonly property bool _sel: hhuAB.planMode === index
+                        color:                  _sel ? HHUStyle.blue : "transparent"
+                        HHUText {
+                            anchors.centerIn:   parent
+                            text:               modelData
+                            size:               16
+                            bold:               true
+                            color:              parent._sel ? "white" : HHUStyle.text
+                        }
+                        MouseArea {
+                            anchors.fill:   parent
+                            cursorShape:    Qt.PointingHandCursor
+                            enabled:        !hhuABRun.active
+                            onClicked:      hhuAB.planMode = index
+                        }
+                    }
+                }
+            }
+        }
+
+        HHUABPanel {
+            visible:            root._abMode
+            Layout.fillWidth:   true
+            Layout.fillHeight:  true
+            editorMap:          root.editorMap
+        }
+
         // step bar: current blue, done green, later grey
         RowLayout {
+            visible:            !root._abMode
             Layout.fillWidth:   true
             spacing:            4 * HHUStyle.s
             Repeater {
@@ -387,6 +447,7 @@ HHUCard {
         // Step content scrolls on short screens; 下一步 / 上传 below always stay visible
         Flickable {
             id:                 stepFlick
+            visible:            !root._abMode
             Layout.fillWidth:   true
             Layout.fillHeight:  true
             clip:               true
@@ -548,6 +609,7 @@ HHUCard {
 
         // bottom buttons
         RowLayout {
+            visible:            !root._abMode
             Layout.fillWidth:   true
             spacing:            8 * HHUStyle.s
 
@@ -595,7 +657,7 @@ HHUCard {
     Rectangle {
         id:             mapHint
         parent:         root.parent
-        visible:        root.step === 0
+        visible:        root.step === 0 && !root._abMode
         y:              12 * HHUStyle.s
         x:              root.x + root.width + (parent.width - root.x - root.width - width) / 2
         width:          hintText.implicitWidth + 32 * HHUStyle.s

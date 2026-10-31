@@ -11,6 +11,10 @@ QtObject {
     property var  gotoTarget:   null
     property real gotoStartDist: 0
 
+    /// 规划 page AB线 → 开始AB作业: the 作业 page asks to slide-confirm and starts this line (0-based)
+    signal abStartRequested(int line)
+    function requestABStart(line) { abStartRequested(line) }
+
     /// 规划 page: a waypoint was right clicked / long pressed (HHUPlanPanel shows the delete card)
     signal waypointMenuRequested(var missionItem)
     function requestWaypointMenu(missionItem) {

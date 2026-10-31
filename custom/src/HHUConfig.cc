@@ -54,6 +54,15 @@ bool HHUConfig::_load(const QString &path)
     _ntripProviders = root.value(QStringLiteral("ntripProviders")).toArray().toVariantList();
     _serverBaseUrl = root.value(QStringLiteral("server")).toObject().value(QStringLiteral("baseUrl")).toString().trimmed();
     _featureReturnHome = root.value(QStringLiteral("features")).toObject().value(QStringLiteral("returnHome")).toBool(false);
+    const QJsonObject ab = root.value(QStringLiteral("abLine")).toObject();
+    _abLine = ABLine();
+    _abLine.leadD        = qBound(0.0, ab.value(QStringLiteral("abLeadD")).toDouble(_abLine.leadD), 20.0);
+    _abLine.leadLc       = qBound(1.0, ab.value(QStringLiteral("abLeadLc")).toDouble(_abLine.leadLc), 50.0);
+    _abLine.alignXtrack  = qBound(0.01, ab.value(QStringLiteral("abAlignXtrack")).toDouble(_abLine.alignXtrack), 5.0);
+    _abLine.alignHeading = qBound(0.5, ab.value(QStringLiteral("abAlignHeading")).toDouble(_abLine.alignHeading), 90.0);
+    _abLine.liftTimeout  = qBound(3, ab.value(QStringLiteral("abLiftTimeout")).toInt(_abLine.liftTimeout), 600);
+    _abLine.workLink     = ab.value(QStringLiteral("abWorkLink")).toBool(_abLine.workLink);
+    _abLine.requireRtkFixed = ab.value(QStringLiteral("abRequireRtkFixed")).toBool(_abLine.requireRtkFixed);
     _source = path;
     qCDebug(HHUConfigLog) << "loaded" << path << _statusText.count() << "statustext" << _preArm.count() << "prearm" << _faults.count() << "faults";
     return true;

@@ -21,6 +21,13 @@ class HHUConfig : public QObject
     Q_PROPERTY(QString buildDate READ buildDate CONSTANT)
     /// features.returnHome: 返回起点 on the work panel (not used this phase, off by default)
     Q_PROPERTY(bool featureReturnHome READ featureReturnHome CONSTANT)
+    /// abLine.abRequireRtkFixed: 记A / 记B only with RTK fixed (SITL: set false)
+    Q_PROPERTY(bool abRequireRtkFixed READ abRequireRtkFixed CONSTANT)
+    /// abLine.abWorkLink: false = AB lines are driven without lowering / raising the lift
+    Q_PROPERTY(bool abWorkLink READ abWorkLink CONSTANT)
+    Q_PROPERTY(int    abLiftTimeout  READ abLiftTimeout  CONSTANT)   ///< s
+    Q_PROPERTY(double abAlignXtrack  READ abAlignXtrack  CONSTANT)   ///< m
+    Q_PROPERTY(double abAlignHeading READ abAlignHeading CONSTANT)   ///< deg
 
 public:
     explicit HHUConfig(QObject *parent = nullptr);
@@ -28,6 +35,23 @@ public:
     QString source() const { return _source; }
     static QString buildDate();
     bool featureReturnHome() const { return _featureReturnHome; }
+
+    /// AB line run settings (abLine in hhu_config.json, not shown in the UI)
+    struct ABLine {
+        double leadD        = 1.0;      ///< abLeadD: alignment point this far before the start (m)
+        double leadLc       = 5.0;      ///< abLeadLc: length of the lead-in before the alignment point (m)
+        double alignXtrack  = 0.20;     ///< abAlignXtrack: alignment OK below this cross-track error (m)
+        double alignHeading = 8.0;      ///< abAlignHeading: alignment OK below this heading error (deg)
+        int    liftTimeout  = 20;       ///< abLiftTimeout: wait for lowering / raising (s)
+        bool   workLink     = true;     ///< abWorkLink
+        bool   requireRtkFixed = true;  ///< abRequireRtkFixed
+    };
+    const ABLine &abLine() const { return _abLine; }
+    bool abRequireRtkFixed() const { return _abLine.requireRtkFixed; }
+    bool abWorkLink() const { return _abLine.workLink; }
+    int    abLiftTimeout() const { return _abLine.liftTimeout; }
+    double abAlignXtrack() const { return _abLine.alignXtrack; }
+    double abAlignHeading() const { return _abLine.alignHeading; }
 
     /// Customer wording for a vehicle STATUSTEXT, or an empty string when no entry matches.
     /// waypointNumber turns the mission sequence after the prefix into the waypoint number ({wp});
@@ -59,4 +83,5 @@ private:
     QVariantList    _ntripProviders;
     QString         _serverBaseUrl;
     bool            _featureReturnHome = false;
+    ABLine          _abLine;
 };
