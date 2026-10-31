@@ -136,7 +136,8 @@ private:
     Vehicle *_vehicle() const;
     void _upload(const QList<MissionItem *> &items);
     void _onSendComplete(bool error);
-    void _startAuto();
+    /// fromStart: a new route, AUTO from its first item; otherwise AUTO goes on at the vehicle's current item
+    void _startAuto(bool fromStart);
     void _sendLift(bool down);
     void _beginLower();
     void _beginWork(bool resumeOnly);

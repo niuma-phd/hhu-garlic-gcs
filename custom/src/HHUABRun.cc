@@ -261,10 +261,10 @@ void HHUABRun::_onSendComplete(bool error)
     }
     // a new route on the vehicle: the resume point of the 手工航点 route no longer applies
     _workLog->clearResume(_vehicle());
-    _startAuto();
+    _startAuto(true);
 }
 
-void HHUABRun::_startAuto()
+void HHUABRun::_startAuto(bool fromStart)
 {
     Vehicle *v = _vehicle();
     if (!v) {
@@ -274,7 +274,9 @@ void HHUABRun::_startAuto()
     _starting = true;
     _stillTime.invalidate();
     _autoTime.restart();
-    v->setCurrentMissionSequence(1);
+    if (fromStart) {
+        v->setCurrentMissionSequence(1);
+    }
     if (v->armed()) {
         v->setFlightMode(v->missionFlightMode());
     } else {
@@ -341,7 +343,8 @@ void HHUABRun::_beginWork(bool resumeOnly)
     _setPhase(Working);
     _endReached = false;
     if (resumeOnly) {
-        _startAuto();
+        // 重试放杆 after a fault on the line: go on from where the vehicle stopped, not from the start point
+        _startAuto(false);
     } else {
         _upload(_workMission());
     }
