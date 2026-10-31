@@ -9,7 +9,7 @@
         "ntripProviders：RTK 差分页的服务商预设（选中后自动填地址和端口）。以下地址为常见公开值，甲方须向服务商核实后修改。",
         "server：4G 服务器之外的 HTTPS 服务（检查更新、日志上传）的地址，留空时用 4G 连接配置中的服务器地址（https://地址）。",
         "features：功能开关。returnHome = 作业面板的“返回起点”按钮，本期不用，默认 false 隐藏，改为 true 后重启显示。",
-        "abLine：AB 线作业。abLeadD = 对准点在起点前多远（m，这一段会播上）；abLeadLc = 对准引导段长度（m）；abAlignXtrack / abAlignHeading = 对准合格的横向偏差（m）/ 航向偏差（度）上限；abLiftTimeout = 放杆、收杆等待超时（s）；abWorkLink = false 时不放杆、不收杆，只压线行驶；abRequireRtkFixed = 记 A / 记 B 是否要求 RTK 固定解（SITL 不是固定解时改 false）。"
+        "abLine：AB 线作业。abLeadD = 对准点在起点前多远（m，这一段会播上）；abLeadLc = 对准引导段长度（m）；abAlignXtrack / abAlignHeading = 对准合格的横向偏差（m）/ 航向偏差（度）上限；abLiftTimeout = 放杆、收杆等待超时（s）；abWorkLink = false 时不放杆、不收杆，只压线行驶；abRequireRtkFixed = 记 A / 记 B 是否要求 RTK 固定解（SITL 不是固定解时改 false）；abSpeedTransport / abSpeedWork = 杆收着 / 放下时航线里写的车速（m/s，VCU 自己钳在 5 km/h / 2 km/h，飞控用它算转弯和到点减速；abWorkLink=false 时作业段也用运输车速）。"
     ],
     "statusText": [
         {
@@ -378,6 +378,8 @@
         "abAlignHeading": 8,
         "abLiftTimeout": 20,
         "abWorkLink": true,
-        "abRequireRtkFixed": true
+        "abRequireRtkFixed": true,
+        "abSpeedTransport": 1.39,
+        "abSpeedWork": 0.55
     }
 }

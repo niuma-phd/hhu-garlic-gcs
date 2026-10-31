@@ -157,6 +157,12 @@ void HHUABRun::startAnyway()
 
 // ---- Routes ---------------------------------------------------------------------------------------
 
+MissionItem *HHUABRun::_speedItem(int seq, double speed)
+{
+    // DO_CHANGE_SPEED before the first waypoint: ground speed (1), m/s, throttle unchanged (-1)
+    return new MissionItem(seq, MAV_CMD_DO_CHANGE_SPEED, MAV_FRAME_MISSION, 1, speed, -1, 0, 0, 0, 0, true, false);
+}
+
 QList<MissionItem *> HHUABRun::_alignMission()
 {
     const hhuab::Line &l = _field->geometry()[_line];
@@ -171,9 +177,10 @@ QList<MissionItem *> HHUABRun::_alignMission()
     };
     const QGeoCoordinate lead  = _field->toCoordinate(hhuab::along(l, -(_field->leadD() + _field->leadLc())));
     const QGeoCoordinate align = _field->toCoordinate(hhuab::along(l, -_field->leadD()));
-    _lastSeq = 2;
+    _lastSeq = 3;
     _target = hhuab::along(l, -_field->leadD());
-    return { wp(0, home), wp(1, lead), wp(2, align) };
+    // lift up: the VCU drives 5 km/h, the autopilot plans turns and the stop with that speed
+    return { wp(0, home), _speedItem(1, _config->abLine().speedTransport), wp(2, lead), wp(3, align) };
 }
 
 QList<MissionItem *> HHUABRun::_workMission()
@@ -188,14 +195,16 @@ QList<MissionItem *> HHUABRun::_workMission()
         return new MissionItem(seq, MAV_CMD_NAV_WAYPOINT, MAV_FRAME_GLOBAL_RELATIVE_ALT,
                                0, 0, 0, 0, c.latitude(), c.longitude(), 0, true, false);
     };
-    QList<MissionItem *> items { wp(0, home), wp(1, _field->toCoordinate(l.start)), wp(2, _field->toCoordinate(l.end)) };
-    _lastSeq = 2;
+    // lift down: the VCU drives 2 km/h; without the lift link the lift stays up and the vehicle drives 5 km/h
+    const double speed = workLink() ? _config->abLine().speedWork : _config->abLine().speedTransport;
+    QList<MissionItem *> items { wp(0, home), _speedItem(1, speed), wp(2, _field->toCoordinate(l.start)), wp(3, _field->toCoordinate(l.end)) };
+    _lastSeq = 3;
     _target = l.end;
     if (workLink()) {
         // DO items run when the NAV item before them starts: the 1 s delay after the end point keeps the
         // raise at the end (without it the lift would go up as soon as the start point is passed)
-        items.append(new MissionItem(3, MAV_CMD_NAV_DELAY, MAV_FRAME_MISSION, 1, -1, -1, -1, 0, 0, 0, true, false));
-        items.append(new MissionItem(4, MAV_CMD_DO_AUX_FUNCTION, MAV_FRAME_MISSION, kAuxWork, kAuxLow, 0, 0, 0, 0, 0, true, false));
+        items.append(new MissionItem(4, MAV_CMD_NAV_DELAY, MAV_FRAME_MISSION, 1, -1, -1, -1, 0, 0, 0, true, false));
+        items.append(new MissionItem(5, MAV_CMD_DO_AUX_FUNCTION, MAV_FRAME_MISSION, kAuxWork, kAuxLow, 0, 0, 0, 0, 0, true, false));
     }
     return items;
 }

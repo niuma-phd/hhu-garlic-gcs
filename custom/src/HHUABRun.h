@@ -15,10 +15,11 @@ class MissionItem;
 class Vehicle;
 
 /// One AB line on the vehicle (作业页), driven by the ground station in four parts:
-///   1 对准  lift up: route [lead point = start − (d + Lc), alignment point = start − d] in AUTO, then HOLD
+///   1 对准  lift up: route [speed abSpeedTransport, lead point = start − (d + Lc), alignment point = start − d]
+///           in AUTO, then HOLD
 ///           and check the cross-track / heading error (out of limits: ask 仍然开始 / 结束本条)
 ///   2 放杆  DO_AUX_FUNCTION(300 SCRIPTING1, 2 high) → wait for WorkFb 3
-///   3 作业  route [start, end, NAV_DELAY 1 s, DO_AUX_FUNCTION(300, low)] in AUTO. The DO command runs
+///   3 作业  route [speed abSpeedWork, start, end, NAV_DELAY 1 s, DO_AUX_FUNCTION(300, low)] in AUTO. The DO command runs
 ///           when the NAV item before it starts, so the delay keeps the raise at the end; it is also the
 ///           fallback when the 4G link is lost
 ///   4 收杆  HOLD, DO_AUX_FUNCTION(300, low) again → wait for WorkFb 0 → line done, field saved
@@ -138,6 +139,7 @@ private:
     void _hold();
     bool _inAuto() const;
     bool _inHold() const;
+    MissionItem *_speedItem(int seq, double speed);
     QList<MissionItem *> _alignMission();
     QList<MissionItem *> _workMission();
 

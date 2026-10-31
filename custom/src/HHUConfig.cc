@@ -63,6 +63,8 @@ bool HHUConfig::_load(const QString &path)
     _abLine.liftTimeout  = qBound(3, ab.value(QStringLiteral("abLiftTimeout")).toInt(_abLine.liftTimeout), 600);
     _abLine.workLink     = ab.value(QStringLiteral("abWorkLink")).toBool(_abLine.workLink);
     _abLine.requireRtkFixed = ab.value(QStringLiteral("abRequireRtkFixed")).toBool(_abLine.requireRtkFixed);
+    _abLine.speedTransport = qBound(0.1, ab.value(QStringLiteral("abSpeedTransport")).toDouble(_abLine.speedTransport), 5.0);
+    _abLine.speedWork      = qBound(0.1, ab.value(QStringLiteral("abSpeedWork")).toDouble(_abLine.speedWork), 5.0);
     _source = path;
     qCDebug(HHUConfigLog) << "loaded" << path << _statusText.count() << "statustext" << _preArm.count() << "prearm" << _faults.count() << "faults";
     return true;

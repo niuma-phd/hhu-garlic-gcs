@@ -45,6 +45,8 @@ public:
         int    liftTimeout  = 20;       ///< abLiftTimeout: wait for lowering / raising (s)
         bool   workLink     = true;     ///< abWorkLink
         bool   requireRtkFixed = true;  ///< abRequireRtkFixed
+        double speedTransport = 1.39;   ///< abSpeedTransport: lift up, the VCU allows 5 km/h (m/s)
+        double speedWork      = 0.55;   ///< abSpeedWork: lift down, the VCU allows 2 km/h (m/s)
     };
     const ABLine &abLine() const { return _abLine; }
     bool abRequireRtkFixed() const { return _abLine.requireRtkFixed; }
