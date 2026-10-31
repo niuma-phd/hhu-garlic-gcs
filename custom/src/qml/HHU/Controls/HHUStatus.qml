@@ -107,7 +107,9 @@ QtObject {
     readonly property string faultText: {
         if (!vcuValid || hhuVcu.fault === 0) return ""
         const desc = hhuConfig.faultText(hhuVcu.fault)
-        return "0x" + hhuVcu.fault.toString(16).toUpperCase() + (desc !== "" ? " " + desc : "")
+        // two digits at least, as the vehicle writes it ("0x07", issue #9)
+        const hex = hhuVcu.fault.toString(16).toUpperCase()
+        return "0x" + (hex.length < 2 ? "0" + hex : hex) + (desc !== "" ? " " + desc : "")
     }
 
     readonly property string modeText: {
