@@ -62,6 +62,7 @@
             "name": "车辆",
             "params": [
                 { "name": "VCU_W_BASE", "min": 0.3, "max": 3, "step": 0.01 },
+                { "name": "VCU_WORK_EN", "min": 0, "max": 1, "step": 1, "integer": true },
                 { "name": "GPS1_POS_X", "min": -3, "max": 3, "step": 0.001, "reboot": true },
                 { "name": "GPS1_POS_Y", "min": -3, "max": 3, "step": 0.001, "reboot": true },
                 { "name": "GPS1_POS_Z", "min": -3, "max": 3, "step": 0.001, "reboot": true },
