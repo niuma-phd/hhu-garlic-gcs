@@ -2,6 +2,7 @@
 #include "QGCLoggingCategory.h"
 
 #include <algorithm>
+#include <cctype>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDate>
@@ -102,8 +103,15 @@ QString HHUConfig::translateStatusText(const QString &text, const std::function<
         result.replace(QStringLiteral("{reason}"), r->text);
     }
     if (result.contains(QStringLiteral("{fault}"))) {
-        // "VCU: fault 0x1A" -> "0x1A 电机过流" (description from faultCodes when known)
-        const QString hex = rest.section(QLatin1Char(' '), 0, 0);
+        // "VCU: fault 0x1A" -> "0x1A 电机过流" (description from faultCodes when known). Only the leading
+        // hex digits count: the HOLD text while driving is "VCU: fault 0x07, HOLD" (issue #9)
+        QString hex;
+        for (const QChar c : rest) {
+            if (!isxdigit(c.toLatin1())) {
+                break;
+            }
+            hex.append(c);
+        }
         bool ok = false;
         const int code = hex.toInt(&ok, 16);
         QString fault = QStringLiteral("0x") + hex.toUpper();

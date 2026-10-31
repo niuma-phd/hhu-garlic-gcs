@@ -13,6 +13,10 @@
 ///                                receives VCU_HealthSta (0x1806407D), which is not part of Nav ↔ VCU
 ///                                v1.0. They have their own freshness (batteryValid) and do not keep
 ///                                `valid` alive. VCU_BATV is 0 when the voltage is out of range.
+///   VCU_WORKFB, VCU_WREQ         作业杆 (protocol v1.1, garlic.15): WorkFb on change + 1 Hz while NavSta is
+///                                valid; the work request (SCRIPTING1) on change + 1 Hz while VCU_WORK_EN=1.
+///                                Own freshness (workFbValid / workReqValid). The status bar and the AB line
+///                                run (HHUABField) both read WorkFb from here.
 class HHUVcuStatus : public QObject
 {
     Q_OBJECT
@@ -27,6 +31,14 @@ class HHUVcuStatus : public QObject
     Q_PROPERTY(bool   batVValid    READ batVValid    NOTIFY batteryChanged)
     Q_PROPERTY(double soc          READ soc          NOTIFY batteryChanged)   ///< percent, NaN when not batteryValid
     Q_PROPERTY(double batV         READ batV         NOTIFY batteryChanged)   ///< volts, NaN until received
+    /// VCU_WORKFB arrived within the last 3 s
+    Q_PROPERTY(bool   workFbValid  READ workFbValid  NOTIFY workChanged)
+    /// 0 运输就绪, 1 升降杆中, 2 作业位就绪, 3 作业中, 4 升降超时故障; -1 until received
+    Q_PROPERTY(int    workFb       READ workFb       NOTIFY workChanged)
+    /// VCU_WREQ (work request echo) arrived within the last 3 s
+    Q_PROPERTY(bool   workReqValid READ workReqValid NOTIFY workChanged)
+    /// 1 = the vehicle sees the work request high; -1 until received
+    Q_PROPERTY(int    workReq      READ workReq      NOTIFY workChanged)
 
 public:
     explicit HHUVcuStatus(QObject *parent = nullptr);
@@ -40,6 +52,13 @@ public:
     bool   batVValid()    const { return _batteryValid && _batV > 0 && _batV <= 100; }
     double soc()          const { return _soc; }
     double batV()         const { return _batV; }
+    bool   workFbValid()  const { return _workFbValid; }
+    int    workFb()       const { return _workFb; }
+    bool   workReqValid() const { return _workReqValid; }
+    int    workReq()      const { return _workReq; }
+    /// ms since the last VCU_WORKFB / VCU_WREQ (-1 = never)
+    qint64 workFbAgeMs()  const { return _lastWorkFbRx.isValid() ? _lastWorkFbRx.elapsed() : -1; }
+    qint64 workReqAgeMs() const { return _lastWorkReqRx.isValid() ? _lastWorkReqRx.elapsed() : -1; }
 
     void handleMessage(const mavlink_message_t &message);
     /// Forget the previous vehicle's chassis (no "chassis link lost" alarm for a vehicle without VCU)
@@ -48,10 +67,12 @@ public:
 signals:
     void changed();
     void batteryChanged();
+    void workChanged();
 
 private:
     void _checkTimeout();
     void _clearBattery();
+    void _clearWork();
 
     bool   _valid = false;
     bool   _seen  = false;
@@ -63,7 +84,14 @@ private:
     double _soc  = qQNaN();
     double _batV = qQNaN();
 
+    bool   _workFbValid  = false;
+    int    _workFb       = -1;
+    bool   _workReqValid = false;
+    int    _workReq      = -1;
+
     QElapsedTimer _lastRx;
     QElapsedTimer _lastSocRx;
+    QElapsedTimer _lastWorkFbRx;
+    QElapsedTimer _lastWorkReqRx;
     QTimer        _timeoutTimer;
 };

@@ -179,6 +179,14 @@ Rectangle {
             batteryLow: status.batteryLow
             onClicked:  detail.openBattery(battItem)
         }
+        // 作业杆 (VCU_WORKFB), only while the vehicle reports it; 4 升降故障 stands out in red
+        HHUStatusItem {
+            visible:    root._statusShown && status.workFbShown
+            dotColor:   status.workFbColor(status.workFb)
+            text:       qsTr("Lift %1").arg(status.workFbText(status.workFb))
+            textColor:  status.workFb === 4 ? HHUStyle.red : HHUStyle.text
+            fill:       status.workFb === 4 ? HHUStyle.redLight : "transparent"
+        }
         Item {
             id:                 centerSlot
             Layout.fillWidth:   true

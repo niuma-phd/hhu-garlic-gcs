@@ -65,6 +65,29 @@ QtObject {
 
     readonly property bool  vcuFault:       vcuValid && hhuVcu.fault !== 0
 
+    /// 作业杆 WorkFb (VCU_WORKFB, protocol v1.1): shown while it arrives
+    readonly property bool  workFbShown:    !!vehicle && hhuVcu.workFbValid
+    readonly property int   workFb:         hhuVcu.workFb
+    function workFbText(value) {
+        switch (value) {
+        case 0:     return qsTr("Transport")
+        case 1:     return qsTr("Lifting")
+        case 2:     return qsTr("Work position ready")
+        case 3:     return qsTr("Seeding")
+        case 4:     return qsTr("Lift fault")
+        default:    return "—"
+        }
+    }
+    function workFbColor(value) {
+        switch (value) {
+        case 1:     return "#F2B705"
+        case 2:     return "#2F75C0"
+        case 3:     return "#2FB344"
+        case 4:     return "#E5484D"
+        default:    return "#8995A3"
+        }
+    }
+
     /// Why the vehicle cannot be driven now (开始作业 / 开到这里), most important first; [] when it can.
     /// Chassis link lost > chassis fault / not authorized / not ready > position
     function driveBlockers() {

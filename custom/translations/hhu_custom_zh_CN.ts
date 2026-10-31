@@ -1479,6 +1479,14 @@
       <translation>局域网</translation>
     </message>
     <message>
+      <source>Lift fault</source>
+      <translation>升降故障</translation>
+    </message>
+    <message>
+      <source>Lifting</source>
+      <translation>升降中</translation>
+    </message>
+    <message>
       <source>Manual</source>
       <translation>手动</translation>
     </message>
@@ -1511,6 +1519,10 @@
       <translation>返回中</translation>
     </message>
     <message>
+      <source>Seeding</source>
+      <translation>作业中</translation>
+    </message>
+    <message>
       <source>Serial</source>
       <translation>串口</translation>
     </message>
@@ -1527,8 +1539,16 @@
       <translation>请用遥控器切换到无人模式</translation>
     </message>
     <message>
+      <source>Transport</source>
+      <translation>运输</translation>
+    </message>
+    <message>
       <source>Wait for a good position, about 1-3 minutes</source>
       <translation>等定位变好，约 1–3 分钟</translation>
+    </message>
+    <message>
+      <source>Work position ready</source>
+      <translation>作业位就绪</translation>
     </message>
     <message>
       <source>Working</source>
@@ -1556,6 +1576,10 @@
     <message>
       <source>Fault</source>
       <translation>故障</translation>
+    </message>
+    <message>
+      <source>Lift %1</source>
+      <translation>作业杆 %1</translation>
     </message>
     <message>
       <source>Link lost</source>
@@ -1633,12 +1657,12 @@
   <context>
     <name>HHUStatusDetail</name>
     <message>
-      <source>%1 ms</source>
-      <translation>%1 毫秒</translation>
-    </message>
-    <message>
       <source>%1 V</source>
       <translation>%1 V</translation>
+    </message>
+    <message>
+      <source>%1 ms</source>
+      <translation>%1 毫秒</translation>
     </message>
     <message>
       <source>Alarm below</source>

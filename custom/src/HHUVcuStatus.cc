@@ -49,6 +49,18 @@ void HHUVcuStatus::handleMessage(const mavlink_message_t &message)
         _batV = value;
         emit batteryChanged();
         return;
+    } else if (name == QStringLiteral("VCU_WORKFB")) {
+        _lastWorkFbRx.restart();
+        _workFb = static_cast<int>(std::lround(value));
+        _workFbValid = true;
+        emit workChanged();
+        return;
+    } else if (name == QStringLiteral("VCU_WREQ")) {
+        _lastWorkReqRx.restart();
+        _workReq = value >= 0.5 ? 1 : 0;
+        _workReqValid = true;
+        emit workChanged();
+        return;
     } else {
         return; // VCU_V / VCU_W / VCU_CMD_*: engineer data, viewed in Mission Planner
     }
@@ -68,6 +80,23 @@ void HHUVcuStatus::_checkTimeout()
     if (_batteryValid && _lastSocRx.elapsed() > kTimeoutMs) {
         _clearBattery();
     }
+    // the last values are kept (the AB line run needs WorkFb also while it is stale)
+    if ((_workFbValid && _lastWorkFbRx.elapsed() > kTimeoutMs) || (_workReqValid && _lastWorkReqRx.elapsed() > kTimeoutMs)) {
+        _workFbValid = _workFbValid && _lastWorkFbRx.elapsed() <= kTimeoutMs;
+        _workReqValid = _workReqValid && _lastWorkReqRx.elapsed() <= kTimeoutMs;
+        emit workChanged();
+    }
+}
+
+void HHUVcuStatus::_clearWork()
+{
+    _workFbValid = false;
+    _workFb = -1;
+    _workReqValid = false;
+    _workReq = -1;
+    _lastWorkFbRx.invalidate();
+    _lastWorkReqRx.invalidate();
+    emit workChanged();
 }
 
 void HHUVcuStatus::_clearBattery()
@@ -88,4 +117,5 @@ void HHUVcuStatus::reset()
     _fault = 0;
     emit changed();
     _clearBattery();
+    _clearWork();
 }

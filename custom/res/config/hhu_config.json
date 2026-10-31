@@ -40,7 +40,35 @@
             "text": "遥控器链路丢失，车辆停车等待恢复"
         },
         {
-            "prefix": "VCU: CAN bridge loaded (Nav v1.0)",
+            "prefix": "VCU: RC start OK",
+            "text": "遥控器已启动"
+        },
+        {
+            "prefix": "VCU: lift moving, HOLD",
+            "text": "作业杆升降中，已停车"
+        },
+        {
+            "prefix": "VCU: lift moving",
+            "text": "作业杆升降中，暂不能行驶"
+        },
+        {
+            "prefix": "VCU: lift fault cleared",
+            "text": "作业杆故障已恢复"
+        },
+        {
+            "prefix": "VCU: lift fault, HOLD",
+            "text": "作业杆升降超时故障，已停车"
+        },
+        {
+            "prefix": "VCU: lift fault",
+            "text": "作业杆升降超时故障"
+        },
+        {
+            "prefix": "VCU: work request cleared",
+            "text": "底盘失去授权，作业请求已清除"
+        },
+        {
+            "prefix": "VCU: CAN bridge loaded",
             "text": "底盘通信桥已启动"
         },
         {
@@ -264,6 +292,14 @@
         {
             "prefix": "VCU: estop",
             "text": "底盘急停已触发"
+        },
+        {
+            "prefix": "VCU: lift moving",
+            "text": "作业杆升降中"
+        },
+        {
+            "prefix": "VCU: lift fault",
+            "text": "作业杆升降超时故障"
         },
         {
             "prefix": "VCU: fault",

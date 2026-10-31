@@ -11,6 +11,8 @@ Item {
     property bool   battery:    false
     property real   batteryPct: NaN
     property bool   batteryLow: false
+    property color  textColor:  HHUStyle.text
+    property color  fill:       "transparent"     ///< background of an item that must stand out
 
     signal clicked
 
@@ -24,7 +26,7 @@ Item {
         anchors.margins:    6 * HHUStyle.s
         anchors.leftMargin: 6 * HHUStyle.s + 1
         radius:             8 * HHUStyle.s
-        color:              mouse.containsMouse ? HHUStyle.grey2 : "transparent"
+        color:              mouse.containsMouse ? HHUStyle.grey2 : root.fill
     }
 
     RowLayout {
@@ -77,6 +79,7 @@ Item {
             text:       root.text
             size:       16
             bold:       true
+            color:      root.textColor
         }
         HHUText {
             visible:    root.battery
