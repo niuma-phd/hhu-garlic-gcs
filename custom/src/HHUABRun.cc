@@ -11,6 +11,10 @@
 #include "Fact.h"
 #include "Vehicle.h"
 
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QSettings>
+
 #include <cmath>
 
 QGC_LOGGING_CATEGORY(HHUABRunLog, "Custom.HHUABRun")
@@ -27,6 +31,9 @@ constexpr qint64 kSettleMs = 1500;          // at the alignment point: wait befo
 constexpr qint64 kEndHoldMs = 2500;         // end point reached: NAV_DELAY 1 s, then raise
 constexpr double kArriveDist = 1.5;         // m from the last point of the route
 constexpr qint64 kArriveStillMs = 3000;
+constexpr qint64 kClearGiveUpMs = 120000;   // stop waiting to remove the AB route (vehicle kept driving)
+const char      *kSettingsGroup = "HHU";
+const char      *kKeySignature = "abRouteSignature";
 constexpr int    kWfbTransport = 0;
 constexpr int    kWfbLifting = 1;
 constexpr int    kWfbWorking = 3;
@@ -43,6 +50,13 @@ HHUABRun::HHUABRun(HHUConfig *config, HHUABField *field, HHUVcuStatus *vcu, HHUW
     _tickTimer.setInterval(kTickMs);
     (void) connect(&_tickTimer, &QTimer::timeout, this, &HHUABRun::_tick);
     (void) connect(MultiVehicleManager::instance(), &MultiVehicleManager::activeVehicleChanged, this, &HHUABRun::_onVehicleChanged);
+
+    QSettings settings;
+    settings.beginGroup(kSettingsGroup);
+    _signature = QJsonDocument::fromJson(settings.value(kKeySignature).toByteArray()).array().toVariantList();
+    _clearTimer.setInterval(500);
+    (void) connect(&_clearTimer, &QTimer::timeout, this, &HHUABRun::_tryClear);
+    _watch(MultiVehicleManager::instance()->activeVehicle());
 }
 
 bool HHUABRun::workLink() const
@@ -73,6 +87,10 @@ void HHUABRun::_setPhase(Phase phase, Fault fault)
     _phase = phase;
     _fault = fault;
     _phaseTime.restart();
+    if (phase == Idle || phase == Done) {
+        // the line has ended: its route must not stay on the vehicle as a normal route
+        _requestClear();
+    }
     if (phase == Idle) {
         _tickTimer.stop();
         _line = -1;
@@ -130,6 +148,7 @@ int HHUABRun::start(int index)
         (void) connect(v, &Vehicle::coordinateChanged, this, &HHUABRun::_updateTrack);
         (void) connect(v, &Vehicle::armedChanged, this, &HHUABRun::_onArmed);
     }
+    _clearTimer.stop();
     _line = index;
     _field->setSelected(index);
     _resumeWork = false;
@@ -218,6 +237,7 @@ void HHUABRun::_upload(const QList<MissionItem *> &items)
         _setPhase(_phase == Aligning ? Idle : WorkFault, UploadFailed);
         return;
     }
+    _saveSignature(items);
     _uploading = true;
     _starting = true;
     (void) connect(manager, &PlanManager::sendComplete, this, &HHUABRun::_onSendComplete, Qt::SingleShotConnection);
@@ -446,6 +466,7 @@ void HHUABRun::_onArmed(bool armed)
 
 void HHUABRun::_onVehicleChanged(Vehicle *vehicle)
 {
+    _watch(vehicle);
     if (vehicle == _vehicleRef) {
         return;
     }
@@ -600,4 +621,110 @@ void HHUABRun::_tick()
     default:
         break;
     }
+}
+
+// ---- AB route left on the vehicle -----------------------------------------------------------------
+
+void HHUABRun::_saveSignature(const QList<MissionItem *> &items)
+{
+    QJsonArray sig;
+    for (const MissionItem *item : items) {
+        if (item->sequenceNumber() == 0) {
+            continue;   // home: the vehicle reports its own
+        }
+        sig.append(QJsonArray{ static_cast<int>(item->command()), item->param1(), item->param2(), item->param5(), item->param6() });
+    }
+    _signature = sig.toVariantList();
+    QSettings settings;
+    settings.beginGroup(kSettingsGroup);
+    settings.setValue(kKeySignature, QJsonDocument(sig).toJson(QJsonDocument::Compact));
+}
+
+bool HHUABRun::_matchesSignature(const QList<MissionItem *> &items) const
+{
+    if (_signature.isEmpty()) {
+        return false;
+    }
+    int i = 0;
+    for (const MissionItem *item : items) {
+        if (item->sequenceNumber() == 0) {
+            continue;
+        }
+        if (i >= _signature.size()) {
+            return false;
+        }
+        const QVariantList s = _signature[i++].toList();
+        if (s.size() != 5 || s[0].toInt() != static_cast<int>(item->command())
+                || std::fabs(s[1].toDouble() - item->param1()) > 1e-3 || std::fabs(s[2].toDouble() - item->param2()) > 1e-3
+                || std::fabs(s[3].toDouble() - item->param5()) > 2e-7 || std::fabs(s[4].toDouble() - item->param6()) > 2e-7) {
+            return false;
+        }
+    }
+    return i == _signature.size();
+}
+
+void HHUABRun::_watch(Vehicle *vehicle)
+{
+    if (vehicle == _watched) {
+        return;
+    }
+    if (_watched) {
+        (void) disconnect(_watched->missionManager(), nullptr, this, nullptr);
+    }
+    _watched = vehicle;
+    if (vehicle) {
+        MissionManager *manager = vehicle->missionManager();
+        // read at connection, written by anyone (手工航点 too), removed
+        (void) connect(manager, &PlanManager::newMissionItemsAvailable, this, &HHUABRun::_checkVehicleRoute);
+        (void) connect(manager, &PlanManager::sendComplete, this, &HHUABRun::_checkVehicleRoute);
+        (void) connect(manager, &PlanManager::removeAllComplete, this, &HHUABRun::_checkVehicleRoute);
+    }
+    _checkVehicleRoute();
+}
+
+void HHUABRun::_checkVehicleRoute()
+{
+    Vehicle *v = _watched.data();
+    const bool ab = v && !v->missionManager()->inProgress() && _matchesSignature(v->missionManager()->missionItems());
+    if (ab != _abRoute) {
+        _abRoute = ab;
+        qCDebug(HHUABRunLog) << "AB route on the vehicle:" << ab;
+        emit routeChanged();
+    }
+    // a left-over AB route (line ended, ground station restarted) while no line is driven
+    if (ab && _phase == Idle && !_uploading) {
+        _requestClear();
+    }
+}
+
+void HHUABRun::_requestClear()
+{
+    if (!_clearTimer.isActive()) {
+        _clearSince.restart();
+        _clearTimer.start();
+    }
+}
+
+void HHUABRun::_tryClear()
+{
+    Vehicle *v = _watched.data();
+    // never while a line is driven (对准 / 放杆 / 作业 / 收杆): only when it has ended
+    if (!v || (_phase != Idle && _phase != Done) || _uploading || _clearSince.elapsed() > kClearGiveUpMs) {
+        _clearTimer.stop();
+        return;
+    }
+    MissionManager *manager = v->missionManager();
+    if (manager->inProgress()) {
+        return;
+    }
+    if (!_matchesSignature(manager->missionItems())) {
+        _clearTimer.stop();     // not (any more) the AB route: e.g. a 手工航点 route was uploaded
+        return;
+    }
+    if (v->armed() && v->flightMode() != v->pauseFlightMode()) {
+        return;                 // only in HOLD or disarmed
+    }
+    qCDebug(HHUABRunLog) << "removing the AB route from the vehicle";
+    _clearTimer.stop();
+    manager->removeAll();
 }

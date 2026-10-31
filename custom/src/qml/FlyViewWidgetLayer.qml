@@ -61,7 +61,7 @@ Item {
         anchors.bottomMargin: _margin * 1.25
         missionController:  _missionController
         z:                  QGroundControl.zOrderWidgets
-        visible:            _hasRoute && !!_activeVehicle && !hhuABRun.active
+        visible:            _hasRoute && !!_activeVehicle && !hhuABRun.active && !hhuABRun.abRouteOnVehicle
     }
 
     // AB line run: status card (bottom left, in place of the progress card) and its dialogs

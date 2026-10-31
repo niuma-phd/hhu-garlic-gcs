@@ -4,6 +4,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtCore/QTimer>
+#include <QtCore/QVariantList>
 
 #include "HHUABGeometry.h"
 
@@ -23,7 +24,11 @@ class Vehicle;
 ///           when the NAV item before it starts, so the delay keeps the raise at the end; it is also the
 ///           fallback when the 4G link is lost
 ///   4 收杆  HOLD, DO_AUX_FUNCTION(300, low) again → wait for WorkFb 0 → line done, field saved
-/// abWorkLink = false skips 2 and 4 (no DO_AUX in the route). WorkFb / the request echo come from
+/// abWorkLink = false skips 2 and 4 (no DO_AUX in the route).
+/// The routes uploaded for a line are remembered (settings, kept over a restart). When the line has ended
+/// (完成, 结束本条, a fault ended) or a vehicle that still carries such a route is connected while no line
+/// is driven, the route is removed from the vehicle (only in HOLD or disarmed): the 作业 page must not
+/// offer it as a normal route (继续作业 would run it outside of the four parts). WorkFb / the request echo come from
 /// HHUVcuStatus (VCU_WORKFB / VCU_WREQ of vcu_can.lua garlic.15). Exposed to QML as hhuABRun.
 class HHUABRun : public QObject
 {
@@ -42,6 +47,8 @@ class HHUABRun : public QObject
     /// errors measured at the alignment point (shown in the 对准不合格 dialog)
     Q_PROPERTY(double alignXtrack     READ alignXtrack     NOTIFY changed)
     Q_PROPERTY(double alignHeadingErr READ alignHeadingErr NOTIFY changed)
+    /// the route on the vehicle is one of the AB routes uploaded here (not offered as 车上航线 / 继续作业)
+    Q_PROPERTY(bool   abRouteOnVehicle READ abRouteOnVehicle NOTIFY routeChanged)
 
 public:
     enum Phase {
@@ -94,6 +101,7 @@ public:
     double headingErr() const { return _headingErr; }
     double alignXtrack() const { return _alignXtrack; }
     double alignHeadingErr() const { return _alignHeadingErr; }
+    bool   abRouteOnVehicle() const { return _abRoute; }
 
     /// VCU_WORK_EN check of 开始AB作业 (only with abWorkLink): StartOk or WorkEnOff
     Q_INVOKABLE int checkWorkEnable() const;
@@ -121,6 +129,7 @@ public:
 signals:
     void changed();
     void trackChanged();
+    void routeChanged();
 
 private:
     void _setPhase(Phase phase, Fault fault = NoFault);
@@ -142,6 +151,12 @@ private:
     MissionItem *_speedItem(int seq, double speed);
     QList<MissionItem *> _alignMission();
     QList<MissionItem *> _workMission();
+    void _saveSignature(const QList<MissionItem *> &items);
+    bool _matchesSignature(const QList<MissionItem *> &items) const;
+    void _watch(Vehicle *vehicle);
+    void _checkVehicleRoute();
+    void _requestClear();
+    void _tryClear();
 
     HHUConfig    *_config = nullptr;
     HHUABField   *_field = nullptr;
@@ -170,4 +185,10 @@ private:
     QElapsedTimer _endTime;         ///< since the end point / the alignment point was reached
     QElapsedTimer _autoTime;        ///< since AUTO was requested
     QElapsedTimer _stillTime;       ///< standing at the last point (arrival when MISSION_ITEM_REACHED was missed)
+
+    QVariantList  _signature;       ///< last AB route uploaded: [cmd, p1, p2, lat, lon] per item after home
+    bool          _abRoute = false;
+    QPointer<Vehicle> _watched;     ///< vehicle whose route is compared with _signature
+    QTimer        _clearTimer;      ///< waits until the AB route can be removed (HOLD / disarmed, no transfer)
+    QElapsedTimer _clearSince;
 };

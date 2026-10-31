@@ -30,7 +30,8 @@ Item {
     readonly property var   _vehicle:           status.vehicle
     readonly property var   _missionController: planMasterController ? planMasterController.missionController : null
     readonly property int   _missionItems:      _missionController ? _missionController.visualItems.count - 1 : 0
-    readonly property bool  _missionAvailable:  _missionItems > 0
+    /// an AB route left on the vehicle is no route to start or continue here (AB lines run on their own)
+    readonly property bool  _missionAvailable:  _missionItems > 0 && !hhuABRun.abRouteOnVehicle
     readonly property bool  _paused:            status.inPause && status.armed
     readonly property bool  _idle:              !!_vehicle && !status.inAuto && !_paused && !status.inReturn && !status.inGuided
     /// an AB line is being driven: its parts drive the vehicle, not the 手工航点 buttons
@@ -299,7 +300,7 @@ Item {
 
             // 开始 / 继续作业: one entry, the text follows the state
             HHUButton {
-                visible:    status.canControl && (root._idle || root._paused) && !root._ab
+                visible:    status.canControl && (root._idle || (root._paused && root._missionAvailable)) && !root._ab
                 enabled:    root._paused ? (root._missionAvailable && !root._vcuFault) : root._startBlocked.length === 0
                 text:       root._paused ? qsTr("Continue work") : qsTr("Start work")
                 icon:       "play"
