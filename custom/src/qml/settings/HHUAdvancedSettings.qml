@@ -244,4 +244,22 @@ SettingsPage {
             wrapMode:               Text.WordWrap
         }
     }
+
+    // Our own engineers only: shown when hhu_config.json has "engineeringTuning": true
+    HHUButton {
+        Layout.alignment:   Qt.AlignLeft
+        visible:            hhuConfig.engineeringTuning
+        text:               qsTr("Engineering tuning ›")
+        kind:               "plain"
+        size:               16
+        onClicked:          mainWindow.showSettingsTool("Tuning")
+    }
+    HHUButton {
+        Layout.alignment:   Qt.AlignLeft
+        visible:            hhuConfig.engineeringTuning
+        text:               qsTr("Lua scripts ›")
+        kind:               "plain"
+        size:               16
+        onClicked:          mainWindow.showSettingsTool("Scripts")
+    }
 }

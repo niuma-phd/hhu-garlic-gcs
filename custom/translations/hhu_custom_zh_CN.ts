@@ -16,8 +16,16 @@
       <translation>连接</translation>
     </message>
     <message>
+      <source>Engineering tuning</source>
+      <translation>工程调参</translation>
+    </message>
+    <message>
       <source>General</source>
       <translation>通用</translation>
+    </message>
+    <message>
+      <source>Lua scripts</source>
+      <translation>Lua 脚本</translation>
     </message>
     <message>
       <source>Map</source>
@@ -1240,6 +1248,10 @@
       <translation>指令超时时间</translation>
     </message>
     <message>
+      <source>Engineering tuning ›</source>
+      <translation>工程调参 ›</translation>
+    </message>
+    <message>
       <source>Last 3 days</source>
       <translation>最近 3 天</translation>
     </message>
@@ -1258,6 +1270,10 @@
     <message>
       <source>Low battery alarm below</source>
       <translation>低电量告警阈值</translation>
+    </message>
+    <message>
+      <source>Lua scripts ›</source>
+      <translation>Lua 脚本 ›</translation>
     </message>
     <message>
       <source>Off</source>
@@ -1679,6 +1695,228 @@
     <message>
       <source>waypoints</source>
       <translation>个航点</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUScripts</name>
+    <message>
+      <source>%1 deleted, saved as %2</source>
+      <translation>已删除 %1，备份为 %2</translation>
+    </message>
+    <message>
+      <source>%1 replaced (%2 bytes), old file saved as %3. Restart the scripts to run it.</source>
+      <translation>已替换 %1（%2 字节），原文件已备份为 %3。重启脚本后生效。</translation>
+    </message>
+    <message>
+      <source>%1 uploaded (%2 bytes). Restart the scripts to run it.</source>
+      <translation>已上传 %1（%2 字节）。重启脚本后生效。</translation>
+    </message>
+    <message>
+      <source>%1: the file read back differs from the upload, the old script is unchanged</source>
+      <translation>%1：回读内容和上传的不一致，原脚本未改动</translation>
+    </message>
+    <message>
+      <source>Cannot create %1</source>
+      <translation>无法创建 %1</translation>
+    </message>
+    <message>
+      <source>Cannot upload %1 (empty, missing or larger than 512 KB)</source>
+      <translation>不能上传 %1（文件为空、不存在或大于 512 KB）</translation>
+    </message>
+    <message>
+      <source>Checking %1</source>
+      <translation>核对 %1</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Delete failed: %1</source>
+      <translation>删除失败：%1</translation>
+    </message>
+    <message>
+      <source>Deleting %1</source>
+      <translation>删除 %1</translation>
+    </message>
+    <message>
+      <source>Disarm the vehicle to change scripts</source>
+      <translation>车辆上锁后才能改脚本</translation>
+    </message>
+    <message>
+      <source>Download failed: %1</source>
+      <translation>下载失败：%1</translation>
+    </message>
+    <message>
+      <source>Downloading %1</source>
+      <translation>下载 %1</translation>
+    </message>
+    <message>
+      <source>File names may only contain letters, digits, _ . -</source>
+      <translation>文件名只能用字母、数字和 _ . -</translation>
+    </message>
+    <message>
+      <source>File transfer busy, try again</source>
+      <translation>飞控文件传输忙，请稍后再试</translation>
+    </message>
+    <message>
+      <source>Listing</source>
+      <translation>读取目录</translation>
+    </message>
+    <message>
+      <source>No answer from the vehicle</source>
+      <translation>车辆无响应</translation>
+    </message>
+    <message>
+      <source>No scripts directory on the autopilot (SCR_ENABLE = 1 and a reboot create it)</source>
+      <translation>飞控上没有脚本目录（SCR_ENABLE 设为 1 并重启飞控后会创建）</translation>
+    </message>
+    <message>
+      <source>OK</source>
+      <translation>成功</translation>
+    </message>
+    <message>
+      <source>Only .lua files</source>
+      <translation>只能上传 .lua 文件</translation>
+    </message>
+    <message>
+      <source>Read-only connection</source>
+      <translation>只读连接</translation>
+    </message>
+    <message>
+      <source>Rename failed: %1</source>
+      <translation>改名失败：%1</translation>
+    </message>
+    <message>
+      <source>Renaming %1</source>
+      <translation>改名 %1</translation>
+    </message>
+    <message>
+      <source>Replace</source>
+      <translation>替换</translation>
+    </message>
+    <message>
+      <source>Restart scripts</source>
+      <translation>重启脚本</translation>
+    </message>
+    <message>
+      <source>Saved as %1</source>
+      <translation>已保存到 %1</translation>
+    </message>
+    <message>
+      <source>Scripts restarted</source>
+      <translation>已重启脚本</translation>
+    </message>
+    <message>
+      <source>Sent</source>
+      <translation>已发送</translation>
+    </message>
+    <message>
+      <source>Upload</source>
+      <translation>上传</translation>
+    </message>
+    <message>
+      <source>Upload failed: %1</source>
+      <translation>上传失败：%1</translation>
+    </message>
+    <message>
+      <source>Uploading %1</source>
+      <translation>上传 %1</translation>
+    </message>
+    <message>
+      <source>no answer from the vehicle</source>
+      <translation>车辆无响应</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUScriptsSettings</name>
+    <message>
+      <source>%1 B</source>
+      <translation>%1 字节</translation>
+    </message>
+    <message>
+      <source>All files (*)</source>
+      <translation>所有文件 (*)</translation>
+    </message>
+    <message>
+      <source>Back up</source>
+      <translation>备份</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Delete %1 on %2? It is saved to the backup folder first.</source>
+      <translation>删除 %2 上的 %1？删除前会先备份到本机。</translation>
+    </message>
+    <message>
+      <source>Delete script</source>
+      <translation>删除脚本</translation>
+    </message>
+    <message>
+      <source>Lua scripts (*.lua)</source>
+      <translation>Lua 脚本 (*.lua)</translation>
+    </message>
+    <message>
+      <source>Not connected</source>
+      <translation>未连接</translation>
+    </message>
+    <message>
+      <source>OK</source>
+      <translation>确定</translation>
+    </message>
+    <message>
+      <source>Open backup folder</source>
+      <translation>打开备份文件夹</translation>
+    </message>
+    <message>
+      <source>Refresh</source>
+      <translation>刷新</translation>
+    </message>
+    <message>
+      <source>Replace</source>
+      <translation>替换</translation>
+    </message>
+    <message>
+      <source>Replace %1</source>
+      <translation>替换 %1</translation>
+    </message>
+    <message>
+      <source>Replace %1 on %2 with %3?</source>
+      <translation>用 %3 替换 %2 上的 %1？</translation>
+    </message>
+    <message>
+      <source>Replace script</source>
+      <translation>替换脚本</translation>
+    </message>
+    <message>
+      <source>Replace…</source>
+      <translation>替换…</translation>
+    </message>
+    <message>
+      <source>Restart</source>
+      <translation>重启</translation>
+    </message>
+    <message>
+      <source>Restart scripts</source>
+      <translation>重启脚本</translation>
+    </message>
+    <message>
+      <source>Restart the scripts of %1 now?</source>
+      <translation>现在重启 %1 的脚本？</translation>
+    </message>
+    <message>
+      <source>Scripts changed, restart the scripts to run them</source>
+      <translation>脚本已更改，重启脚本后生效</translation>
+    </message>
+    <message>
+      <source>Upload script</source>
+      <translation>上传脚本</translation>
+    </message>
+    <message>
+      <source>Upload script…</source>
+      <translation>上传脚本…</translation>
     </message>
   </context>
   <context>
@@ -2176,6 +2414,168 @@
     <message>
       <source>Allowed %1 – %2 %3, set to %4</source>
       <translation>可输入 %1–%2 %3，已改为 %4</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUTuning</name>
+    <message>
+      <source> (%1 unconfirmed)</source>
+      <translation>（其中未确认 %1 项）</translation>
+    </message>
+    <message>
+      <source>%1 parameters taken from %2</source>
+      <translation>已从 %2 填入 %1 项</translation>
+    </message>
+    <message>
+      <source>%1 succeeded, %2 failed</source>
+      <translation>成功 %1 项，失败 %2 项</translation>
+    </message>
+    <message>
+      <source>, %1 not written</source>
+      <translation>，未写 %1 项</translation>
+    </message>
+    <message>
+      <source>? Unconfirmed</source>
+      <translation>? 未确认</translation>
+    </message>
+    <message>
+      <source>Cannot read %1</source>
+      <translation>无法读取 %1</translation>
+    </message>
+    <message>
+      <source>Cannot write while driving</source>
+      <translation>行驶中不能写</translation>
+    </message>
+    <message>
+      <source>Connection lost: </source>
+      <translation>连接断开：</translation>
+    </message>
+    <message>
+      <source>Not read</source>
+      <translation>未读到</translation>
+    </message>
+    <message>
+      <source>Read-only connection</source>
+      <translation>只读连接，不能写</translation>
+    </message>
+    <message>
+      <source>Snapshot not saved, nothing written: %1</source>
+      <translation>快照保存失败，未写入：%1</translation>
+    </message>
+    <message>
+      <source>Writing</source>
+      <translation>写入中</translation>
+    </message>
+    <message>
+      <source>cannot create %1</source>
+      <translation>无法创建 %1</translation>
+    </message>
+    <message>
+      <source>✓ Written</source>
+      <translation>✓ 已写入</translation>
+    </message>
+    <message>
+      <source>✗ Failed (error %1)</source>
+      <translation>✗ 失败（错误 %1）</translation>
+    </message>
+    <message>
+      <source>✗ Failed (read back %1)</source>
+      <translation>✗ 失败（回读 %1）</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUTuningSettings</name>
+    <message>
+      <source>%1 – %2</source>
+      <translation>%1 – %2</translation>
+    </message>
+    <message>
+      <source>All files (*)</source>
+      <translation>所有文件 (*)</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
+      <source>Current</source>
+      <translation>当前值</translation>
+    </message>
+    <message>
+      <source>Discard changes</source>
+      <translation>放弃修改</translation>
+    </message>
+    <message>
+      <source>Import .param</source>
+      <translation>导入 .param</translation>
+    </message>
+    <message>
+      <source>New value</source>
+      <translation>新值</translation>
+    </message>
+    <message>
+      <source>No snapshots</source>
+      <translation>没有快照</translation>
+    </message>
+    <message>
+      <source>No such parameter</source>
+      <translation>无此参数</translation>
+    </message>
+    <message>
+      <source>Not connected</source>
+      <translation>未连接</translation>
+    </message>
+    <message>
+      <source>Parameter</source>
+      <translation>参数</translation>
+    </message>
+    <message>
+      <source>Parameter files (*.param *.params *.txt)</source>
+      <translation>参数文件 (*.param *.params *.txt)</translation>
+    </message>
+    <message>
+      <source>Read</source>
+      <translation>读取</translation>
+    </message>
+    <message>
+      <source>Reading…</source>
+      <translation>读取中…</translation>
+    </message>
+    <message>
+      <source>Reboot</source>
+      <translation>重启</translation>
+    </message>
+    <message>
+      <source>Reboot autopilot</source>
+      <translation>重启飞控</translation>
+    </message>
+    <message>
+      <source>Reboot the autopilot of %1 now?</source>
+      <translation>现在重启 %1 的飞控？</translation>
+    </message>
+    <message>
+      <source>Restore snapshot</source>
+      <translation>恢复快照</translation>
+    </message>
+    <message>
+      <source>Some parameters take effect after the autopilot reboots</source>
+      <translation>有参数需重启飞控生效</translation>
+    </message>
+    <message>
+      <source>Status</source>
+      <translation>状态</translation>
+    </message>
+    <message>
+      <source>To write</source>
+      <translation>待写入</translation>
+    </message>
+    <message>
+      <source>Write (%1)</source>
+      <translation>写入（%1 项）</translation>
+    </message>
+    <message>
+      <source>Writing…</source>
+      <translation>写入中…</translation>
     </message>
   </context>
   <context>

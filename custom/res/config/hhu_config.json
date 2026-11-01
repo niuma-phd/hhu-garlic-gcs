@@ -381,5 +381,6 @@
         "abRequireRtkFixed": true,
         "abSpeedTransport": 1.39,
         "abSpeedWork": 0.55
-    }
+    },
+    "engineeringTuning": false
 }

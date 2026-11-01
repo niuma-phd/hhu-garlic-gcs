@@ -17,6 +17,8 @@
 #include "HHUNtrip.h"
 #include "HHUService.h"
 #include "HHUWorkLog.h"
+#include "HHUTuning.h"
+#include "HHUScripts.h"
 #include "LogManagerSettings.h"
 #include "MavlinkSettings.h"
 #include "HHULinkMonitor.h"
@@ -311,6 +313,9 @@ bool CustomPlugin::mavlinkMessage(Vehicle *vehicle, LinkInterface *link, const m
 {
     _linkMonitor->messageReceived(vehicle, link, message);
     _vcuStatus->handleMessage(message);
+    if (_tuning) {
+        _tuning->handleMessage(vehicle, message);
+    }
     if (message.msgid == MAVLINK_MSG_ID_MISSION_ITEM_REACHED) {
         _workLog->itemReached(vehicle, mavlink_msg_mission_item_reached_get_seq(&message));
         _abRun->itemReached(vehicle, mavlink_msg_mission_item_reached_get_seq(&message));
@@ -443,6 +448,10 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
     if (!_ntrip) {
         _ntrip = new HHUNtrip(_hhuConfig, this);
         _service = new HHUService(_hhuConfig, _link4G, this);
+        if (_hhuConfig->engineeringTuning()) {
+            _tuning = new HHUTuning(_link4G, this);
+            _scripts = new HHUScripts(_link4G, _tuning, this);
+        }
         // RTK corrections: from this computer on serial / UDP / TCP / Bluetooth, from the server on 4G
         (void) connect(_link4G, &HHU4GLink::stateChanged, this, [this]() { _ntrip->applyForwarding(!_link4G->active()); });
         // TURN_RADIUS for the route check (急弯标红), kept for offline planning
@@ -502,6 +511,8 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
     }
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuNtrip"), _ntrip);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuService"), _service);
+    _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuTuning"), _tuning);
+    _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuScripts"), _scripts);
 
     _urlInterceptor = new CustomOverrideInterceptor();
     _qmlEngine->addUrlInterceptor(_urlInterceptor);

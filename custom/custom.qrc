@@ -14,6 +14,8 @@
         <file alias="QGroundControl/AppSettings/NTRIPSettings.qml">src/qml/settings/NTRIPSettings.qml</file>
         <file alias="QGroundControl/AppSettings/HHUAdvancedSettings.qml">src/qml/settings/HHUAdvancedSettings.qml</file>
         <file alias="QGroundControl/AppSettings/HHUAboutSettings.qml">src/qml/settings/HHUAboutSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/HHUTuningSettings.qml">src/qml/settings/HHUTuningSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/HHUScriptsSettings.qml">src/qml/settings/HHUScriptsSettings.qml</file>
         <file alias="QGroundControl/AppSettings/LinkConfigurationManager.qml">src/qml/generated/LinkConfigurationManager.qml</file>
         <file alias="QGroundControl/PlanView/PlanView.qml">src/qml/generated/PlanView.qml</file>
         <file alias="QGroundControl/PlanView/SimpleItemEditor.qml">src/qml/generated/SimpleItemEditor.qml</file>
@@ -55,6 +57,7 @@
         <file alias="i18n/hhu_source_zh_CN.qm">res/i18n/hhu_source_zh_CN.qm</file>
         <file alias="i18n/hhu_json_zh_CN.qm">res/i18n/hhu_json_zh_CN.qm</file>
         <file alias="config/hhu_config.json">res/config/hhu_config.json</file>
+        <file alias="config/hhu_tuning_params.json">res/config/hhu_tuning_params.json</file>
         <file alias="config/relay_ca.crt">res/config/relay_ca.crt</file>
         <file alias="sounds/alarm.wav">res/sounds/alarm.wav</file>
         <file alias="icons/arrow.svg">res/icons/ui/arrow.svg</file>

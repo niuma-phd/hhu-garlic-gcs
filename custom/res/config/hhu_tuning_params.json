@@ -1,0 +1,84 @@
+{
+    "_readme": [
+        "工程调参页的参数清单（设置 → 关于 → 售后设置 → 工程调参，hhu_config.json 的 engineeringTuning 为 true 时显示）。",
+        "位置：安装目录下的 config/hhu_tuning_params.json，改完重启地面站生效；文件缺失或格式错误时使用程序内置的清单。",
+        "每项：name 参数原名；min / max 允许范围（超出不能写入）；step 加减按钮的步长，小数位数也按它显示；integer 只能填整数；reboot 写入后要重启飞控才生效。"
+    ],
+    "groups": [
+        {
+            "name": "车速",
+            "params": [
+                { "name": "WP_SPEED", "min": 0.1, "max": 1.38, "step": 0.05 },
+                { "name": "SPEED_MAX", "min": 0.1, "max": 1.38, "step": 0.05 },
+                { "name": "VCU_V_MAX", "min": 0.1, "max": 1.38, "step": 0.05 },
+                { "name": "WP_ACCEL", "min": 0, "max": 2, "step": 0.05 },
+                { "name": "WP_JERK", "min": 0, "max": 5, "step": 0.1 },
+                { "name": "ATC_ACCEL_MAX", "min": 0.1, "max": 2, "step": 0.05 },
+                { "name": "ATC_DECEL_MAX", "min": 0, "max": 2, "step": 0.05 }
+            ]
+        },
+        {
+            "name": "到点",
+            "params": [
+                { "name": "WP_RADIUS", "min": 0.2, "max": 5, "step": 0.1 },
+                { "name": "WP_OVERSHOOT", "min": 0, "max": 10, "step": 0.1 }
+            ]
+        },
+        {
+            "name": "跟线",
+            "params": [
+                { "name": "PSC_POS_P", "min": 0, "max": 5, "step": 0.05 },
+                { "name": "PSC_VEL_P", "min": 0, "max": 5, "step": 0.05 },
+                { "name": "PSC_VEL_I", "min": 0, "max": 2, "step": 0.01 },
+                { "name": "PSC_VEL_D", "min": 0, "max": 1, "step": 0.01 },
+                { "name": "PSC_VEL_IMAX", "min": 0, "max": 2, "step": 0.05 }
+            ]
+        },
+        {
+            "name": "转向",
+            "params": [
+                { "name": "TURN_RADIUS", "min": 0.5, "max": 20, "step": 0.1 },
+                { "name": "ATC_STR_ACC_MAX", "min": 0, "max": 200, "step": 0.5 },
+                { "name": "ATC_STR_DEC_MAX", "min": 0, "max": 200, "step": 0.5 },
+                { "name": "ATC_STR_RAT_MAX", "min": 1, "max": 180, "step": 1 },
+                { "name": "ATC_TURN_MAX_G", "min": 0.05, "max": 1, "step": 0.01 }
+            ]
+        },
+        {
+            "name": "保护",
+            "params": [
+                { "name": "CRASH_TIMEOUT", "min": 1, "max": 30, "step": 1 },
+                { "name": "CRASH_VEL_MIN", "min": 0.01, "max": 0.5, "step": 0.01 },
+                { "name": "CRASH_THR_MIN", "min": 0, "max": 100, "step": 1 },
+                { "name": "FS_CRASH_CHECK", "min": 0, "max": 2, "step": 1, "integer": true },
+                { "name": "VCU_RTK_REQ", "min": 0, "max": 2, "step": 1, "integer": true },
+                { "name": "VCU_RTK_TMO", "min": 500, "max": 30000, "step": 500 },
+                { "name": "VCU_FB_TMO", "min": 0, "max": 2000, "step": 50 },
+                { "name": "FS_GCS_ENABLE", "min": 0, "max": 2, "step": 1, "integer": true },
+                { "name": "FS_GCS_TIMEOUT", "min": 1, "max": 60, "step": 1 }
+            ]
+        },
+        {
+            "name": "车辆",
+            "params": [
+                { "name": "VCU_W_BASE", "min": 0.3, "max": 3, "step": 0.01 },
+                { "name": "VCU_WORK_EN", "min": 0, "max": 1, "step": 1, "integer": true },
+                { "name": "GPS1_POS_X", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "GPS1_POS_Y", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "GPS1_POS_Z", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "GPS1_MB_OFS_X", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "GPS1_MB_OFS_Y", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "GPS1_MB_OFS_Z", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "INS_POS1_X", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "INS_POS1_Y", "min": -3, "max": 3, "step": 0.001, "reboot": true },
+                { "name": "INS_POS1_Z", "min": -3, "max": 3, "step": 0.001, "reboot": true }
+            ]
+        },
+        {
+            "name": "调试",
+            "params": [
+                { "name": "VCU_DBG_HZ", "min": 0, "max": 10, "step": 1 }
+            ]
+        }
+    ]
+}

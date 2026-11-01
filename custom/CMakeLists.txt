@@ -6,7 +6,7 @@
 message(STATUS "QGC: Adding HHU Custom Plugin")
 
 # Product version (检查更新 compares against it; sent in the 4G login)
-set(HHU_APP_VERSION "1.2.9")
+set(HHU_APP_VERSION "1.3.0")
 
 # ============================================================================
 # Custom Resources
@@ -43,9 +43,13 @@ qt_add_qml_module(HHUControlsModule
 # executable as config/hhu_config.json; a copy is also built into the program (custom.qrc)
 # ============================================================================
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_config.json DESTINATION ${CMAKE_BINARY_DIR}/Release/config)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_config.json DESTINATION ${CMAKE_BINARY_DIR}/Debug/config)
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_config.json DESTINATION ${CMAKE_INSTALL_BINDIR}/config)
+set(HHU_CONFIG_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_config.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/res/config/hhu_tuning_params.json   # 工程调参 parameter list
+)
+file(COPY ${HHU_CONFIG_FILES} DESTINATION ${CMAKE_BINARY_DIR}/Release/config)
+file(COPY ${HHU_CONFIG_FILES} DESTINATION ${CMAKE_BINARY_DIR}/Debug/config)
+install(FILES ${HHU_CONFIG_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR}/config)
 
 # UI fonts (HarmonyOS Sans SC, Barlow) next to the executable as fonts/ — loaded by CustomPlugin.
 # HarmonyOS Sans: bundled unmodified with its license as the license requires (no subsetting).
@@ -85,6 +89,10 @@ set(CUSTOM_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUService.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUSettings.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUSettings.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUScripts.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUScripts.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUTuning.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUTuning.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUVcuStatus.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUVcuStatus.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUWorkLog.cc

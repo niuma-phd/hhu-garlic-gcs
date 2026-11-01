@@ -28,6 +28,8 @@ class HHUConfig : public QObject
     Q_PROPERTY(int    abLiftTimeout  READ abLiftTimeout  CONSTANT)   ///< s
     Q_PROPERTY(double abAlignXtrack  READ abAlignXtrack  CONSTANT)   ///< m
     Q_PROPERTY(double abAlignHeading READ abAlignHeading CONSTANT)   ///< deg
+    /// engineeringTuning: 工程调参 page under 售后设置, for our own engineers only (off in customer builds)
+    Q_PROPERTY(bool engineeringTuning READ engineeringTuning CONSTANT)
 
 public:
     explicit HHUConfig(QObject *parent = nullptr);
@@ -35,6 +37,7 @@ public:
     QString source() const { return _source; }
     static QString buildDate();
     bool featureReturnHome() const { return _featureReturnHome; }
+    bool engineeringTuning() const { return _engineeringTuning; }
 
     /// AB line run settings (abLine in hhu_config.json, not shown in the UI)
     struct ABLine {
@@ -86,4 +89,5 @@ private:
     QString         _serverBaseUrl;
     bool            _featureReturnHome = false;
     ABLine          _abLine;
+    bool            _engineeringTuning = false;
 };

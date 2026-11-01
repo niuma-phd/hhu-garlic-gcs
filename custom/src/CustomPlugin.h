@@ -15,6 +15,8 @@ class HHUConfig;
 class HHUNtrip;
 class HHUService;
 class HHUWorkLog;
+class HHUTuning;
+class HHUScripts;
 class HHULinkMonitor;
 class HHUSettings;
 class HHUVcuStatus;
@@ -125,6 +127,8 @@ private:
     HHUWorkLog *_workLog = nullptr;
     HHUABField *_abField = nullptr;
     HHUABRun *_abRun = nullptr;
+    HHUTuning *_tuning = nullptr;
+    HHUScripts *_scripts = nullptr;
     HHUNtrip *_ntrip = nullptr;
     HHUService *_service = nullptr;
     QQmlApplicationEngine *_qmlEngine = nullptr;
