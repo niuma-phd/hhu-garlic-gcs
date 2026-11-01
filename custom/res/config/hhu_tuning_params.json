@@ -54,6 +54,7 @@
                 { "name": "VCU_RTK_REQ", "min": 0, "max": 2, "step": 1, "integer": true },
                 { "name": "VCU_RTK_TMO", "min": 500, "max": 30000, "step": 500 },
                 { "name": "VCU_FB_TMO", "min": 0, "max": 2000, "step": 50 },
+                { "name": "VCU_FB_CHK", "min": 0, "max": 1, "step": 1, "integer": true },
                 { "name": "FS_GCS_ENABLE", "min": 0, "max": 2, "step": 1, "integer": true },
                 { "name": "FS_GCS_TIMEOUT", "min": 1, "max": 60, "step": 1 }
             ]
@@ -63,6 +64,8 @@
             "params": [
                 { "name": "VCU_W_BASE", "min": 0.3, "max": 3, "step": 0.01 },
                 { "name": "VCU_WORK_EN", "min": 0, "max": 1, "step": 1, "integer": true },
+                { "name": "VCU_REV", "min": 0, "max": 1, "step": 1, "integer": true },
+                { "name": "VCU_VREF_MIN", "min": 0.05, "max": 1, "step": 0.05 },
                 { "name": "GPS1_POS_X", "min": -3, "max": 3, "step": 0.001, "reboot": true },
                 { "name": "GPS1_POS_Y", "min": -3, "max": 3, "step": 0.001, "reboot": true },
                 { "name": "GPS1_POS_Z", "min": -3, "max": 3, "step": 0.001, "reboot": true },
@@ -77,7 +80,8 @@
         {
             "name": "调试",
             "params": [
-                { "name": "VCU_DBG_HZ", "min": 0, "max": 10, "step": 1 }
+                { "name": "VCU_DBG_HZ", "min": 0, "max": 10, "step": 1 },
+                { "name": "VCU_ENABLE", "min": 0, "max": 1, "step": 1, "integer": true }
             ]
         }
     ]
