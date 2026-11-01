@@ -12,6 +12,10 @@
       <translation>售后设置</translation>
     </message>
     <message>
+      <source>Autopilot logs</source>
+      <translation>飞控日志</translation>
+    </message>
+    <message>
       <source>Connection</source>
       <translation>连接</translation>
     </message>
@@ -1244,6 +1248,10 @@
       <translation>自动：底盘上报电量时显示。关闭：不显示电量，也不提示电量低。</translation>
     </message>
     <message>
+      <source>Autopilot logs ›</source>
+      <translation>飞控日志 ›</translation>
+    </message>
+    <message>
       <source>Battery display</source>
       <translation>电量显示</translation>
     </message>
@@ -1391,12 +1399,24 @@
       <translation>底盘故障：%1</translation>
     </message>
     <message>
+      <source>Chassis system fault: %1</source>
+      <translation>底盘系统故障：%1</translation>
+    </message>
+    <message>
       <source>Check the chassis cable and power.</source>
       <translation>检查底盘连线和电源。</translation>
     </message>
     <message>
       <source>Clear the fault on the vehicle, then tap "Continue".</source>
       <translation>排除故障后点“继续”。</translation>
+    </message>
+    <message>
+      <source>Does not stop the vehicle.</source>
+      <translation>不影响行驶。</translation>
+    </message>
+    <message>
+      <source>Drive %1 fault 0x%2</source>
+      <translation>驱动器 %1 故障 0x%2</translation>
     </message>
     <message>
       <source>Last position</source>
@@ -1421,6 +1441,10 @@
     <message>
       <source>Position poor while working</source>
       <translation>作业中定位变差</translation>
+    </message>
+    <message>
+      <source>Reported by the chassis; whether it drives is decided by the VCU.</source>
+      <translation>底盘上报，能不能走由底盘自己决定。</translation>
     </message>
     <message>
       <source>The vehicle is still working. To stop it, press the emergency stop on the vehicle.</source>
@@ -1456,6 +1480,93 @@
     <message>
       <source>Cancel</source>
       <translation>取消</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUFlightLogs</name>
+    <message>
+      <source>%1 logs deleted on the vehicle</source>
+      <translation>已删除车上 %1 个日志</translation>
+    </message>
+    <message>
+      <source>%1 logs downloaded (%2, %3/s)</source>
+      <translation>已下载 %1 个日志（%2，%3/s）</translation>
+    </message>
+    <message>
+      <source>%1/s · %2:%3 left</source>
+      <translation>%1/s · 剩余 %2:%3</translation>
+    </message>
+    <message>
+      <source>%1: delete failed (%2), %3 deleted</source>
+      <translation>%1 删除失败（%2），已删除 %3 个</translation>
+    </message>
+    <message>
+      <source>%1: download failed (%2), %3 of %4 logs downloaded</source>
+      <translation>%1 下载失败（%2），已下载 %3 / %4 个</translation>
+    </message>
+    <message>
+      <source>%1: size %2 instead of %3 bytes, not kept</source>
+      <translation>%1 大小 %2 字节，应为 %3 字节，未保存</translation>
+    </message>
+    <message>
+      <source>All logs are downloaded</source>
+      <translation>日志都已下载</translation>
+    </message>
+    <message>
+      <source>Cancelled, %1 of %2 logs downloaded</source>
+      <translation>已取消，已下载 %1 / %2 个</translation>
+    </message>
+    <message>
+      <source>Cannot create %1</source>
+      <translation>无法创建 %1</translation>
+    </message>
+    <message>
+      <source>Cannot write %1</source>
+      <translation>无法写入 %1</translation>
+    </message>
+    <message>
+      <source>Connection lost, %1 of %2 logs downloaded</source>
+      <translation>连接中断，已下载 %1 / %2 个</translation>
+    </message>
+    <message>
+      <source>Deleting %1</source>
+      <translation>删除 %1</translation>
+    </message>
+    <message>
+      <source>Disarm the vehicle to download logs</source>
+      <translation>请先让车上锁再下载日志</translation>
+    </message>
+    <message>
+      <source>Downloading %1</source>
+      <translation>下载 %1</translation>
+    </message>
+    <message>
+      <source>File transfer busy, try again</source>
+      <translation>文件传输忙，请重试</translation>
+    </message>
+    <message>
+      <source>Listing</source>
+      <translation>读取列表</translation>
+    </message>
+    <message>
+      <source>No answer from the vehicle</source>
+      <translation>车辆没有应答</translation>
+    </message>
+    <message>
+      <source>No log directory on the autopilot (no SD card?)</source>
+      <translation>飞控上没有日志目录（没插 SD 卡？）</translation>
+    </message>
+    <message>
+      <source>Nothing to delete: only downloaded logs, never the newest one</source>
+      <translation>没有可删的：只删已下载的日志，最新一个不删</translation>
+    </message>
+    <message>
+      <source>Read-only connection</source>
+      <translation>只读连接</translation>
+    </message>
+    <message>
+      <source>no answer from the vehicle</source>
+      <translation>车辆没有应答</translation>
     </message>
   </context>
   <context>
@@ -1499,6 +1610,73 @@
     <message>
       <source>The vehicle did not carry out "%1". Check the vehicle state and try again.</source>
       <translation>车辆没有执行“%1”，请检查车辆状态后重试。</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHULogsSettings</name>
+    <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
+      <source>Delete</source>
+      <translation>删除</translation>
+    </message>
+    <message>
+      <source>Delete all logs on %2 that are downloaded?</source>
+      <translation>删除 %2 上所有已下载的日志？</translation>
+    </message>
+    <message>
+      <source>Delete downloaded on vehicle…</source>
+      <translation>删除车上已下载的…</translation>
+    </message>
+    <message>
+      <source>Delete logs on the vehicle</source>
+      <translation>删除车上日志</translation>
+    </message>
+    <message>
+      <source>Delete the %1 selected logs on %2 that are downloaded?</source>
+      <translation>删除 %2 上选中的、已下载的 %1 个日志？</translation>
+    </message>
+    <message>
+      <source>Download all new (%1, %2)</source>
+      <translation>下载全部未下载的（%1 个，%2）</translation>
+    </message>
+    <message>
+      <source>Download selected (%1)</source>
+      <translation>下载选中的（%1）</translation>
+    </message>
+    <message>
+      <source>Downloaded</source>
+      <translation>已下载</translation>
+    </message>
+    <message>
+      <source>Logs not downloaded and the newest log stay on the vehicle.</source>
+      <translation>没下载的日志和最新一个日志会留在车上。</translation>
+    </message>
+    <message>
+      <source>Newest</source>
+      <translation>最新</translation>
+    </message>
+    <message>
+      <source>No logs on the vehicle</source>
+      <translation>车上没有日志</translation>
+    </message>
+    <message>
+      <source>Not connected</source>
+      <translation>未连接</translation>
+    </message>
+    <message>
+      <source>Open folder</source>
+      <translation>打开文件夹</translation>
+    </message>
+    <message>
+      <source>Refresh</source>
+      <translation>刷新</translation>
+    </message>
+    <message>
+      <source>Saved in %1. Over 4G the logs count against the data plan; many or large logs are faster from the SD card.</source>
+      <translation>保存在 %1。走 4G 会消耗流量；日志多或很大时，拔 SD 卡读更快。</translation>
     </message>
   </context>
   <context>

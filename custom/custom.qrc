@@ -16,6 +16,7 @@
         <file alias="QGroundControl/AppSettings/HHUAboutSettings.qml">src/qml/settings/HHUAboutSettings.qml</file>
         <file alias="QGroundControl/AppSettings/HHUTuningSettings.qml">src/qml/settings/HHUTuningSettings.qml</file>
         <file alias="QGroundControl/AppSettings/HHUScriptsSettings.qml">src/qml/settings/HHUScriptsSettings.qml</file>
+        <file alias="QGroundControl/AppSettings/HHULogsSettings.qml">src/qml/settings/HHULogsSettings.qml</file>
         <file alias="QGroundControl/AppSettings/LinkConfigurationManager.qml">src/qml/generated/LinkConfigurationManager.qml</file>
         <file alias="QGroundControl/PlanView/PlanView.qml">src/qml/generated/PlanView.qml</file>
         <file alias="QGroundControl/PlanView/SimpleItemEditor.qml">src/qml/generated/SimpleItemEditor.qml</file>

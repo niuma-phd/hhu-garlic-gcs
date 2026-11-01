@@ -20,6 +20,7 @@
 #include "HHUTuning.h"
 #include "HHUScripts.h"
 #include "HHUStraightTest.h"
+#include "HHUFlightLogs.h"
 #include "LogManagerSettings.h"
 #include "MavlinkSettings.h"
 #include "HHULinkMonitor.h"
@@ -457,6 +458,7 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
             _tuning = new HHUTuning(_link4G, this);
             _scripts = new HHUScripts(_link4G, _tuning, this);
             _straight = new HHUStraightTest(_tuning, this);
+            _logs = new HHUFlightLogs(_link4G, _tuning, this);
         }
         // RTK corrections: from this computer on serial / UDP / TCP / Bluetooth, from the server on 4G
         (void) connect(_link4G, &HHU4GLink::stateChanged, this, [this]() { _ntrip->applyForwarding(!_link4G->active()); });
@@ -520,6 +522,7 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuTuning"), _tuning);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuScripts"), _scripts);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuStraight"), _straight);
+    _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuLogs"), _logs);
 
     _urlInterceptor = new CustomOverrideInterceptor();
     _qmlEngine->addUrlInterceptor(_urlInterceptor);

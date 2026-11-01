@@ -262,4 +262,12 @@ SettingsPage {
         size:               16
         onClicked:          mainWindow.showSettingsTool("Scripts")
     }
+    HHUButton {
+        Layout.alignment:   Qt.AlignLeft
+        visible:            hhuConfig.engineeringTuning
+        text:               qsTr("Autopilot logs ›")
+        kind:               "plain"
+        size:               16
+        onClicked:          mainWindow.showSettingsTool("Logs")
+    }
 }

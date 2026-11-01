@@ -26,19 +26,22 @@ Rectangle {
     readonly property string _advancedUrl: "qrc:/qml/QGroundControl/AppSettings/HHUAdvancedSettings.qml"
     readonly property string _tuningUrl:   "qrc:/qml/QGroundControl/AppSettings/HHUTuningSettings.qml"
     readonly property string _scriptsUrl:  "qrc:/qml/QGroundControl/AppSettings/HHUScriptsSettings.qml"
+    readonly property string _logsUrl:     "qrc:/qml/QGroundControl/AppSettings/HHULogsSettings.qml"
 
     property int  _selected: 0
     property bool _advanced: false
     property bool _tuning:   false
     property bool _scripts:  false
+    property bool _logs:     false
 
     function showSettingsPage(settingsPage) {
-        if (settingsPage === "Advanced" || ((settingsPage === "Tuning" || settingsPage === "Scripts") && hhuConfig.engineeringTuning)) {
+        if (settingsPage === "Advanced" || ((settingsPage === "Tuning" || settingsPage === "Scripts" || settingsPage === "Logs") && hhuConfig.engineeringTuning)) {
             _selected = _pages.length - 1
             _advanced = true
             _tuning = settingsPage === "Tuning"
             _scripts = settingsPage === "Scripts"
-            page.source = _tuning ? _tuningUrl : (_scripts ? _scriptsUrl : _advancedUrl)
+            _logs = settingsPage === "Logs"
+            page.source = _tuning ? _tuningUrl : (_scripts ? _scriptsUrl : (_logs ? _logsUrl : _advancedUrl))
             return
         }
         for (let i = 0; i < _pages.length; i++) {
@@ -54,6 +57,7 @@ Rectangle {
         _advanced = false
         _tuning = false
         _scripts = false
+        _logs = false
         page.source = _pages[index].url
     }
 
@@ -128,6 +132,7 @@ Rectangle {
         text:                   settingsView._pages[settingsView._selected].name + (settingsView._advanced ? " › " + qsTr("After-sales settings") : "")
                                 + (settingsView._tuning ? " › " + qsTr("Engineering tuning") : "")
                                 + (settingsView._scripts ? " › " + qsTr("Lua scripts") : "")
+                                + (settingsView._logs ? " › " + qsTr("Autopilot logs") : "")
         size:                   24
         bold:                   true
     }
