@@ -151,7 +151,7 @@ jobs:
             - 作业页左上角固定显示车速（km/h，飞控 EKF 地速）和航向（车头朝向 0–360°），车连上就一直显示，空闲、手工航线、AB 线、开到指定点都一样；进度卡里原来的小字车速去掉
             - 合入内部使用的工程调参页（config/hhu_config.json 的 engineeringTuning，默认关闭，客户安装包不显示）：读取、先改后写、写前快照、逐项确认、调参日志、恢复快照、导入 .param、重启飞控
             - 同一开关下的“Lua 脚本”页：通过 MAVFTP 查看、上传、替换、备份、删除飞控上的脚本并重启脚本，4G 也可用；替换前自动备份原文件，先传成 .new 回读核对一致后再改名，传到一半断线不会留下半个脚本
-            - 工程调参清单补齐车端 vcu_can.lua 的参数：VCU_ENABLE、VCU_W_MAX、VCU_REV、VCU_VREF_MIN、VCU_FB_CHK（VCU_WORK_EN 已有）
+            - 工程调参清单补齐车端 vcu_can.lua 的参数：VCU_VREF_MIN、VCU_FB_CHK、VCU_REV、VCU_ENABLE（VCU_WORK_EN 已有；VCU_W_MAX 车端已废弃，不加）
 
             **v1.2.9 改动**
             - 修复：AB 线作业中作业杆故障后“重试放杆”成功，车回到这条线的起点重新走；现在从停下的地方接着走

@@ -10,8 +10,9 @@ import QGroundControl.FlightMap
 import HHU.Controls
 
 // HHU override of QGroundControl/FlyView/FlyViewWidgetLayer.qml (设计稿 4a–4j)
-// Replaces the aircraft tool strip / instrument panel / telemetry bar with the progress card (bottom
-// left), work buttons (bottom right), map tools (top right) and the alarm banners (top center).
+// Replaces the aircraft tool strip / instrument panel / telemetry bar with the speed / heading card (top
+// left), progress card (bottom left), work buttons (bottom right), map tools (top right) and the alarm
+// banners (top center).
 Item {
     id: _root
 
@@ -42,10 +43,19 @@ Item {
         bottomEdgeRightInset:   workPanel.height + _margin * 1.25
     }
 
+    // Speed / heading (top left), the same in every state of the page
+    HHUSpeedHeading {
+        id:                 speedHeading
+        anchors.left:       parent.left
+        anchors.top:        parent.top
+        anchors.margins:    _margin
+        z:                  QGroundControl.zOrderWidgets
+    }
+
     MapScale {
         id:                 mapScale
         anchors.left:       parent.left
-        anchors.top:        parent.top
+        anchors.top:        speedHeading.visible ? speedHeading.bottom : parent.top
         anchors.margins:    _margin
         mapControl:         _root.mapControl
         autoHide:           true
@@ -167,7 +177,8 @@ Item {
         anchors.top:                parent.top
         anchors.topMargin:          12 * HHUStyle.s
         anchors.horizontalCenter:   parent.horizontalCenter
-        maxWidth:                   parent.width - (mapTools.width + _margin * 2) * 2
+        // clear of the speed / heading card (left) and the map tools (right)
+        maxWidth:                   parent.width - (Math.max(mapTools.width, speedHeading.visible ? speedHeading.width : 0) + _margin * 2) * 2
         planMasterController:       _planMasterController
         mapControl:                 _root.mapControl
         z:                          QGroundControl.zOrderTopMost

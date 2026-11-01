@@ -5,7 +5,7 @@ import QGroundControl
 import QGroundControl.Controls
 
 /// Progress card at the bottom left of the 作业 page (设计稿 4b–4h): big percent, time left,
-/// progress bar, one small line with waypoint / distance / speed. While driving to a target point
+/// progress bar, one small line with waypoint / distance (speed: HHUSpeedHeading). While driving to a target point
 /// (开到指定点) it shows that trip instead.
 HHUCard {
     id: root
@@ -168,11 +168,10 @@ HHUCard {
             color:              HHUStyle.text3
             elide:              Text.ElideRight
             text: {
-                const speed = root._speed > 0.05 ? " · " + root._speed.toFixed(1) + " m/s" : ""
                 if (status.routeDone) return qsTr("All %1 waypoints driven").arg(root._route.points.length)
-                if (root._goto) return root._speed.toFixed(1) + " m/s"
+                if (root._goto) return qsTr("Trip %1").arg(root._fmtDist(HHUState.gotoStartDist))
                 if (!root._started) return qsTr("%1 waypoints").arg(root._route.points.length) + " · " + root._fmtDist(root._route.length)
-                return qsTr("Waypoint %1/%2").arg(root._currentNumber).arg(root._route.points.length) + " · " + root._fmtDist(root._remainDist) + speed
+                return qsTr("Waypoint %1/%2").arg(root._currentNumber).arg(root._route.points.length) + " · " + root._fmtDist(root._remainDist)
             }
         }
     }

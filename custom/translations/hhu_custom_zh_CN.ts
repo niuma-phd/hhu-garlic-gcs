@@ -1535,6 +1535,10 @@
       <translation>前往目标点</translation>
     </message>
     <message>
+      <source>Trip %1</source>
+      <translation>全程 %1</translation>
+    </message>
+    <message>
       <source>Waypoint %1/%2</source>
       <translation>航点 %1/%2</translation>
     </message>
@@ -2004,6 +2008,49 @@
     <message>
       <source>Version %1 is available.</source>
       <translation>有新版本 %1。</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUSpeedHeading</name>
+    <message>
+      <source>E</source>
+      <translation>东</translation>
+    </message>
+    <message>
+      <source>Heading</source>
+      <translation>航向</translation>
+    </message>
+    <message>
+      <source>N</source>
+      <translation>北</translation>
+    </message>
+    <message>
+      <source>NE</source>
+      <translation>东北</translation>
+    </message>
+    <message>
+      <source>NW</source>
+      <translation>西北</translation>
+    </message>
+    <message>
+      <source>S</source>
+      <translation>南</translation>
+    </message>
+    <message>
+      <source>SE</source>
+      <translation>东南</translation>
+    </message>
+    <message>
+      <source>SW</source>
+      <translation>西南</translation>
+    </message>
+    <message>
+      <source>Speed</source>
+      <translation>车速</translation>
+    </message>
+    <message>
+      <source>W</source>
+      <translation>西</translation>
     </message>
   </context>
   <context>
