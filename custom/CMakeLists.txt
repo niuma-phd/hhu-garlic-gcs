@@ -6,7 +6,7 @@
 message(STATUS "QGC: Adding HHU Custom Plugin")
 
 # Product version (检查更新 compares against it; sent in the 4G login)
-set(HHU_APP_VERSION "1.3.0")
+set(HHU_APP_VERSION "1.3.1")
 
 # ============================================================================
 # Custom Resources
@@ -89,6 +89,8 @@ set(CUSTOM_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUService.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUSettings.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUSettings.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUStraightTest.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUStraightTest.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUScripts.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUScripts.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HHUTuning.cc

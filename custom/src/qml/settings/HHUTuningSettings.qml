@@ -65,6 +65,17 @@ SettingsPage {
             enabled:    !hhuTuning.writing
             onClicked:  importDialog.open()
         }
+        // 直线测试 results (the test itself is started on the 作业 page, map tools 直线)
+        HHUButton {
+            visible:    typeof hhuStraight !== "undefined" && !!hhuStraight
+            text:       qsTr("Straight line test records")
+            kind:       "plain"
+            size:       16
+            onClicked: {
+                straightDialog.rows = hhuStraight.history(12)
+                straightDialog.open()
+            }
+        }
         HHUText {
             height:     HHUStyle.touch
             visible:    text !== ""
@@ -300,6 +311,69 @@ SettingsPage {
                 kind:       "plain"
                 onClicked:  snapshotDialog.close()
             }
+        ]
+    }
+
+    // Last runs of this vehicle from 直线测试/<vehicle>/汇总.csv, newest first
+    HHUDialog {
+        id:             straightDialog
+        title:          qsTr("Straight line test records")
+        subtitle:       hhuTuning.vehicleName
+        dialogWidth:    860
+
+        property var rows: []
+
+        function f(v, d) { return (v === undefined || isNaN(v)) ? "—" : Number(v).toFixed(d) }
+
+        HHUText {
+            visible:    straightDialog.rows.length === 0
+            text:       qsTr("No runs yet")
+            color:      HHUStyle.text3
+        }
+        GridLayout {
+            visible:        straightDialog.rows.length > 0
+            columns:        8
+            columnSpacing:  14 * HHUStyle.s
+            rowSpacing:     4 * HHUStyle.s
+            Repeater {
+                model: [ qsTr("Time"), qsTr("Leg"), qsTr("km/h"), qsTr("Steady RMS m"), qsTr("Steady max m"), qsTr("Bias m (+L)"), qsTr("Crossings"), qsTr("Stop m (+past)") ]
+                HHUText { text: modelData; size: 14; color: HHUStyle.text3 }
+            }
+            Repeater {
+                model: straightDialog.rows.length * 8
+                HHUText {
+                    readonly property var r: straightDialog.rows[Math.floor(index / 8)]
+                    readonly property int c: index % 8
+                    size:   15
+                    number: c > 0
+                    color:  r.aborted ? HHUStyle.text3 : HHUStyle.text
+                    text: {
+                        switch (c) {
+                        case 0: return r.time.replace(/^(\d{4})(\d\d)(\d\d)_(\d\d)(\d\d)(\d\d)$/, "$2-$3 $4:$5") + (r.aborted ? " *" : "")
+                        case 1: return r.leg === 2 ? qsTr("back") : qsTr("there")
+                        case 2: return straightDialog.f(r.speedSet * 3.6, 1)
+                        case 3: return straightDialog.f(r.steadyRms, 3)
+                        case 4: return straightDialog.f(r.max, 3)
+                        case 5: return straightDialog.f(r.bias, 3)
+                        case 6: return isNaN(r.crossings) ? "—" : String(r.crossings)
+                        default: return straightDialog.f(r.overshoot, 2)
+                        }
+                    }
+                }
+            }
+        }
+        HHUText {
+            Layout.fillWidth:   true
+            visible:            straightDialog.rows.length > 0
+            text:               qsTr("* aborted. All columns and the parameter values of every run are in 汇总.csv.")
+            size:               13
+            color:              HHUStyle.text3
+            wrapMode:           Text.WordWrap
+        }
+        footerItems: [
+            HHUButton { text: qsTr("Open folder"); kind: "plain"; size: 16; onClicked: hhuStraight.openFolder() },
+            Item { Layout.fillWidth: true },
+            HHUButton { text: qsTr("Close"); kind: "plain"; onClicked: straightDialog.close() }
         ]
     }
 

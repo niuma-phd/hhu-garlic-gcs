@@ -55,7 +55,7 @@ HHUCard {
         }
         HHUText {
             visible: !isNaN(root._heading)
-            text:    root._compass(root._heading)
+            text:    isNaN(root._heading) ? "" : root._compass(root._heading)
             size:    15
             color:   HHUStyle.text2
             Layout.alignment: Qt.AlignBaseline

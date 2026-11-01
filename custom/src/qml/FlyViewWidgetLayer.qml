@@ -31,14 +31,14 @@ Item {
         id:                     _totalToolInsets
         leftEdgeTopInset:       parentToolInsets.leftEdgeTopInset
         leftEdgeCenterInset:    parentToolInsets.leftEdgeCenterInset
-        leftEdgeBottomInset:    progress.visible ? progress.width + _margin : (abWork.visible ? abWork.width + _margin : parentToolInsets.leftEdgeBottomInset)
+        leftEdgeBottomInset:    progress.visible ? progress.width + _margin : (abWork.visible ? abWork.width + _margin : (straight.visible ? straight.width + _margin : parentToolInsets.leftEdgeBottomInset))
         rightEdgeTopInset:      mapTools.width + _margin
         rightEdgeCenterInset:   parentToolInsets.rightEdgeCenterInset
         rightEdgeBottomInset:   workPanel.width + _margin
         topEdgeLeftInset:       mapScale.y + mapScale.height + _margin
         topEdgeCenterInset:     alarms.y + alarms.height + _margin
         topEdgeRightInset:      mapTools.y + mapTools.height + _margin
-        bottomEdgeLeftInset:    progress.visible ? progress.height + _margin * 1.25 : (abWork.visible ? abWork.height + _margin * 1.25 : parentToolInsets.bottomEdgeLeftInset)
+        bottomEdgeLeftInset:    progress.visible ? progress.height + _margin * 1.25 : (abWork.visible ? abWork.height + _margin * 1.25 : (straight.visible ? straight.height + _margin * 1.25 : parentToolInsets.bottomEdgeLeftInset))
         bottomEdgeCenterInset:  parentToolInsets.bottomEdgeCenterInset
         bottomEdgeRightInset:   workPanel.height + _margin * 1.25
     }
@@ -71,8 +71,20 @@ Item {
         anchors.bottomMargin: _margin * 1.25
         missionController:  _missionController
         z:                  QGroundControl.zOrderWidgets
-        visible:            _hasRoute && !!_activeVehicle && !hhuABRun.active && !hhuABRun.abRouteOnVehicle
+        visible:            _hasRoute && !!_activeVehicle && !hhuABRun.active && !hhuABRun.abRouteOnVehicle && !straight.visible
     }
+
+    // 直线测试 (工程调参 only): live card (bottom left, in place of the progress card) and its dialogs
+    HHUStraightPanel {
+        id:                 straight
+        anchors.left:       parent.left
+        anchors.bottom:     parent.bottom
+        anchors.leftMargin: _margin
+        anchors.bottomMargin: _margin * 1.25
+        mapControl:         _root.mapControl
+        z:                  QGroundControl.zOrderWidgets
+    }
+    readonly property bool _straightAvailable: typeof hhuStraight !== "undefined" && !!hhuStraight
 
     // AB line run: status card (bottom left, in place of the progress card) and its dialogs
     HHUABWork {
@@ -100,7 +112,7 @@ Item {
         anchors.rightMargin:    _margin
         anchors.bottomMargin:   _margin * 1.25
         // clear of the progress card on small screens
-        maxWidth:               parent.width - (progress.visible ? progress.width + _margin : (abWork.visible ? abWork.width + _margin : 0)) - _margin * 2
+        maxWidth:               parent.width - (progress.visible ? progress.width + _margin : (abWork.visible ? abWork.width + _margin : (straight.visible ? straight.width + _margin : 0))) - _margin * 2
         planMasterController:   _planMasterController
         z:                      QGroundControl.zOrderWidgets
     }
@@ -122,10 +134,17 @@ Item {
             anchors.centerIn:   parent
 
             Repeater {
-                model: [
-                    { icon: "locate", t: qsTr("Find vehicle") },
-                    { icon: "trash",  t: qsTr("Clear track") }
-                ]
+                // 直线 (straight line test) only with 工程调参, while the vehicle stands locked and no AB line runs
+                model: {
+                    let list = [
+                        { icon: "locate", t: qsTr("Find vehicle"), id: "find" },
+                        { icon: "trash",  t: qsTr("Clear track"), id: "clear" }
+                    ]
+                    if (_root._straightAvailable && !hhuStraight.active && !hhuABRun.active && _activeVehicle && !_activeVehicle.armed) {
+                        list.push({ icon: "arrow", t: qsTr("Straight"), id: "straight" })
+                    }
+                    return list
+                }
                 Rectangle {
                     width:  60 * HHUStyle.s
                     height: 60 * HHUStyle.s
@@ -157,12 +176,14 @@ Item {
                             if (!_activeVehicle) {
                                 return
                             }
-                            if (index === 0) {
+                            if (modelData.id === "find") {
                                 if (_activeVehicle.coordinate.isValid) {
                                     _root.mapControl.center = _activeVehicle.coordinate
                                 }
-                            } else {
+                            } else if (modelData.id === "clear") {
                                 _activeVehicle.trajectoryPoints.clear()
+                            } else {
+                                straight.openStart()
                             }
                         }
                     }

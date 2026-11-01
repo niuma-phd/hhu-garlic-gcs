@@ -314,6 +314,26 @@ QString HHUTuning::vehicleName() const
     return name.replace(QRegularExpression(QStringLiteral("[\\\\/:*?\"<>|]")), QStringLiteral("_"));
 }
 
+QStringList HHUTuning::parameterNames() const
+{
+    QStringList names;
+    for (const Row &row : _rows) {
+        names << row.name;
+    }
+    return names;
+}
+
+QVariantMap HHUTuning::currentValues() const
+{
+    QVariantMap values;
+    for (const Row &row : _rows) {
+        if (row.hasCurrent) {
+            values[row.name] = _format(row.current);
+        }
+    }
+    return values;
+}
+
 void HHUTuning::setActive(bool active)
 {
     if (active == _active) {

@@ -28,6 +28,9 @@ class HHUConfig : public QObject
     Q_PROPERTY(int    abLiftTimeout  READ abLiftTimeout  CONSTANT)   ///< s
     Q_PROPERTY(double abAlignXtrack  READ abAlignXtrack  CONSTANT)   ///< m
     Q_PROPERTY(double abAlignHeading READ abAlignHeading CONSTANT)   ///< deg
+    /// abLine speeds, also the 作业 / 运输 choices of the 直线测试
+    Q_PROPERTY(double abSpeedWork      READ abSpeedWork      CONSTANT)   ///< m/s
+    Q_PROPERTY(double abSpeedTransport READ abSpeedTransport CONSTANT)   ///< m/s
     /// engineeringTuning: 工程调参 page under 售后设置, for our own engineers only (off in customer builds)
     Q_PROPERTY(bool engineeringTuning READ engineeringTuning CONSTANT)
 
@@ -57,6 +60,8 @@ public:
     int    abLiftTimeout() const { return _abLine.liftTimeout; }
     double abAlignXtrack() const { return _abLine.alignXtrack; }
     double abAlignHeading() const { return _abLine.alignHeading; }
+    double abSpeedWork() const { return _abLine.speedWork; }
+    double abSpeedTransport() const { return _abLine.speedTransport; }
 
     /// Customer wording for a vehicle STATUSTEXT, or an empty string when no entry matches.
     /// waypointNumber turns the mission sequence after the prefix into the waypoint number ({wp});

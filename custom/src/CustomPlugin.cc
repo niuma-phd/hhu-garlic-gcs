@@ -19,6 +19,7 @@
 #include "HHUWorkLog.h"
 #include "HHUTuning.h"
 #include "HHUScripts.h"
+#include "HHUStraightTest.h"
 #include "LogManagerSettings.h"
 #include "MavlinkSettings.h"
 #include "HHULinkMonitor.h"
@@ -316,6 +317,9 @@ bool CustomPlugin::mavlinkMessage(Vehicle *vehicle, LinkInterface *link, const m
     if (_tuning) {
         _tuning->handleMessage(vehicle, message);
     }
+    if (_straight) {
+        _straight->handleMessage(vehicle, message);
+    }
     if (message.msgid == MAVLINK_MSG_ID_MISSION_ITEM_REACHED) {
         _workLog->itemReached(vehicle, mavlink_msg_mission_item_reached_get_seq(&message));
         _abRun->itemReached(vehicle, mavlink_msg_mission_item_reached_get_seq(&message));
@@ -434,6 +438,7 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
     // enums of the AB line run / field for QML (HHUABRun.Aligning, HHUABField.Done …)
     qmlRegisterUncreatableType<HHUABRun>("HHU.AB", 1, 0, "HHUABRun", QStringLiteral("use hhuABRun"));
     qmlRegisterUncreatableType<HHUABField>("HHU.AB", 1, 0, "HHUABField", QStringLiteral("use hhuAB"));
+    qmlRegisterUncreatableType<HHUStraightTest>("HHU.AB", 1, 0, "HHUStraightTest", QStringLiteral("use hhuStraight"));
     _qmlEngine = QGCCorePlugin::createQmlApplicationEngine(parent);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuVcu"), _vcuStatus);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuSettings"), _hhuSettings);
@@ -451,6 +456,7 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
         if (_hhuConfig->engineeringTuning()) {
             _tuning = new HHUTuning(_link4G, this);
             _scripts = new HHUScripts(_link4G, _tuning, this);
+            _straight = new HHUStraightTest(_tuning, this);
         }
         // RTK corrections: from this computer on serial / UDP / TCP / Bluetooth, from the server on 4G
         (void) connect(_link4G, &HHU4GLink::stateChanged, this, [this]() { _ntrip->applyForwarding(!_link4G->active()); });
@@ -513,6 +519,7 @@ QQmlApplicationEngine *CustomPlugin::createQmlApplicationEngine(QObject *parent)
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuService"), _service);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuTuning"), _tuning);
     _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuScripts"), _scripts);
+    _qmlEngine->rootContext()->setContextProperty(QStringLiteral("hhuStraight"), _straight);
 
     _urlInterceptor = new CustomOverrideInterceptor();
     _qmlEngine->addUrlInterceptor(_urlInterceptor);

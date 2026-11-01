@@ -347,6 +347,10 @@
       <translation>发现新版本 %1</translation>
     </message>
     <message>
+      <source>Straight</source>
+      <translation>直线</translation>
+    </message>
+    <message>
       <source>The ground station closes for the installation.</source>
       <translation>安装时地面站会关闭。作业中不会打断。</translation>
     </message>
@@ -1428,11 +1432,11 @@
     </message>
     <message>
       <source>The whole route is driven. Return to start or stop and lock the vehicle.</source>
-      <translation>整条航线已走完。可以返回起点，或停车上锁。</translation>
+      <translation>整条航线已走完，可以返回起点，或按“急停”停车上锁。</translation>
     </message>
     <message>
       <source>The whole route is driven. Stop and lock the vehicle.</source>
-      <translation>整条航线已走完。请停车上锁。</translation>
+      <translation>整条航线已走完，请按“急停”停车上锁。</translation>
     </message>
     <message>
       <source>View only</source>
@@ -2206,6 +2210,10 @@
       <translation>已暂停</translation>
     </message>
     <message>
+      <source>Press Ready on the remote control</source>
+      <translation>请在遥控器上按 Ready</translation>
+    </message>
+    <message>
       <source>RTK fixed</source>
       <translation>RTK 固定解</translation>
     </message>
@@ -2244,6 +2252,10 @@
     <message>
       <source>Wait for a good position, about 1-3 minutes</source>
       <translation>等定位变好，约 1–3 分钟</translation>
+    </message>
+    <message>
+      <source>Wait for an RTK position, about 1-3 minutes</source>
+      <translation>等待 RTK 定位（浮点或固定），约 1-3 分钟</translation>
     </message>
     <message>
       <source>Work position ready</source>
@@ -2315,6 +2327,10 @@
     <message>
       <source>Position poor</source>
       <translation>定位差</translation>
+    </message>
+    <message>
+      <source>Press Ready</source>
+      <translation>等遥控 Ready</translation>
     </message>
     <message>
       <source>Ready</source>
@@ -2464,6 +2480,244 @@
     </message>
   </context>
   <context>
+    <name>HHUStraightPanel</name>
+    <message>
+      <source> and room to turn at the end</source>
+      <translation>，终点有掉头的空间</translation>
+    </message>
+    <message>
+      <source>%1 m past</source>
+      <translation>冲过 %1 m</translation>
+    </message>
+    <message>
+      <source>%1 m short</source>
+      <translation>差 %1 m 未到</translation>
+    </message>
+    <message>
+      <source>Bias</source>
+      <translation>平均偏向</translation>
+    </message>
+    <message>
+      <source>Cancel</source>
+      <translation>取消</translation>
+    </message>
+    <message>
+      <source>Cannot start</source>
+      <translation>暂时不能开始</translation>
+    </message>
+    <message>
+      <source>Changed since the run before: %1</source>
+      <translation>与上一趟相比改过的参数：%1</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Cross-track</source>
+      <translation>横向偏差</translation>
+    </message>
+    <message>
+      <source>Crossings (weaving)</source>
+      <translation>过线次数（画龙）</translation>
+    </message>
+    <message>
+      <source>Custom</source>
+      <translation>自定义</translation>
+    </message>
+    <message>
+      <source>Distance</source>
+      <translation>距离</translation>
+    </message>
+    <message>
+      <source>Driven</source>
+      <translation>已走</translation>
+    </message>
+    <message>
+      <source>Heading</source>
+      <translation>航向偏差</translation>
+    </message>
+    <message>
+      <source>Heading RMS</source>
+      <translation>航向偏差 RMS</translation>
+    </message>
+    <message>
+      <source>In brackets: the run before.</source>
+      <translation>括号里是上一趟。</translation>
+    </message>
+    <message>
+      <source>L</source>
+      <translation>左</translation>
+    </message>
+    <message>
+      <source>Left</source>
+      <translation>剩余</translation>
+    </message>
+    <message>
+      <source>Leg 1 (there)</source>
+      <translation>去程</translation>
+    </message>
+    <message>
+      <source>Leg 2 (back)</source>
+      <translation>回程</translation>
+    </message>
+    <message>
+      <source>Make sure the way ahead is free for %1 m%2. Emergency stop works at any time.</source>
+      <translation>请确认前方 %1 m 内无障碍%2。随时可以按急停。</translation>
+    </message>
+    <message>
+      <source>Max cross-track</source>
+      <translation>最大横向偏差</translation>
+    </message>
+    <message>
+      <source>Mean speed</source>
+      <translation>平均车速 / 设定</translation>
+    </message>
+    <message>
+      <source>No tuning list parameter changed since the run before.</source>
+      <translation>与上一趟相比，调参清单里的参数没有改动。</translation>
+    </message>
+    <message>
+      <source>Not connected or read-only connection</source>
+      <translation>未连接或只读连接</translation>
+    </message>
+    <message>
+      <source>One way</source>
+      <translation>单程</translation>
+    </message>
+    <message>
+      <source>Open folder</source>
+      <translation>打开文件夹</translation>
+    </message>
+    <message>
+      <source>R</source>
+      <translation>右</translation>
+    </message>
+    <message>
+      <source>Round trip</source>
+      <translation>往返</translation>
+    </message>
+    <message>
+      <source>Run again</source>
+      <translation>再跑一趟</translation>
+    </message>
+    <message>
+      <source>Saved in %1</source>
+      <translation>记录保存在 %1</translation>
+    </message>
+    <message>
+      <source>Speed</source>
+      <translation>车速</translation>
+    </message>
+    <message>
+      <source>Start</source>
+      <translation>开始</translation>
+    </message>
+    <message>
+      <source>Steady part RMS</source>
+      <translation>稳定段偏差 RMS</translation>
+    </message>
+    <message>
+      <source>Stop and lock the vehicle first</source>
+      <translation>请先让车停下并上锁</translation>
+    </message>
+    <message>
+      <source>Stop at the end</source>
+      <translation>终点停车</translation>
+    </message>
+    <message>
+      <source>Stop test</source>
+      <translation>停止测试</translation>
+    </message>
+    <message>
+      <source>Stopped early: %1</source>
+      <translation>提前结束：%1</translation>
+    </message>
+    <message>
+      <source>Straight line test</source>
+      <translation>直线测试</translation>
+    </message>
+    <message>
+      <source>Straight line test result</source>
+      <translation>直线测试结果</translation>
+    </message>
+    <message>
+      <source>Straight line test · leg %1 / 2</source>
+      <translation>直线测试 · 第 %1 / 2 段</translation>
+    </message>
+    <message>
+      <source>Straight line test · starting</source>
+      <translation>直线测试 · 启动中</translation>
+    </message>
+    <message>
+      <source>Straight line test · stopping</source>
+      <translation>直线测试 · 停车中</translation>
+    </message>
+    <message>
+      <source>The vehicle drives straight ahead along its current heading.</source>
+      <translation>车沿当前车头方向直行。</translation>
+    </message>
+    <message>
+      <source>There and back</source>
+      <translation>往返</translation>
+    </message>
+    <message>
+      <source>Transport %1 km/h</source>
+      <translation>运输 %1 km/h</translation>
+    </message>
+    <message>
+      <source>Work %1 km/h</source>
+      <translation>作业 %1 km/h</translation>
+    </message>
+    <message>
+      <source>aborted</source>
+      <translation>中断</translation>
+    </message>
+  </context>
+  <context>
+    <name>HHUStraightTest</name>
+    <message>
+      <source>A test is running</source>
+      <translation>测试正在进行</translation>
+    </message>
+    <message>
+      <source>Did not reach the end in %1 s</source>
+      <translation>%1 秒内没有到达终点</translation>
+    </message>
+    <message>
+      <source>No position data from the vehicle</source>
+      <translation>车辆位置数据中断</translation>
+    </message>
+    <message>
+      <source>No position from the vehicle</source>
+      <translation>没有收到车辆位置</translation>
+    </message>
+    <message>
+      <source>Not connected</source>
+      <translation>未连接</translation>
+    </message>
+    <message>
+      <source>Stop and lock the vehicle first</source>
+      <translation>请先让车停下并上锁</translation>
+    </message>
+    <message>
+      <source>Stopped</source>
+      <translation>已手动停止</translation>
+    </message>
+    <message>
+      <source>The vehicle did not arm</source>
+      <translation>车没有解锁</translation>
+    </message>
+    <message>
+      <source>The vehicle left GUIDED (%1)</source>
+      <translation>车退出了引导模式（%1）</translation>
+    </message>
+    <message>
+      <source>The vehicle was locked (emergency stop)</source>
+      <translation>车已上锁（急停）</translation>
+    </message>
+  </context>
+  <context>
     <name>HHUTuning</name>
     <message>
       <source> (%1 unconfirmed)</source>
@@ -2537,12 +2791,28 @@
       <translation>%1 – %2</translation>
     </message>
     <message>
+      <source>* aborted. All columns and the parameter values of every run are in 汇总.csv.</source>
+      <translation>* 为中断的记录。每趟的全部数据和参数值在 汇总.csv 里。</translation>
+    </message>
+    <message>
       <source>All files (*)</source>
       <translation>所有文件 (*)</translation>
     </message>
     <message>
+      <source>Bias m (+L)</source>
+      <translation>偏向 m（+左）</translation>
+    </message>
+    <message>
       <source>Cancel</source>
       <translation>取消</translation>
+    </message>
+    <message>
+      <source>Close</source>
+      <translation>关闭</translation>
+    </message>
+    <message>
+      <source>Crossings</source>
+      <translation>过线</translation>
     </message>
     <message>
       <source>Current</source>
@@ -2557,8 +2827,16 @@
       <translation>导入 .param</translation>
     </message>
     <message>
+      <source>Leg</source>
+      <translation>段</translation>
+    </message>
+    <message>
       <source>New value</source>
       <translation>新值</translation>
+    </message>
+    <message>
+      <source>No runs yet</source>
+      <translation>还没有记录</translation>
     </message>
     <message>
       <source>No snapshots</source>
@@ -2571,6 +2849,10 @@
     <message>
       <source>Not connected</source>
       <translation>未连接</translation>
+    </message>
+    <message>
+      <source>Open folder</source>
+      <translation>打开文件夹</translation>
     </message>
     <message>
       <source>Parameter</source>
@@ -2613,6 +2895,26 @@
       <translation>状态</translation>
     </message>
     <message>
+      <source>Steady RMS m</source>
+      <translation>稳定段 RMS m</translation>
+    </message>
+    <message>
+      <source>Steady max m</source>
+      <translation>稳定段最大 m</translation>
+    </message>
+    <message>
+      <source>Stop m (+past)</source>
+      <translation>终点停车 m（+冲过）</translation>
+    </message>
+    <message>
+      <source>Straight line test records</source>
+      <translation>直线测试记录</translation>
+    </message>
+    <message>
+      <source>Time</source>
+      <translation>时间</translation>
+    </message>
+    <message>
       <source>To write</source>
       <translation>待写入</translation>
     </message>
@@ -2623,6 +2925,18 @@
     <message>
       <source>Writing…</source>
       <translation>写入中…</translation>
+    </message>
+    <message>
+      <source>back</source>
+      <translation>回程</translation>
+    </message>
+    <message>
+      <source>km/h</source>
+      <translation>km/h</translation>
+    </message>
+    <message>
+      <source>there</source>
+      <translation>去程</translation>
     </message>
   </context>
   <context>
@@ -2657,7 +2971,7 @@
     </message>
     <message>
       <source>The vehicle is working on its route. Pause it or stop and lock it first.</source>
-      <translation>车正在按航线作业，请先暂停或停车上锁。</translation>
+      <translation>车正在按航线作业，请先暂停或按“急停”。</translation>
     </message>
     <message>
       <source>Turns too sharp for the vehicle (turn radius %1 m) at waypoints: %2 (marked red on the map)</source>
@@ -2695,6 +3009,10 @@
       <translation>继续作业</translation>
     </message>
     <message>
+      <source>Emergency stop</source>
+      <translation>急停</translation>
+    </message>
+    <message>
       <source>Go to plan</source>
       <translation>去规划</translation>
     </message>
@@ -2723,10 +3041,6 @@
       <translation>重新发送</translation>
     </message>
     <message>
-      <source>Slide to lock</source>
-      <translation>右滑上锁</translation>
-    </message>
-    <message>
       <source>Slide to return</source>
       <translation>右滑返回</translation>
     </message>
@@ -2735,26 +3049,8 @@
       <translation>开始作业</translation>
     </message>
     <message>
-      <source>Stop and disarm</source>
-      <translation>停车上锁</translation>
-    </message>
-    <message>
-      <source>Stop and lock</source>
-      <translation>停车上锁</translation>
-    </message>
-    <message>
-      <source>Stop and lock?</source>
-      <translation>停车上锁？</translation>
-    </message>
-    <message>
       <source>The vehicle did not respond to "%1".</source>
       <translation>车没响应“%1”。</translation>
-    </message>
-    <message>
-      <source>The vehicle stops at once and this work run ends.
-Next time you can continue where it stopped.</source>
-      <translation>车会马上停下，本次作业结束。
-下次可以接着上次继续。</translation>
     </message>
     <message>
       <source>The vehicle stops working and drives back along its path to the start point.</source>

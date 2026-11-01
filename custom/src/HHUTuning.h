@@ -86,6 +86,10 @@ public:
     bool    rebootNeeded() const { return _rebootNeeded; }
     QString vehicleName() const;
     bool    active() const { return _active; }
+    /// Names of the tuning list, in list order (直线测试 logs their values with every run)
+    QStringList parameterNames() const;
+    /// Last values read from / written to the vehicle: name → value text (only the rows that have one)
+    QVariantMap currentValues() const;
     void    setActive(bool active);
 
     /// Reads every parameter of the list from the vehicle (edited inputs are kept)
