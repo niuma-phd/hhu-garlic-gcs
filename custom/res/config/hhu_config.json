@@ -77,6 +77,30 @@
             "text": "底盘故障（故障码 {fault}）"
         },
         {
+            "prefix": "VCU: drive fault cleared",
+            "text": "驱动器故障已恢复"
+        },
+        {
+            "prefix": "VCU: drive fault",
+            "text": "驱动器故障：{rest}（不影响行驶）"
+        },
+        {
+            "prefix": "VCU: sys fault cleared",
+            "text": "底盘系统故障已恢复"
+        },
+        {
+            "prefix": "VCU: sys fault 0x",
+            "text": "底盘系统故障：{fault}"
+        },
+        {
+            "prefix": "VCU: chassis failsafe cleared",
+            "text": "底盘失效保护已解除"
+        },
+        {
+            "prefix": "VCU: chassis failsafe",
+            "text": "底盘进入失效保护"
+        },
+        {
             "prefix": "VCU: RTK lost",
             "text": "RTK 定位丢失，已停车"
         },

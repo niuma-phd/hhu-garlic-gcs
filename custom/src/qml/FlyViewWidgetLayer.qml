@@ -197,9 +197,11 @@ Item {
         id:                         alarms
         anchors.top:                parent.top
         anchors.topMargin:          12 * HHUStyle.s
-        anchors.horizontalCenter:   parent.horizontalCenter
-        // clear of the speed / heading card (left) and the map tools (right)
-        maxWidth:                   parent.width - (Math.max(mapTools.width, speedHeading.visible ? speedHeading.width : 0) + _margin * 2) * 2
+        // centered between the speed / heading card (left) and the map tools (right)
+        readonly property real _leftEdge:  (speedHeading.visible ? speedHeading.width : mapTools.width) + _margin * 2
+        readonly property real _rightEdge: parent.width - mapTools.width - _margin * 2
+        x:                          _leftEdge + Math.max(0, (_rightEdge - _leftEdge - width) / 2)
+        maxWidth:                   _rightEdge - _leftEdge
         planMasterController:       _planMasterController
         mapControl:                 _root.mapControl
         z:                          QGroundControl.zOrderTopMost

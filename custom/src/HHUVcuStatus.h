@@ -17,6 +17,9 @@
 ///                                valid; the work request (SCRIPTING1) on change + 1 Hz while VCU_WORK_EN=1.
 ///                                Own freshness (workFbValid / workReqValid). The status bar and the AB line
 ///                                run (HHUABField) both read WorkFb from here.
+///   VCU_SYSFLT, VCU_DRVFLT,      协议外 HealthSta (garlic.16/17, issue #10): Sys_Fault 0~7, the first non-zero
+///   VCU_DRVCH                    drive fault code and its channel 1~3. Report only (VCU_FB_CHK=0): shown as a
+///                                yellow hint, never a drive blocker. Own freshness (healthValid).
 /// Also the RC start handshake from vcu_can.lua's STATUSTEXT ("VCU: wait RC start" / "VCU: RC start OK"),
 /// and the vehicle parameters the ground station's own drive checks follow (VCU_RTK_REQ, VCU_ENABLE), so
 /// that a check switched off on the vehicle is not kept up here.
@@ -45,6 +48,11 @@ class HHUVcuStatus : public QObject
     /// 0 unknown (no handshake message seen since connecting), 1 waiting for Ready on the remote control
     /// (wait RC start / handover failed / RC link lost), 2 RC start OK. Back to 0 when VCU_MODE leaves 2.
     Q_PROPERTY(int    rcStart      READ rcStart      NOTIFY changed)
+    /// VCU_SYSFLT / VCU_DRVFLT arrived within the last 3 s
+    Q_PROPERTY(bool   healthValid  READ healthValid  NOTIFY healthChanged)
+    Q_PROPERTY(int    sysFault     READ sysFault     NOTIFY healthChanged)   ///< Sys_Fault 0~7 (faultCodes 0x01~0x07)
+    Q_PROPERTY(int    drvFault     READ drvFault     NOTIFY healthChanged)   ///< drive fault code, 0 none
+    Q_PROPERTY(int    drvChannel   READ drvChannel   NOTIFY healthChanged)   ///< 1~3, 0 none
     /// VCU_RTK_REQ of the vehicle: 0 no check, 1 float or fixed, 2 fixed only; -1 unknown (parameter
     /// missing or not loaded: the ground station then asks for RTK fixed as before)
     Q_PROPERTY(int    rtkReq       READ rtkReq       NOTIFY paramsChanged)
@@ -68,6 +76,10 @@ public:
     bool   workReqValid() const { return _workReqValid; }
     int    workReq()      const { return _workReq; }
     int    rcStart()      const { return _rcStart; }
+    bool   healthValid()  const { return _healthValid; }
+    int    sysFault()     const { return _healthValid ? _sysFault : 0; }
+    int    drvFault()     const { return _healthValid ? _drvFault : 0; }
+    int    drvChannel()   const { return _healthValid ? _drvChannel : 0; }
     int    rtkReq()       const { return _rtkReq; }
     bool   bridgeEnabled() const { return _bridgeEnabled; }
     /// ms since the last VCU_WORKFB / VCU_WREQ (-1 = never)
@@ -83,6 +95,7 @@ signals:
     void batteryChanged();
     void workChanged();
     void paramsChanged();
+    void healthChanged();
 
 private:
     void _checkTimeout();
@@ -107,6 +120,11 @@ private:
     int    _workReq      = -1;
 
     int    _rcStart      = 0;
+    bool   _healthValid  = false;
+    int    _sysFault     = 0;
+    int    _drvFault     = 0;
+    int    _drvChannel   = 0;
+    QElapsedTimer _lastHealthRx;
     int    _rtkReq       = -1;
     bool   _bridgeEnabled = true;
 

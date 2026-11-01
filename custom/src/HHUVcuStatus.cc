@@ -66,6 +66,15 @@ void HHUVcuStatus::handleMessage(const mavlink_message_t &message)
         _workFbValid = true;
         emit workChanged();
         return;
+    } else if (name == QStringLiteral("VCU_SYSFLT") || name == QStringLiteral("VCU_DRVFLT") || name == QStringLiteral("VCU_DRVCH")) {
+        const int v = static_cast<int>(std::lround(value));
+        if (name == QStringLiteral("VCU_SYSFLT")) _sysFault = v;
+        else if (name == QStringLiteral("VCU_DRVFLT")) _drvFault = v;
+        else _drvChannel = v;
+        _lastHealthRx.restart();
+        _healthValid = true;
+        emit healthChanged();
+        return;
     } else if (name == QStringLiteral("VCU_WREQ")) {
         _lastWorkReqRx.restart();
         _workReq = value >= 0.5 ? 1 : 0;
@@ -132,6 +141,10 @@ void HHUVcuStatus::_checkTimeout()
     if (_batteryValid && _lastSocRx.elapsed() > kTimeoutMs) {
         _clearBattery();
     }
+    if (_healthValid && _lastHealthRx.elapsed() > kTimeoutMs) {
+        _healthValid = false;
+        emit healthChanged();
+    }
     // the last values are kept (the AB line run needs WorkFb also while it is stale)
     if ((_workFbValid && _lastWorkFbRx.elapsed() > kTimeoutMs) || (_workReqValid && _lastWorkReqRx.elapsed() > kTimeoutMs)) {
         _workFbValid = _workFbValid && _lastWorkFbRx.elapsed() <= kTimeoutMs;
@@ -169,6 +182,9 @@ void HHUVcuStatus::reset()
     _fault = 0;
     _rcStart = 0;
     emit changed();
+    _healthValid = false;
+    _sysFault = _drvFault = _drvChannel = 0;
+    emit healthChanged();
     _clearBattery();
     _clearWork();
 }

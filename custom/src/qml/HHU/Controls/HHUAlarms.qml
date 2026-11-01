@@ -54,6 +54,20 @@ Item {
                         title: desc !== "" ? qsTr("Chassis fault: %1").arg(desc) : qsTr("Chassis fault %1").arg(status.faultText),
                         text: qsTr("Clear the fault on the vehicle, then tap \"Continue\".") })
         }
+        // 协议外 HealthSta (garlic.16/17, issue #10): report only, the VCU decides whether it drives -
+        // yellow, but no drive blocker and no 30 s sound
+        if (status.connected && hhuVcu.sysFault !== 0) {
+            const sysDesc = hhuConfig.faultText(hhuVcu.sysFault)
+            list.push({ id: "sysFault", level: 1, quiet: true,
+                        title: qsTr("Chassis system fault: %1").arg(sysDesc !== "" ? sysDesc : "0x0" + hhuVcu.sysFault.toString(16).toUpperCase()),
+                        text: qsTr("Reported by the chassis; whether it drives is decided by the VCU.") })
+        }
+        if (status.connected && hhuVcu.drvFault !== 0) {
+            const hex = hhuVcu.drvFault.toString(16).toUpperCase()
+            list.push({ id: "drvFault", level: 1, quiet: true,
+                        title: qsTr("Drive %1 fault 0x%2").arg(hhuVcu.drvChannel).arg(hex.length < 2 ? "0" + hex : hex),
+                        text: qsTr("Does not stop the vehicle.") })
+        }
         if (status.connected && status.chassisChecked && hhuVcu.seen && !hhuVcu.valid) {
             list.push({ id: "chassisLink", level: 1, title: qsTr("No data from the chassis"), text: qsTr("Check the chassis cable and power.") })
         }
@@ -112,7 +126,7 @@ Item {
     }
 
     readonly property bool _dangerSounding: activeAlarms.some(a => a.level === 2 && !_muted[a.id])
-    readonly property bool _warningActive:  activeAlarms.some(a => a.level === 1)
+    readonly property bool _warningActive:  activeAlarms.some(a => a.level === 1 && !a.quiet)
 
     Connections {
         target: QGroundControl.multiVehicleManager

@@ -1,8 +1,8 @@
 --[[
  sim_vcu.lua  仿真用底盘 VCU（只在 SITL 中使用，实车用 vcu_can.lua）
 
- SITL 没有 CAN 总线，这个脚本代替 vcu_can.lua（garlic.15，Nav ↔ VCU CAN 通讯协议 v1.1）。
- 对着 garlic.15 的 vcu_can.lua 照着写：遥测名和频率、STATUSTEXT 原文、作业请求（Work_On）的来源、
+ SITL 没有 CAN 总线，这个脚本代替 vcu_can.lua（garlic.17，Nav ↔ VCU CAN 通讯协议 v1.1）。
+ 对着 vcu_can.lua 照着写：协议外状态帧（HealthSta）按 garlic.17 默认只上报（VCU_FB_CHK=0），遥测名和频率、STATUSTEXT 原文、作业请求（Work_On）的来源、
  HOLD 和解锁检查条件都和 vcu_can.lua 一致，只把 "CAN 收发" 换成下面的本地模拟：
    NavSta  OpSource = SVCU_MODE，SVCU_MUTE=1 时整帧丢失（NavSta lost），WorkFb 按下面的序列模拟，
            HsErr = SVCU_FAULT 为 0x11~0x16 时的低位
@@ -13,6 +13,9 @@
 
  地面站收到的（与 vcu_can.lua 相同）：
    NAMED_VALUE_FLOAT 5 Hz：VCU_MODE, VCU_FAULT, VCU_OK；VCU_BATV, VCU_SOC（仅 HealthSta 新鲜时）
+   VCU_FAULT：VCU_FB_CHK=0 时只有 0x10+HsErr；=1 时 Sys_Fault 1~7 和驱动器 0x100+码也进（garlic.15 做法）
+   VCU_SYSFLT / VCU_DRVFLT / VCU_DRVCH：任一变化时立即发，之后 1 Hz（HealthSta 新鲜时）；驱动器故障模拟为第 1 路
+   STATUSTEXT 变化提示："VCU: sys fault 0x03" / "VCU: sys fault cleared"、"VCU: drive fault 0x22 Drv1" / "VCU: drive fault cleared"
    VCU_WORKFB：变化时立即发，之后 1 Hz（NavSta 无效时不发）
    VCU_WREQ：作业请求变化时立即发；VCU_WORK_EN=1 时随 VCU_WORKFB 1 Hz 补发
    STATUSTEXT："VCU: ..." 英文原文
@@ -31,7 +34,8 @@
 
  仿真参数（地面站不能改，用 sim_ctl.py：set SVCU_FAULT 7）：
    SVCU_FAULT   故障码：1~7 Sys_Fault（1 急停 2 链路断 3 FCU 超时 4 电池低温 5 电池高温 6 电量低
-                7 提升超时，禁止解锁 / 行驶中切 HOLD）；0x11~0x16 HsErr（只上报）；0x100+ 驱动器（只上报）
+                7 提升超时，只上报；VCU_FB_CHK=1 时禁止解锁 / 行驶中切 HOLD）；0x11~0x16 HsErr（只上报）；
+                0x100+ 驱动器（只上报）
    SVCU_MUTE    1 = NavSta 丢失（通信中断；行驶中切 HOLD）
    SVCU_MODE    OpSource：0 遥控 / 1 切换中 / 2 无人（非 2 时禁止解锁）
    SVCU_ESTOP   1 = 急停（上报为 Sys_Fault=1）
@@ -50,7 +54,7 @@ local AUX_WORK = 300          -- 作业请求: RC 辅助功能 SCRIPTING1 (同 v
 local WORK_LIFT_EXPECT_MS = 30000  -- Work_On 变化后多久内的升/降杆算我方请求的 (同 vcu_can.lua)
 local SCRIPT_VERSION = "sim"
 
-local MAV_EMERG, MAV_CRIT, MAV_WARN, MAV_INFO = 0, 2, 4, 6
+local MAV_EMERG, MAV_CRIT, MAV_WARN, MAV_NOTICE, MAV_INFO = 0, 2, 4, 5, 6
 local MODE_HOLD = 4
 local DRIVE_MODES = { [5] = true, [10] = true, [11] = true, [12] = true, [15] = true }  -- LOITER AUTO RTL SMART_RTL GUIDED
 
@@ -66,6 +70,8 @@ assert(param:add_table(71, "VCU_", 12), "VCU: could not add param table")
 assert(param:add_param(71, 1, "ENABLE", 1), "VCU: could not add param ENABLE")
 assert(param:add_param(71, 7, "RTK_REQ", 2), "VCU: could not add param RTK_REQ")
 assert(param:add_param(71, 10, "WORK_EN", 0), "VCU: could not add param WORK_EN")
+assert(param:add_param(71, 12, "FB_CHK", 0), "VCU: could not add param FB_CHK")
+local VCU_FB_CHK = Parameter("VCU_FB_CHK")
 local VCU_WORK_EN = Parameter("VCU_WORK_EN")
 
 -- 仿真参数 SVCU_* (序号 1~7 与旧版一致)
@@ -160,11 +166,11 @@ local function simulate(now, work_on)
 end
 
 ---------------------------------------------------------------------------
--- 以下与 vcu_can.lua (garlic.15) 的对应部分一致
+-- 以下与 vcu_can.lua (garlic.17) 的对应部分一致
 ---------------------------------------------------------------------------
--- MotionSta / HealthSta 反馈检查 (SITL 没有 MotionSta, 只看 HealthSta 故障码)
+-- MotionSta / HealthSta 反馈检查 (SITL 没有 MotionSta, 只看 HealthSta 故障码); VCU_FB_CHK=0 时只上报
 local function feedback_ok()
-  if health.fresh and health.sys ~= 0 then
+  if VCU_FB_CHK:get() > 0 and health.fresh and health.sys ~= 0 then
     return false, string.format("fault 0x%02X", health.sys)
   end
   return true, nil
@@ -190,6 +196,8 @@ local function ahrs_fwd_speed()
 end
 
 local last_gcs_ms = 0
+local last_health_ms = 0
+local prev_sys, prev_drv = 0, 0
 local last_warn_ms = 0
 local last_wfb_ms = 0
 local prev_hs = 0
@@ -292,11 +300,12 @@ local function update()
     last_gcs_ms = now
     gcs:send_named_float("VCU_MODE", (not navsta_valid) and 0 or (navsta.op == OP_NAV and 2 or 1))
     local fault_code = 0
-    if health.fresh and health.sys > 0 then
+    local fb_chk = VCU_FB_CHK:get() > 0
+    if fb_chk and health.fresh and health.sys > 0 then
       fault_code = health.sys
     elseif navsta_valid and navsta.err > 0 then
       fault_code = 0x10 + navsta.err
-    elseif health.fresh and health.drv > 0 then
+    elseif fb_chk and health.fresh and health.drv > 0 then
       fault_code = 0x100 + health.drv
     end
     gcs:send_named_float("VCU_FAULT", fault_code)
@@ -305,6 +314,26 @@ local function update()
       gcs:send_named_float("VCU_SOC", health.soc)
     end
     gcs:send_named_float("VCU_OK", ok and 1 or 0)
+  end
+
+  -- 协议外 HealthSta 只上报: 变化时立即发 + 提示, 之后 1 Hz
+  if health.fresh then
+    local changed = health.sys ~= prev_sys or health.drv ~= prev_drv
+    if health.sys ~= prev_sys then
+      if health.sys == 0 then gcs:send_text(MAV_INFO, "VCU: sys fault cleared")
+      else gcs:send_text(MAV_NOTICE, string.format("VCU: sys fault 0x%02X", health.sys)) end
+    end
+    if health.drv ~= prev_drv then
+      if health.drv == 0 then gcs:send_text(MAV_INFO, "VCU: drive fault cleared")
+      else gcs:send_text(MAV_NOTICE, string.format("VCU: drive fault 0x%02X Drv1", health.drv)) end
+    end
+    prev_sys, prev_drv = health.sys, health.drv
+    if changed or now - last_health_ms >= 1000 then
+      last_health_ms = now
+      gcs:send_named_float("VCU_SYSFLT", health.sys)
+      gcs:send_named_float("VCU_DRVFLT", health.drv)
+      gcs:send_named_float("VCU_DRVCH", health.drv > 0 and 1 or 0)
+    end
   end
 
   return update, LOOP_MS
