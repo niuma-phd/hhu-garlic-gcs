@@ -46,7 +46,7 @@ Item {
         let list = status.driveBlockers().map(t => ({ t: t, btn: "", page: "" }))
         if (!_missionAvailable) {
             // before the position note, which is always the last one
-            list.splice(status.rtkFixed ? list.length : list.length - 1, 0,
+            list.splice(status.positionOk ? list.length : list.length - 1, 0,
                         { t: qsTr("No route on the vehicle"), btn: qsTr("Go to plan"), page: "plan" })
         }
         return list
@@ -165,10 +165,14 @@ Item {
         _expect(qsTr("Return"), function() { return status.inReturn }, 6, null, _returnHome)
     }
 
+    /// 急停: one tap, no confirmation. HOLD and a forced disarm (21196: the vehicle skips its disarm
+    /// checks) at once; the forced disarm again after 1.5 s while the vehicle still reports armed (a lost
+    /// packet over 4G). An accidental tap only stops the vehicle.
     function _stopAndDisarm() {
         _vehicle.flightMode = _vehicle.pauseFlightMode
+        _vehicle.emergencyStop()
         disarmTimer.restart()
-        _expect(qsTr("Stop and disarm"), function() { return !status.armed }, 0, function() { HHUState.gotoTarget = null }, _stopAndDisarm)
+        _expect(qsTr("Emergency stop"), function() { return !status.armed }, 0, function() { HHUState.gotoTarget = null }, _stopAndDisarm)
     }
 
     // Smart RTL can be rejected (no return path recorded) - fall back to plain RTL within 3 s
@@ -184,10 +188,10 @@ Item {
 
     Timer {
         id:         disarmTimer
-        interval:   600
+        interval:   1500
         onTriggered: {
-            if (root._vehicle) {
-                root._vehicle.armed = false
+            if (root._vehicle && root._vehicle.armed) {
+                root._vehicle.emergencyStop()
             }
         }
     }
@@ -370,19 +374,15 @@ Item {
             HHUButton {
                 id:         stopButton
                 visible:    status.canControl && status.armed
-                text:       qsTr("Stop and lock")
+                text:       qsTr("Emergency stop")
                 icon:       "lock"
                 kind:       "red"
                 h:          HHUStyle.btnH
                 size:       HHUStyle.btnFont / HHUStyle.s
                 shadow:     true
                 whiteRim:   true
-                onClicked: confirmDialog.openAction(
-                               qsTr("Stop and lock?"),
-                               qsTr("The vehicle stops at once and this work run ends.\nNext time you can continue where it stopped."),
-                               qsTr("Slide to lock"),
-                               function() { root._stopAndDisarm() },
-                               "lock", HHUStyle.red)
+                // one tap stops and locks at once: a stop must never wait for a slide confirmation
+                onClicked:  root._stopAndDisarm()
             }
         }
     }
