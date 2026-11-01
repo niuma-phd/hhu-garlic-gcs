@@ -54,10 +54,10 @@ Item {
                         title: desc !== "" ? qsTr("Chassis fault: %1").arg(desc) : qsTr("Chassis fault %1").arg(status.faultText),
                         text: qsTr("Clear the fault on the vehicle, then tap \"Continue\".") })
         }
-        if (status.connected && hhuVcu.seen && !hhuVcu.valid) {
+        if (status.connected && status.chassisChecked && hhuVcu.seen && !hhuVcu.valid) {
             list.push({ id: "chassisLink", level: 1, title: qsTr("No data from the chassis"), text: qsTr("Check the chassis cable and power.") })
         }
-        if (status.connected && status.inAuto && !status.rtkFixed) {
+        if (status.connected && status.inAuto && !status.positionOk) {
             list.push({ id: "rtk", level: 1, title: qsTr("Position poor while working"), text: qsTr("The vehicle may leave the route. Watch it or pause.") })
         }
         // batteryLow is false as soon as the battery data stops or 电量显示 is set to 关闭, so the alarm clears with it

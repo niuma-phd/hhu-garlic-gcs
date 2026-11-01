@@ -40,6 +40,7 @@
    SVCU_BAT     1 = 发电量 VCU_SOC / VCU_BATV（默认）；0 = 不发（模拟收不到 HealthSta 的车）
    SVCU_WFB_EN  1 = 上报 WorkFb 序列（默认）；0 = 恒发 0
    SVCU_WFB_T   动杆时间（秒），默认 5
+  SVCU_HS_T    授权后等遥控器 Ready 的时间（秒），默认 1（测地面站“请先按 Ready”时调大）
    SVCU_WFB_FLT 1 = 下一次动杆超时后变成 4
    SVCU_WFB_FRC -1 = 不强制（默认）；0~4 = 强制 WorkFb
 --]]
@@ -58,15 +59,18 @@ local HS_WAIT_START, HS_DONE = 2, 3
 local WFB_TRANSPORT, WFB_LIFTING, WFB_WORKING, WFB_LIFT_FAULT = 0, 1, 3, 4
 
 ---------------------------------------------------------------------------
--- 参数: VCU_WORK_EN 与 vcu_can.lua 同表同序号 (SITL 里不跑 vcu_can.lua, 表 71 空着)
+-- 参数: VCU_WORK_EN / VCU_ENABLE / VCU_RTK_REQ 与 vcu_can.lua 同表同序号 (SITL 里不跑 vcu_can.lua,
+-- 表 71 空着)。ENABLE / RTK_REQ 只给地面站读 (它的开车前检查跟着这两个参数), 这里不起作用
 ---------------------------------------------------------------------------
-assert(param:add_table(71, "VCU_", 11), "VCU: could not add param table")
+assert(param:add_table(71, "VCU_", 12), "VCU: could not add param table")
+assert(param:add_param(71, 1, "ENABLE", 1), "VCU: could not add param ENABLE")
+assert(param:add_param(71, 7, "RTK_REQ", 2), "VCU: could not add param RTK_REQ")
 assert(param:add_param(71, 10, "WORK_EN", 0), "VCU: could not add param WORK_EN")
 local VCU_WORK_EN = Parameter("VCU_WORK_EN")
 
 -- 仿真参数 SVCU_* (序号 1~7 与旧版一致)
 local KEY = 72
-assert(param:add_table(KEY, "SVCU_", 11), "SVCU: could not add param table")
+assert(param:add_table(KEY, "SVCU_", 12), "SVCU: could not add param table")
 local function p(name, idx, default)
   assert(param:add_param(KEY, idx, name, default), "SVCU: could not add param " .. name)
   return Parameter("SVCU_" .. name)
@@ -82,6 +86,7 @@ local WFB_EN  = p("WFB_EN", 8, 1)
 local WFB_T   = p("WFB_T", 9, 5)
 local WFB_FLT = p("WFB_FLT", 10, 0)
 local WFB_FRC = p("WFB_FRC", 11, -1)
+local HS_T    = p("HS_T", 12, 1)
 
 local auth_id = arming:get_aux_auth_id()
 
@@ -105,11 +110,11 @@ local function simulate(now, work_on)
   navsta.op = math.floor(mode)
   local code = math.floor(fault)
   navsta.err = (code >= 0x11 and code <= 0x16) and (code - 0x10) or 0
-  -- 授权握手: OpSource 变 2 时先 "等遥控器启动", 1 s 后 "已启动"
+  -- 授权握手: OpSource 变 2 时先 "等遥控器启动", SVCU_HS_T 秒 (默认 1) 后 "已启动"
   if navsta.op == OP_NAV then
     if navsta.hs ~= HS_WAIT_START and navsta.hs ~= HS_DONE then
       navsta.hs = HS_WAIT_START
-      hs_done_ms = now + 1000
+      hs_done_ms = now + math.floor(HS_T:get() * 1000)
     elseif navsta.hs == HS_WAIT_START and now >= hs_done_ms then
       navsta.hs = HS_DONE
     end

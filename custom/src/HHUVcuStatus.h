@@ -17,6 +17,9 @@
 ///                                valid; the work request (SCRIPTING1) on change + 1 Hz while VCU_WORK_EN=1.
 ///                                Own freshness (workFbValid / workReqValid). The status bar and the AB line
 ///                                run (HHUABField) both read WorkFb from here.
+/// Also the RC start handshake from vcu_can.lua's STATUSTEXT ("VCU: wait RC start" / "VCU: RC start OK"),
+/// and the vehicle parameters the ground station's own drive checks follow (VCU_RTK_REQ, VCU_ENABLE), so
+/// that a check switched off on the vehicle is not kept up here.
 class HHUVcuStatus : public QObject
 {
     Q_OBJECT
@@ -39,6 +42,14 @@ class HHUVcuStatus : public QObject
     Q_PROPERTY(bool   workReqValid READ workReqValid NOTIFY workChanged)
     /// 1 = the vehicle sees the work request high; -1 until received
     Q_PROPERTY(int    workReq      READ workReq      NOTIFY workChanged)
+    /// 0 unknown (no handshake message seen since connecting), 1 waiting for Ready on the remote control
+    /// (wait RC start / handover failed / RC link lost), 2 RC start OK. Back to 0 when VCU_MODE leaves 2.
+    Q_PROPERTY(int    rcStart      READ rcStart      NOTIFY changed)
+    /// VCU_RTK_REQ of the vehicle: 0 no check, 1 float or fixed, 2 fixed only; -1 unknown (parameter
+    /// missing or not loaded: the ground station then asks for RTK fixed as before)
+    Q_PROPERTY(int    rtkReq       READ rtkReq       NOTIFY paramsChanged)
+    /// false when the vehicle has VCU_ENABLE = 0 (CAN bridge off, bench test): no chassis checks then
+    Q_PROPERTY(bool   bridgeEnabled READ bridgeEnabled NOTIFY paramsChanged)
 
 public:
     explicit HHUVcuStatus(QObject *parent = nullptr);
@@ -56,6 +67,9 @@ public:
     int    workFb()       const { return _workFb; }
     bool   workReqValid() const { return _workReqValid; }
     int    workReq()      const { return _workReq; }
+    int    rcStart()      const { return _rcStart; }
+    int    rtkReq()       const { return _rtkReq; }
+    bool   bridgeEnabled() const { return _bridgeEnabled; }
     /// ms since the last VCU_WORKFB / VCU_WREQ (-1 = never)
     qint64 workFbAgeMs()  const { return _lastWorkFbRx.isValid() ? _lastWorkFbRx.elapsed() : -1; }
     qint64 workReqAgeMs() const { return _lastWorkReqRx.isValid() ? _lastWorkReqRx.elapsed() : -1; }
@@ -68,11 +82,14 @@ signals:
     void changed();
     void batteryChanged();
     void workChanged();
+    void paramsChanged();
 
 private:
     void _checkTimeout();
     void _clearBattery();
     void _clearWork();
+    void _handleStatusText(const mavlink_message_t &message);
+    void _readParams();
 
     bool   _valid = false;
     bool   _seen  = false;
@@ -88,6 +105,10 @@ private:
     int    _workFb       = -1;
     bool   _workReqValid = false;
     int    _workReq      = -1;
+
+    int    _rcStart      = 0;
+    int    _rtkReq       = -1;
+    bool   _bridgeEnabled = true;
 
     QElapsedTimer _lastRx;
     QElapsedTimer _lastSocRx;

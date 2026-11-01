@@ -1,4 +1,8 @@
 #include "HHUVcuStatus.h"
+#include "MultiVehicleManager.h"
+#include "ParameterManager.h"
+#include "Fact.h"
+#include "Vehicle.h"
 
 #include <cmath>
 
@@ -16,6 +20,10 @@ HHUVcuStatus::HHUVcuStatus(QObject *parent)
 
 void HHUVcuStatus::handleMessage(const mavlink_message_t &message)
 {
+    if (message.msgid == MAVLINK_MSG_ID_STATUSTEXT) {
+        _handleStatusText(message);
+        return;
+    }
     if (message.msgid != MAVLINK_MSG_ID_NAMED_VALUE_FLOAT) {
         return;
     }
@@ -33,6 +41,9 @@ void HHUVcuStatus::handleMessage(const mavlink_message_t &message)
         _ok = value >= 0.5;
     } else if (name == QStringLiteral("VCU_MODE")) {
         _mode = static_cast<int>(std::lround(value));
+        if (_mode != 2) {
+            _rcStart = 0;   // a new handover starts with "wait RC start" again
+        }
     } else if (name == QStringLiteral("VCU_FAULT")) {
         _fault = static_cast<int>(std::lround(value));
     } else if (name == QStringLiteral("VCU_SOC")) {
@@ -71,8 +82,49 @@ void HHUVcuStatus::handleMessage(const mavlink_message_t &message)
     emit changed();
 }
 
+void HHUVcuStatus::_handleStatusText(const mavlink_message_t &message)
+{
+    mavlink_statustext_t st{};
+    mavlink_msg_statustext_decode(&message, &st);
+    const QString text = QString::fromUtf8(st.text, static_cast<int>(strnlen(st.text, sizeof(st.text))));
+    int rcStart = _rcStart;
+    if (text == QStringLiteral("VCU: RC start OK")) {
+        rcStart = 2;
+    } else if (text == QStringLiteral("VCU: wait RC start") || text == QStringLiteral("VCU: handover failed")
+               || text == QStringLiteral("VCU: RC link lost")) {
+        rcStart = 1;
+    }
+    if (rcStart != _rcStart) {
+        _rcStart = rcStart;
+        emit changed();
+    }
+}
+
+void HHUVcuStatus::_readParams()
+{
+    int rtkReq = -1;
+    bool bridgeEnabled = true;
+    Vehicle *v = MultiVehicleManager::instance()->activeVehicle();
+    ParameterManager *params = v ? v->parameterManager() : nullptr;
+    if (params && params->parametersReady()) {
+        const int comp = ParameterManager::defaultComponentId;
+        if (params->parameterExists(comp, QStringLiteral("VCU_RTK_REQ"))) {
+            rtkReq = params->getParameter(comp, QStringLiteral("VCU_RTK_REQ"))->rawValue().toInt();
+        }
+        if (params->parameterExists(comp, QStringLiteral("VCU_ENABLE"))) {
+            bridgeEnabled = params->getParameter(comp, QStringLiteral("VCU_ENABLE"))->rawValue().toInt() > 0;
+        }
+    }
+    if (rtkReq != _rtkReq || bridgeEnabled != _bridgeEnabled) {
+        _rtkReq = rtkReq;
+        _bridgeEnabled = bridgeEnabled;
+        emit paramsChanged();
+    }
+}
+
 void HHUVcuStatus::_checkTimeout()
 {
+    _readParams();
     if (_valid && _lastRx.elapsed() > kTimeoutMs) {
         _valid = false;
         emit changed();
@@ -115,6 +167,7 @@ void HHUVcuStatus::reset()
     _ok = false;
     _mode = 0;
     _fault = 0;
+    _rcStart = 0;
     emit changed();
     _clearBattery();
     _clearWork();

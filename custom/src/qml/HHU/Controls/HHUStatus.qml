@@ -88,18 +88,33 @@ QtObject {
         }
     }
 
+    /// Position quality the vehicle asks for (VCU_RTK_REQ): 0 none, 1 RTK float or fixed, 2 RTK fixed.
+    /// Unknown (parameter missing / not loaded yet) = 2 as before. The ground station never asks for more
+    /// than the vehicle does: a check switched off on the vehicle is off here too.
+    readonly property int   rtkRequired:    hhuVcu.rtkReq < 0 ? 2 : hhuVcu.rtkReq
+    readonly property bool  positionOk:     rtkRequired === 0 || rtkFixed || (rtkRequired === 1 && rtkFloat)
+    /// Chassis checks only while the vehicle's CAN bridge is on (VCU_ENABLE = 0: bench test, no VCU)
+    readonly property bool  chassisChecked: hhuVcu.bridgeEnabled
+
     /// Why the vehicle cannot be driven now (开始作业 / 开到这里), most important first; [] when it can.
-    /// Chassis link lost > chassis fault / not authorized / not ready > position
+    /// Chassis link lost > chassis fault / not authorized / not ready / Ready not pressed > position.
+    /// Only what the vehicle itself would refuse or not drive with (vcu_can.lua, VCU_RTK_REQ).
     function driveBlockers() {
         let list = []
-        if (chassisLinkLost) {
+        if (!chassisChecked) {
+            // nothing about the chassis
+        } else if (chassisLinkLost) {
             list.push(qsTr("Chassis communication lost, check the CAN cable and the VCU"))
         } else if (vcuValid) {
             if (vcuFault)                   list.push(qsTr("Chassis fault: %1").arg(faultText))
             if (!vcuAuthorized)             list.push(qsTr("Switch to unmanned mode with the remote control"))
             else if (!hhuVcu.ok && !vcuFault) list.push(qsTr("Chassis not ready, see the message list"))
+            // authorized, but the VCU drives only after Ready on the remote control (else the rover
+            // throttles against a standing chassis and the crash check puts it in HOLD)
+            else if (hhuVcu.rcStart === 1)  list.push(qsTr("Press Ready on the remote control"))
         }
-        if (!rtkFixed)                      list.push(qsTr("Wait for a good position, about 1-3 minutes"))
+        if (!positionOk)                    list.push(rtkRequired === 1 ? qsTr("Wait for an RTK position, about 1-3 minutes")
+                                                                        : qsTr("Wait for a good position, about 1-3 minutes"))
         return list
     }
 

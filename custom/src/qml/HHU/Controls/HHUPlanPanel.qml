@@ -267,7 +267,7 @@ HHUCard {
     /// Waypoint at the vehicle's position; without RTK fixed the user is warned first
     function _addWaypointAtVehicle(what) {
         const coordinate = QtPositioning.coordinate(status.vehicle.coordinate.latitude, status.vehicle.coordinate.longitude)
-        if (status.rtkFixed) {
+        if (status.positionOk) {
             _addWaypoint(coordinate)
             return
         }

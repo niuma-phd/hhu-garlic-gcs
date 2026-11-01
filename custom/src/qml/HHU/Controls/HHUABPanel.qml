@@ -17,7 +17,7 @@ Item {
 
     readonly property bool _locked:     hhuABRun.active      ///< no editing while a line is driven
     readonly property bool _canRecord:  !!status.vehicle && status.vehicle.coordinate.isValid
-                                        && (status.rtkFixed || !hhuConfig.abRequireRtkFixed) && hhuAB.recording === 0 && !_locked
+                                        && (status.positionOk || !hhuConfig.abRequireRtkFixed) && hhuAB.recording === 0 && !_locked
     readonly property bool _hasLines:   hhuAB.lines.length > 0
 
     function _centerOnLines() {
