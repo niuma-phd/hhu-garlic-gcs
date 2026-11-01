@@ -1079,6 +1079,11 @@ void FTPManager::_listDirectoryAckOrNak(const MavlinkFTP::Request* ackOrNak)
         while (curDataPtr < (const char*)ackOrNak->data + ackOrNak->hdr.size) {
             QString dirEntry = curDataPtr;
             curDataPtr += dirEntry.size() + 1;
+            // ArduPilot ends every entry with an extra NUL: an empty string is no entry. Counting it
+            // doubled the offset of the next request and dropped every page after the first.
+            if (dirEntry.isEmpty()) {
+                continue;
+            }
             _listDirectoryState.rgDirectoryList.append(dirEntry);
             _listDirectoryState.expectedOffset++;
         }
