@@ -41,7 +41,11 @@
                 { "name": "ATC_STR_ACC_MAX", "min": 0, "max": 200, "step": 0.5 },
                 { "name": "ATC_STR_DEC_MAX", "min": 0, "max": 200, "step": 0.5 },
                 { "name": "ATC_STR_RAT_MAX", "min": 1, "max": 180, "step": 1 },
-                { "name": "ATC_TURN_MAX_G", "min": 0.05, "max": 1, "step": 0.01 }
+                { "name": "ATC_TURN_MAX_G", "min": 0.05, "max": 1, "step": 0.01 },
+                { "name": "VCU_STR_OFS", "min": -5, "max": 5, "step": 0.1 },
+                { "name": "VCU_STR_TOL", "min": 0, "max": 15, "step": 1 },
+                { "name": "VCU_STR_PARK", "min": 0, "max": 1, "step": 1, "integer": true },
+                { "name": "GUID_OPTIONS", "min": 0, "max": 64, "step": 64, "integer": true }
             ]
         },
         {
@@ -66,6 +70,7 @@
                 { "name": "VCU_WORK_EN", "min": 0, "max": 1, "step": 1, "integer": true },
                 { "name": "VCU_REV", "min": 0, "max": 1, "step": 1, "integer": true },
                 { "name": "VCU_VREF_MIN", "min": 0.05, "max": 1, "step": 0.05 },
+                { "name": "VCU_VREF_SRC", "min": 0, "max": 1, "step": 1, "integer": true },
                 { "name": "GPS1_POS_X", "min": -3, "max": 3, "step": 0.001, "reboot": true },
                 { "name": "GPS1_POS_Y", "min": -3, "max": 3, "step": 0.001, "reboot": true },
                 { "name": "GPS1_POS_Z", "min": -3, "max": 3, "step": 0.001, "reboot": true },
