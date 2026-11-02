@@ -45,6 +45,7 @@
                 { "name": "VCU_STR_OFS", "min": -5, "max": 5, "step": 0.1 },
                 { "name": "VCU_STR_TOL", "min": 0, "max": 15, "step": 1 },
                 { "name": "VCU_STR_PARK", "min": 0, "max": 1, "step": 1, "integer": true },
+                { "name": "VCU_STR_STEP", "min": 0, "max": 10, "step": 0.5 },
                 { "name": "GUID_OPTIONS", "min": 0, "max": 64, "step": 64, "integer": true }
             ]
         },
