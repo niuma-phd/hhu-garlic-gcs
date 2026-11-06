@@ -903,6 +903,26 @@
         <translation>垄宽</translation>
     </message>
     <message>
+        <source>Run settings (all fields)</source>
+        <translation>运行设置（所有地块通用）</translation>
+    </message>
+    <message>
+        <source>Transport speed</source>
+        <translation>运输速度</translation>
+    </message>
+    <message>
+        <source>Work speed</source>
+        <translation>作业速度</translation>
+    </message>
+    <message>
+        <source>Lead-in length</source>
+        <translation>对准引导段长度</translation>
+    </message>
+    <message>
+        <source>Alignment point before A</source>
+        <translation>对准点距 A 点</translation>
+    </message>
+    <message>
         <source>Save</source>
         <translation>保存</translation>
     </message>

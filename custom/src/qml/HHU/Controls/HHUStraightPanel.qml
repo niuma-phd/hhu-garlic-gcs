@@ -58,7 +58,7 @@ HHUCard {
     property int  _speedKind:   0       ///< 0 作业, 1 运输, 2 自定义
     property real _customKmh:   3
     property bool _roundTrip:   false
-    readonly property real _speedMps: _speedKind === 0 ? hhuConfig.abSpeedWork : (_speedKind === 1 ? hhuConfig.abSpeedTransport : _customKmh / 3.6)
+    readonly property real _speedMps: _speedKind === 0 ? hhuAB.speedWork : (_speedKind === 1 ? hhuAB.speedTransport : _customKmh / 3.6)
 
     HHUDialog {
         id:             startDialog
@@ -88,8 +88,8 @@ HHUCard {
                 RowLayout {
                     spacing: 8 * HHUStyle.s
                     Repeater {
-                        model: [ qsTr("Work %1 km/h").arg((hhuConfig.abSpeedWork * 3.6).toFixed(1)),
-                                 qsTr("Transport %1 km/h").arg((hhuConfig.abSpeedTransport * 3.6).toFixed(1)),
+                        model: [ qsTr("Work %1 km/h").arg((hhuAB.speedWork * 3.6).toFixed(1)),
+                                 qsTr("Transport %1 km/h").arg((hhuAB.speedTransport * 3.6).toFixed(1)),
                                  qsTr("Custom") ]
                         HHUButton {
                             text:       modelData

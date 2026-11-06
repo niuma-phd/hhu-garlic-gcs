@@ -29,6 +29,11 @@ constexpr int    kRtkFixed = 6;         // GPS_FIX_TYPE_RTK_FIXED
 const char      *kSettingsGroup = "HHU";
 const char      *kKeyPlanMode = "abPlanMode";
 const char      *kKeyLastField = "abLastField";
+// AB 线运行设置 (所有地块共用); 范围与 hhu_config.json 的读取范围一致
+const char      *kKeyLeadD = "abLeadD";
+const char      *kKeyLeadLc = "abLeadLc";
+const char      *kKeySpeedTransport = "abSpeedTransport";
+const char      *kKeySpeedWork = "abSpeedWork";
 
 const char *statusName(int s)
 {
@@ -54,8 +59,12 @@ HHUABField::HHUABField(HHUConfig *config, QObject *parent)
     QSettings settings;
     settings.beginGroup(kSettingsGroup);
     _planMode = qBound(0, settings.value(kKeyPlanMode, 0).toInt(), 1);
-    _leadD = _config->abLine().leadD;
-    _leadLc = _config->abLine().leadLc;
+    // 改过的值存本机设置, 没改过用 hhu_config.json. 不再跟地块文件走 (以前新建地块时拷进文件, 改配置对已有地块不生效)
+    const HHUConfig::ABLine &ab = _config->abLine();
+    _leadD = qBound(0.0, settings.value(kKeyLeadD, ab.leadD).toDouble(), 20.0);
+    _leadLc = qBound(1.0, settings.value(kKeyLeadLc, ab.leadLc).toDouble(), 50.0);
+    _speedTransport = qBound(0.1, settings.value(kKeySpeedTransport, ab.speedTransport).toDouble(), 5.0);
+    _speedWork = qBound(0.1, settings.value(kKeySpeedWork, ab.speedWork).toDouble(), 5.0);
 
     _recordTimer.setSingleShot(true);
     _recordTimer.setInterval(kRecordMs);
@@ -77,6 +86,24 @@ void HHUABField::setPlanMode(int mode)
     settings.setValue(kKeyPlanMode, mode);
     emit planModeChanged();
 }
+
+void HHUABField::_setRunSetting(double &member, double value, double lo, double hi, const char *key)
+{
+    value = std::round(qBound(lo, value, hi) * 100.0) / 100.0;
+    if (qFuzzyCompare(value, member)) {
+        return;
+    }
+    member = value;
+    QSettings settings;
+    settings.beginGroup(kSettingsGroup);
+    settings.setValue(key, value);
+    emit runSettingsChanged();
+}
+
+void HHUABField::setLeadD(double value)          { _setRunSetting(_leadD, value, 0.0, 20.0, kKeyLeadD); }
+void HHUABField::setLeadLc(double value)         { _setRunSetting(_leadLc, value, 1.0, 50.0, kKeyLeadLc); }
+void HHUABField::setSpeedTransport(double value) { _setRunSetting(_speedTransport, value, 0.1, 5.0, kKeySpeedTransport); }
+void HHUABField::setSpeedWork(double value)      { _setRunSetting(_speedWork, value, 0.1, 5.0, kKeySpeedWork); }
 
 // ---- Geometry -----------------------------------------------------------------------------------
 
@@ -338,8 +365,6 @@ void HHUABField::newField()
     _b = QGeoCoordinate();
     _status.assign(_count, Pending);
     _selected = 0;
-    _leadD = _config->abLine().leadD;
-    _leadLc = _config->abLine().leadLc;
     _created = QDateTime::currentDateTime();
     _rebuild();
     _changed();
@@ -404,8 +429,7 @@ bool HHUABField::open(const QString &name)
     _rowWidth = qBound(0.1, o.value(QStringLiteral("rowWidth")).toDouble(0.25), 5.0);
     _left = o.value(QStringLiteral("side")).toString() != QStringLiteral("right");
     _count = qBound(1, o.value(QStringLiteral("count")).toInt(10), 200);
-    _leadD = o.value(QStringLiteral("d")).toDouble(_config->abLine().leadD);
-    _leadLc = o.value(QStringLiteral("Lc")).toDouble(_config->abLine().leadLc);
+    // 旧版地块文件里的 "d" / "Lc" 不再使用: 引导段用全局 AB 线设置
     _created = QDateTime::fromString(o.value(QStringLiteral("created")).toString(), Qt::ISODate);
     _modified = QDateTime::fromString(o.value(QStringLiteral("modified")).toString(), Qt::ISODate);
     _status.assign(_count, Pending);
@@ -461,8 +485,6 @@ bool HHUABField::_write(const QString &path)
         { QStringLiteral("rowWidth"),  _rowWidth },
         { QStringLiteral("side"),      _left ? QStringLiteral("left") : QStringLiteral("right") },
         { QStringLiteral("count"),     _count },
-        { QStringLiteral("d"),         _leadD },
-        { QStringLiteral("Lc"),        _leadLc },
         { QStringLiteral("startLine"), _selected + 1 },
         { QStringLiteral("lines"),     lines },
         { QStringLiteral("created"),   _created.toString(Qt::ISODateWithMs) },

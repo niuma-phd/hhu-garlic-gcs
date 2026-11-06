@@ -199,7 +199,7 @@ QList<MissionItem *> HHUABRun::_alignMission()
     _lastSeq = 3;
     _target = hhuab::along(l, -_field->leadD());
     // lift up: the VCU drives 5 km/h, the autopilot plans turns and the stop with that speed
-    return { wp(0, home), _speedItem(1, _config->abLine().speedTransport), wp(2, lead), wp(3, align) };
+    return { wp(0, home), _speedItem(1, _field->speedTransport()), wp(2, lead), wp(3, align) };
 }
 
 QList<MissionItem *> HHUABRun::_workMission()
@@ -215,7 +215,7 @@ QList<MissionItem *> HHUABRun::_workMission()
                                0, 0, 0, 0, c.latitude(), c.longitude(), 0, true, false);
     };
     // lift down: the VCU drives 2 km/h; without the lift link the lift stays up and the vehicle drives 5 km/h
-    const double speed = workLink() ? _config->abLine().speedWork : _config->abLine().speedTransport;
+    const double speed = workLink() ? _field->speedWork() : _field->speedTransport();
     QList<MissionItem *> items { wp(0, home), _speedItem(1, speed), wp(2, _field->toCoordinate(l.start)), wp(3, _field->toCoordinate(l.end)) };
     _lastSeq = 3;
     _target = l.end;

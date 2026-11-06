@@ -371,6 +371,34 @@ Item {
                     }
                 }
 
+                // AB 线运行设置: 所有地块共用, 改了立即用于下一次对准 / 作业
+                Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 1; color: HHUStyle.divider }
+                HHUText { text: qsTr("Run settings (all fields)"); size: 15; color: HHUStyle.text3 }
+                Repeater {
+                    model: [
+                        { t: qsTr("Transport speed"), key: "speedTransport", k: 3.6, from: 0.5, to: 5,  step: 0.1, dec: 1, unit: "km/h" },
+                        { t: qsTr("Work speed"),      key: "speedWork",      k: 3.6, from: 0.5, to: 2,  step: 0.1, dec: 1, unit: "km/h" },
+                        { t: qsTr("Lead-in length"),  key: "leadLc",         k: 1,   from: 1,   to: 30, step: 1,   dec: 0, unit: "m" },
+                        { t: qsTr("Alignment point before A"), key: "leadD", k: 1,   from: 0,   to: 10, step: 0.5, dec: 1, unit: "m" }
+                    ]
+                    RowLayout {
+                        Layout.fillWidth:   true
+                        Layout.bottomMargin: 18 * HHUStyle.s
+                        enabled:            !root._locked
+                        HHUText { Layout.fillWidth: true; text: modelData.t; size: 16; bold: true }
+                        HHUStepper {
+                            value:      hhuAB[modelData.key] * modelData.k
+                            from:       modelData.from
+                            to:         modelData.to
+                            step:       modelData.step
+                            decimals:   modelData.dec
+                            editable:   true
+                            unit:       modelData.unit
+                            onEdited:   (v) => hhuAB[modelData.key] = v / modelData.k
+                        }
+                    }
+                }
+
                 Rectangle { Layout.fillWidth: true; Layout.preferredHeight: 1; color: HHUStyle.divider; visible: root._hasLines }
 
                 HHUText {

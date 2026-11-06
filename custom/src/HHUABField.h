@@ -40,6 +40,12 @@ class HHUABField : public QObject
     /// line to start from (0-based), -1 = none
     Q_PROPERTY(int      selected    READ selected   WRITE setSelected   NOTIFY fieldChanged)
 
+    /// AB 线运行设置: 所有地块共用, 存本机设置 (QSettings), 没改过时用 hhu_config.json 的值
+    Q_PROPERTY(double   leadD          READ leadD          WRITE setLeadD          NOTIFY runSettingsChanged)  ///< 对准点在起点前 m
+    Q_PROPERTY(double   leadLc         READ leadLc         WRITE setLeadLc         NOTIFY runSettingsChanged)  ///< 对准引导段 m
+    Q_PROPERTY(double   speedTransport READ speedTransport WRITE setSpeedTransport NOTIFY runSettingsChanged)  ///< 杆收着 (对准) m/s
+    Q_PROPERTY(double   speedWork      READ speedWork      WRITE setSpeedWork      NOTIFY runSettingsChanged)  ///< 杆放下 (作业) m/s
+
     /// 记A / 记B in progress: 0 none, 1 A, 2 B
     Q_PROPERTY(int      recording   READ recording                      NOTIFY recordingChanged)
     /// last 记A / 记B failure: "" | "rtk" (RTK fixed lost while averaging) | "nodata"
@@ -84,6 +90,12 @@ public:
     int lineStatus(int index) const;
     double leadD() const { return _leadD; }
     double leadLc() const { return _leadLc; }
+    double speedTransport() const { return _speedTransport; }
+    double speedWork() const { return _speedWork; }
+    void   setLeadD(double value);
+    void   setLeadLc(double value);
+    void   setSpeedTransport(double value);
+    void   setSpeedWork(double value);
 
     /// Averages the vehicle position (EKF, the position shown on the map) over 2 s
     Q_INVOKABLE void record(int which);     ///< 1 = A, 2 = B
@@ -110,6 +122,7 @@ public:
 signals:
     void planModeChanged();
     void fieldChanged();
+    void runSettingsChanged();
     void recordingChanged();
 
 private:
@@ -117,6 +130,7 @@ private:
     void _changed();
     void _onSample();
     void _finishRecord();
+    void _setRunSetting(double &member, double value, double lo, double hi, const char *key);
     QString _path(const QString &name) const;
     bool _write(const QString &path);
     static bool _validName(const QString &name);
@@ -135,6 +149,8 @@ private:
     int        _count = 10;
     double     _leadD = 1.0;
     double     _leadLc = 5.0;
+    double     _speedTransport = 1.39;
+    double     _speedWork = 0.55;
     std::vector<int> _status;
     int        _selected = 0;
 
